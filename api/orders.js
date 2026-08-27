@@ -1,15 +1,54 @@
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ ok: false, error: 'Method not allowed' });
-  }
-
   try {
     const webhook = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+    const adminPassword = process.env.NSP_ADMIN_PASSWORD;
 
     if (!webhook) {
       return res.status(503).json({
         ok: false,
         error: 'Order management is not configured yet.'
+      });
+    }
+
+    if (req.method === 'GET') {
+      if (!adminPassword) {
+        return res.status(503).json({
+          ok: false,
+          error: 'Admin access is not configured yet.'
+        });
+      }
+
+      if (req.headers['x-admin-password'] !== adminPassword) {
+        return res.status(401).json({
+          ok: false,
+          error: 'Invalid admin password.'
+        });
+      }
+
+      const response = await fetch(`${webhook}?action=orders`, {
+        method: 'GET',
+        redirect: 'follow'
+      });
+
+      if (!response.ok) {
+        return res.status(502).json({
+          ok: false,
+          error: 'The order service could not return orders.'
+        });
+      }
+
+      const data = await response.json();
+
+      return res.status(200).json({
+        ok: true,
+        orders: Array.isArray(data.orders) ? data.orders : []
+      });
+    }
+
+    if (req.method !== 'POST') {
+      return res.status(405).json({
+        ok: false,
+        error: 'Method not allowed'
       });
     }
 
@@ -52,7 +91,7 @@ export default async function handler(req, res) {
 
     return res.status(500).json({
       ok: false,
-      error: 'Unable to save the order right now.'
+      error: 'Unable to process the order right now.'
     });
   }
 }
