@@ -604,6 +604,42 @@ footer{
   text-transform:uppercase;
 }
 
+/* LIVE INVENTORY */
+.size{
+  min-width:72px;
+  min-height:52px;
+  padding:9px 10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+}
+.size-label{
+  font-size:10px;
+  font-weight:900;
+}
+.size-availability{
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:.4px;
+  opacity:.55;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.size.out-of-stock{
+  cursor:not-allowed;
+  opacity:.4;
+  text-decoration:line-through;
+  background:#eee;
+  border-color:#ccc;
+}
+.size.out-of-stock:hover{
+  background:#eee;
+  color:inherit;
+  border-color:#ccc;
+}
+
 /* BAG */
 .bag-panel{
   position:fixed;
@@ -759,12 +795,12 @@ footer{
 .form-group textarea,
 .form-group select{
   width:100%;
-  border:1px solid #bbb;
+  border:1px solid #ccc;
   background:#fff;
   padding:13px;
-  outline:none;
   font:inherit;
   font-size:12px;
+  outline:none;
 }
 .form-group textarea{
   min-height:100px;
@@ -776,48 +812,39 @@ footer{
   border-color:#111;
 }
 .order-summary{
-  border:1px solid #ccc;
-  background:#fff;
+  border-top:1px solid #ccc;
+  border-bottom:1px solid #ccc;
 }
 .order-summary-item{
-  display:grid;
-  grid-template-columns:65px 1fr auto;
-  gap:12px;
-  align-items:center;
-  padding:14px;
-  border-bottom:1px solid #ddd;
-}
-.order-summary-item img{
-  width:65px;
-  height:75px;
-  object-fit:contain;
-  background:var(--soft);
-}
-.order-summary-item h4{
-  font-size:10px;
-  text-transform:uppercase;
-}
-.order-summary-item p{
-  margin-top:5px;
-  font-size:9px;
-  opacity:.55;
-}
-.order-summary-price{
-  font-size:10px;
-  font-weight:900;
-}
-.order-total{
   display:flex;
   justify-content:space-between;
-  padding:20px 14px;
-  font-size:13px;
-  font-weight:900;
+  gap:20px;
+  padding:14px 0;
+  border-bottom:1px solid #ddd;
+  font-size:11px;
+}
+.order-summary-item:last-child{
+  border-bottom:0;
+}
+.order-summary-item strong{
+  display:block;
+  font-size:10px;
   text-transform:uppercase;
+}
+.order-summary-item span{
+  display:block;
+  margin-top:4px;
+  opacity:.6;
+  font-size:9px;
+}
+.order-summary-price{
+  white-space:nowrap;
+  font-weight:800;
 }
 .place-order{
   width:100%;
-  margin-top:25px;
-  padding:18px;
+  margin-top:20px;
+  padding:17px;
   border:0;
   background:#111;
   color:#fff;
@@ -826,74 +853,67 @@ footer{
   letter-spacing:1.5px;
   text-transform:uppercase;
 }
-.place-order:hover{
-  background:#333;
-}
 .checkout-note{
-  margin-top:12px;
+  margin-top:16px;
   font-size:9px;
-  line-height:1.5;
+  line-height:1.6;
   opacity:.55;
 }
 .checkout-close{
   position:absolute;
+  top:16px;
   right:20px;
-  top:15px;
+  z-index:2;
   border:0;
   background:none;
   color:#fff;
   font-size:25px;
-  z-index:3;
 }
-
-/* SUCCESS */
 .success-screen{
+  padding:55px 20px;
   text-align:center;
-  padding:70px 40px;
 }
 .success-icon{
-  width:65px;
-  height:65px;
+  width:55px;
+  height:55px;
   margin:0 auto 25px;
+  border:1px solid #111;
   border-radius:50%;
-  background:#111;
-  color:#fff;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:25px;
+  font-weight:900;
 }
 .success-screen h2{
-  font-size:clamp(40px,7vw,70px);
+  font-size:55px;
   line-height:.85;
   letter-spacing:-.07em;
   text-transform:uppercase;
 }
-.success-screen p{
-  max-width:450px;
+.success-screen > p{
+  max-width:430px;
   margin:25px auto;
   font-size:13px;
-  line-height:1.7;
+  line-height:1.6;
   opacity:.65;
 }
 .success-order{
-  max-width:500px;
-  margin:30px auto;
+  max-width:450px;
+  margin:25px auto;
   padding:20px;
-  background:#fff;
-  border:1px solid #ddd;
+  background:#e8e7e2;
   text-align:left;
   font-size:11px;
-  line-height:1.8;
+  line-height:1.6;
 }
 .success-actions{
   display:flex;
-  gap:10px;
   justify-content:center;
+  gap:10px;
   flex-wrap:wrap;
 }
 .success-actions button{
-  padding:15px 20px;
+  padding:14px 20px;
   border:1px solid #111;
   background:#111;
   color:#fff;
@@ -907,7 +927,6 @@ footer{
   color:#111;
 }
 
-/* RESPONSIVE */
 @media(max-width:800px){
   .navbar{
     height:70px;
@@ -1004,15 +1023,7 @@ footer{
   .bag-panel{
     width:100%;
   }
-  .checkout-grid{
-    grid-template-columns:1fr;
-  }
-  .checkout-header,
-  .checkout-body{
-    padding:30px;
-  }
 }
-
 @media(max-width:500px){
   .products{
     grid-template-columns:1fr;
@@ -1025,1343 +1036,368 @@ footer{
     flex-direction:column;
     gap:8px;
   }
-  .checkout-header,
-  .checkout-body{
-    padding:25px 20px;
-  }
-  .success-screen{
-    padding:55px 20px;
-  }
 }
 </style>
 </head>
-
 <body>
-
-<nav class="navbar">
-  <a href="#top" class="logo">NSP</a>
-
-  <ul class="nav-links" id="navLinks">
-    <li><a href="#shop">Shop</a></li>
-    <li><a href="#collection-316">316</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-
-  <button class="bag-button" id="bagButton">
-    Bag <span class="bag-count" id="bagCount">0</span>
-  </button>
-
-  <button class="menu-btn" id="menuBtn">☰</button>
-</nav>
-
+<nav class="navbar"><a href="#top" class="logo">NSP</a><ul class="nav-links" id="navLinks"><li><a href="#shop">Shop</a></li><li><a href="#collection-316">316</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul><button class="bag-button" id="bagButton">Bag <span class="bag-count" id="bagCount">0</span></button><button class="menu-btn" id="menuBtn">☰</button></nav>
 <main id="top">
-
-<header class="hero">
-  <div class="eyebrow">None Shall Perish — Est. 2026</div>
-
-  <h1>
-    None<br>
-    Shall<br>
-    Perish
-  </h1>
-
-  <div class="hero-bottom">
-    <p class="hero-copy">
-      Christian streetwear created for people who carry their faith beyond the walls of the church.
-    </p>
-
-    <a class="button" href="#shop">
-      Explore Collection →
-    </a>
-  </div>
-</header>
-
-<div class="marquee">
-  <div class="marquee-track">
-    <span>Faith Over Fear</span>
-    <span>None Shall Perish</span>
-    <span>John 3:16</span>
-    <span>Made For The Called</span>
-    <span>Faith Over Fear</span>
-    <span>None Shall Perish</span>
-    <span>John 3:16</span>
-    <span>Made For The Called</span>
-  </div>
-</div>
-
-<section class="section" id="shop">
-
-  <div class="section-head">
-    <div>
-      <div class="label">01 — Featured</div>
-      <h2 class="section-title">Shop NSP</h2>
-    </div>
-
-    <a href="#shop" class="text-link">
-      View Collection →
-    </a>
-  </div>
-
-  <div class="products" id="products"></div>
-
-</section>
-
-<section class="collection" id="collection-316">
-
-  <div class="collection-copy">
-
-    <div class="collection-number">
-      02 — Collection 316
-    </div>
-
-    <h2>316</h2>
-
-    <p>
-      Inspired by John 3:16 — a collection built around the message that God's love gives us hope beyond this life. Wear the message. Live the message. Share the message.
-    </p>
-
-    <button class="outline-button" onclick="document.getElementById('shop').scrollIntoView()">
-      Shop 316 →
-    </button>
-
-  </div>
-
-  <div class="collection-image">
-    <img src="/2.png" alt="NSP 316 Collection">
-  </div>
-
-</section>
-
-<section class="statement">
-
-  <div class="label">
-    Our Foundation
-  </div>
-
-  <p class="statement-text">
-    “For God so loved the world that He gave His one and only Son, that whoever believes in Him shall not perish but have eternal life.”
-  </p>
-
-  <div class="reference">
-    John 3:16
-  </div>
-
-</section>
-
-<section class="section" id="about">
-
-  <div class="about">
-
-    <h2>
-      Built<br>
-      On<br>
-      Faith.
-    </h2>
-
-    <div class="about-copy">
-
-      <p>
-        None Shall Perish is a Christian streetwear brand built around one simple message: your faith should be lived, not hidden.
-      </p>
-
-      <p>
-        NSP exists to create clothing that carries meaning — pieces that remind us of the Gospel, our identity in Christ, and the purpose we are called to live.
-      </p>
-
-      <p>
-        Wear the message. Live the message. Share the message.
-      </p>
-
-    </div>
-
-  </div>
-
-</section>
-
-<section class="social" id="contact">
-
-  <h2>
-    Follow<br>
-    The Journey.
-  </h2>
-
-  <p>
-    Join the NSP community and follow our latest drops, stories, and collections.
-  </p>
-
-  <a href="#" class="outline-button">
-    Instagram →
-  </a>
-
-</section>
-
+<header class="hero"><div class="eyebrow">None Shall Perish — Est. 2026</div><h1>None<br>Shall<br>Perish</h1><div class="hero-bottom"><p class="hero-copy">Christian streetwear created for people who carry their faith beyond the walls of the church.</p><a class="button" href="#shop">Explore Collection →</a></div></header>
+<div class="marquee"><div class="marquee-track"><span>Faith Over Fear</span><span>None Shall Perish</span><span>John 3:16</span><span>Made For The Called</span><span>Faith Over Fear</span><span>None Shall Perish</span><span>John 3:16</span><span>Made For The Called</span></div></div>
+<section class="section" id="shop"><div class="section-head"><div><div class="label">01 — Featured</div><h2 class="section-title">Shop NSP</h2></div><a href="#shop" class="text-link">View Collection →</a></div><div class="products" id="products"></div></section>
+<section class="collection" id="collection-316"><div class="collection-copy"><div class="collection-number">02 — Collection 316</div><h2>316</h2><p>Inspired by John 3:16 — a collection built around the message that God's love gives us hope beyond this life. Wear the message. Live the message. Share the message.</p><button class="outline-button" onclick="document.getElementById('shop').scrollIntoView()">Shop 316 →</button></div><div class="collection-image"><img src="/2.png" alt="NSP 316 Collection"></div></section>
+<section class="statement"><div class="label">Our Foundation</div><p class="statement-text">“For God so loved the world that He gave His one and only Son, that whoever believes in Him shall not perish but have eternal life.”</p><div class="reference">John 3:16</div></section>
+<section class="section" id="about"><div class="about"><h2>Built<br>On<br>Faith.</h2><div class="about-copy"><p>None Shall Perish is a Christian streetwear brand built around one simple message: your faith should be lived, not hidden.</p><p>NSP exists to create clothing that carries meaning — pieces that remind us of the Gospel, our identity in Christ, and the purpose we are called to live.</p><p>Wear the message. Live the message. Share the message.</p></div></div></section>
+<section class="social" id="contact"><h2>Follow<br>The Journey.</h2><p>Join the NSP community and follow our latest drops, stories, and collections.</p><a href="#" class="outline-button">Instagram →</a></section>
 </main>
-
-<footer>
-
-  <div class="footer-top">
-
-    <div class="footer-logo">
-      NSP
-    </div>
-
-    <div class="footer-links">
-
-      <div class="footer-column">
-
-        <h4>Navigate</h4>
-
-        <a href="#shop">Shop</a>
-        <a href="#collection-316">316</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-
-      </div>
-
-      <div class="footer-column">
-
-        <h4>Social</h4>
-
-        <a href="#">Instagram</a>
-        <a href="#">Facebook</a>
-        <a href="#">TikTok</a>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <div class="footer-bottom">
-
-    <span>
-      © 2026 None Shall Perish
-    </span>
-
-    <span>
-      Faith. Purpose. Eternity.
-    </span>
-
-  </div>
-
-</footer>
-
+<footer><div class="footer-top"><div class="footer-logo">NSP</div><div class="footer-links"><div class="footer-column"><h4>Navigate</h4><a href="#shop">Shop</a><a href="#collection-316">316</a><a href="#about">About</a><a href="#contact">Contact</a></div><div class="footer-column"><h4>Social</h4><a href="#">Instagram</a><a href="#">Facebook</a><a href="#">TikTok</a></div></div></div><div class="footer-bottom"><span>© 2026 None Shall Perish</span><span>Faith. Purpose. Eternity.</span></div></footer>
 
 <!-- PRODUCT MODAL -->
-
 <div class="modal-backdrop" id="modal">
-
   <div class="product-modal">
-
-    <button class="close" id="closeModal">
-      ×
-    </button>
-
-    <div class="modal-image">
-      <img id="modalImage" src="" alt="">
-    </div>
-
+    <button class="close" id="closeModal">×</button>
+    <div class="modal-image"><img id="modalImage" src="" alt=""></div>
     <div class="modal-info">
-
-      <div class="modal-label">
-        NSP Collection
-      </div>
-
+      <div class="modal-label">NSP Collection</div>
       <h2 class="modal-title" id="modalTitle"></h2>
-
       <div class="modal-price" id="modalPrice"></div>
-
-      <p class="modal-description">
-        A statement piece from None Shall Perish. Choose your size before adding it to your bag.
-      </p>
-
-      <div class="size-title">
-        Select Size
-      </div>
-
+      <p class="modal-description">A statement piece from None Shall Perish. Choose your size before adding it to your bag.</p>
+      <div class="size-title">Select Size</div>
       <div class="sizes" id="sizes">
-
-        <button class="size">S</button>
-        <button class="size">M</button>
-        <button class="size">L</button>
-        <button class="size">XL</button>
-        <button class="size">2XL</button>
-        <button class="size">3XL</button>
-
+        <button class="size" data-size="S"><span class="size-label">S</span><span class="size-availability">Checking...</span></button>
+        <button class="size" data-size="M"><span class="size-label">M</span><span class="size-availability">Checking...</span></button>
+        <button class="size" data-size="L"><span class="size-label">L</span><span class="size-availability">Checking...</span></button>
+        <button class="size" data-size="XL"><span class="size-label">XL</span><span class="size-availability">Checking...</span></button>
+        <button class="size" data-size="2XL"><span class="size-label">2XL</span><span class="size-availability">Checking...</span></button>
+        <button class="size" data-size="3XL"><span class="size-label">3XL</span><span class="size-availability">Checking...</span></button>
       </div>
-
-      <button class="add-button" id="addButton">
-        Add to Bag
-      </button>
-
+      <button class="add-button" id="addButton">Add to Bag</button>
     </div>
-
   </div>
-
 </div>
-
 
 <!-- SHOPPING BAG -->
-
 <aside class="bag-panel" id="bagPanel">
-
-  <div class="bag-head">
-
-    <h2>
-      Your Bag
-    </h2>
-
-    <button class="bag-close" id="bagClose">
-      ×
-    </button>
-
-  </div>
-
+  <div class="bag-head"><h2>Your Bag</h2><button class="bag-close" id="bagClose">×</button></div>
   <div id="bagItems"></div>
-
-  <div class="bag-total">
-
-    <span>
-      Total
-    </span>
-
-    <span id="bagTotal">
-      ₱0
-    </span>
-
-  </div>
-
-  <button class="checkout" id="checkout">
-    Checkout
-  </button>
-
+  <div class="bag-total"><span>Total</span><span id="bagTotal">₱0</span></div>
+  <button class="checkout" id="checkout">Checkout</button>
 </aside>
 
-
 <!-- CHECKOUT MODAL -->
-
 <div class="checkout-backdrop" id="checkoutBackdrop">
-
   <div class="checkout-modal">
-
-    <button class="checkout-close" id="checkoutClose">
-      ×
-    </button>
-
-    <div class="checkout-header">
-
-      <div class="label">
-        NSP — Order
-      </div>
-
-      <h2>
-        Checkout
-      </h2>
-
-    </div>
-
-    <div class="checkout-body" id="checkoutBody">
-
+    <button class="checkout-close" id="checkoutClose">×</button>
+    <div class="checkout-header"><div class="label">NSP — Order</div><h2>Checkout</h2></div>
+    <div class="checkout-body">
       <div class="checkout-grid">
-
-        <!-- CUSTOMER DETAILS -->
-
         <div>
-
-          <div class="checkout-section-title">
-            Customer Details
-          </div>
-
+          <div class="checkout-section-title">Customer Information</div>
           <form id="checkoutForm">
-
-            <div class="form-group">
-
-              <label for="customerName">
-                Full Name
-              </label>
-
-              <input
-                type="text"
-                id="customerName"
-                required
-                placeholder="Your full name"
-              >
-
-            </div>
-
-            <div class="form-group">
-
-              <label for="customerPhone">
-                Phone Number
-              </label>
-
-              <input
-                type="tel"
-                id="customerPhone"
-                required
-                placeholder="09XXXXXXXXX"
-              >
-
-            </div>
-
-            <div class="form-group">
-
-              <label for="customerEmail">
-                Email
-              </label>
-
-              <input
-                type="email"
-                id="customerEmail"
-                required
-                placeholder="you@example.com"
-              >
-
-            </div>
-
-            <div class="form-group">
-
-              <label for="customerAddress">
-                Complete Address
-              </label>
-
-              <textarea
-                id="customerAddress"
-                required
-                placeholder="House/Unit, Street, Barangay, City, Province"
-              ></textarea>
-
-            </div>
-
+            <div class="form-group"><label for="customerName">Full Name</label><input type="text" id="customerName" required placeholder="Your full name"></div>
+            <div class="form-group"><label for="customerPhone">Phone Number</label><input type="tel" id="customerPhone" required placeholder="09XXXXXXXXX"></div>
+            <div class="form-group"><label for="customerEmail">Email</label><input type="email" id="customerEmail" required placeholder="you@example.com"></div>
+            <div class="form-group"><label for="customerAddress">Complete Address</label><textarea id="customerAddress" required placeholder="House/Unit, Street, Barangay, City, Province"></textarea></div>
           </form>
-
         </div>
-
-
-        <!-- ORDER SUMMARY -->
-
         <div>
-
-          <div class="checkout-section-title">
-            Order Summary
-          </div>
-
+          <div class="checkout-section-title">Order Summary</div>
           <div class="order-summary" id="checkoutItems"></div>
-
-          <button
-            type="submit"
-            form="checkoutForm"
-            class="place-order"
-          >
-            Place Order
-          </button>
-
-          <p class="checkout-note">
-            After placing your order, you'll receive an order confirmation with your order details. NSP can then confirm availability, shipping, and payment instructions with you.
-          </p>
-
+          <button type="submit" form="checkoutForm" class="place-order">Place Order</button>
+          <p class="checkout-note">After placing your order, you'll receive an order confirmation with your order details. NSP can then confirm availability, shipping, and payment instructions with you.</p>
         </div>
-
       </div>
-
     </div>
-
   </div>
-
 </div>
 
-
 <script>
-
 const products = [
-
-  {
-    name:'NSP Collection 01',
-    price:490,
-    image:'/2.png'
-  },
-
-  {
-    name:'NSP Collection 02',
-    price:490,
-    image:'/3.png'
-  },
-
-  {
-    name:'NSP Collection 03',
-    price:490,
-    image:'/4.png'
-  },
-
-  {
-    name:'NSP Collection 04',
-    price:490,
-    image:'/5.png'
-  },
-
-  {
-    name:'NSP Collection 05',
-    price:490,
-    image:'/6.png'
-  },
-
-  {
-    name:'NSP Collection 06',
-    price:490,
-    image:'/7.png'
-  }
-
+  {name:'NSP Collection 01',price:490,image:'/2.png'},
+  {name:'NSP Collection 02',price:490,image:'/3.png'},
+  {name:'NSP Collection 03',price:490,image:'/4.png'},
+  {name:'NSP Collection 04',price:490,image:'/5.png'},
+  {name:'NSP Collection 05',price:490,image:'/6.png'},
+  {name:'NSP Collection 06',price:490,image:'/7.png'}
 ];
 
-
-const productsEl =
-  document.getElementById('products');
-
-const modal =
-  document.getElementById('modal');
-
-const modalImage =
-  document.getElementById('modalImage');
-
-const modalTitle =
-  document.getElementById('modalTitle');
-
-const modalPrice =
-  document.getElementById('modalPrice');
-
-const sizes =
-  document.getElementById('sizes');
-
-const bagPanel =
-  document.getElementById('bagPanel');
-
-const checkoutBackdrop =
-  document.getElementById('checkoutBackdrop');
-
+const productsEl = document.getElementById('products');
+const modal = document.getElementById('modal');
+const modalImage = document.getElementById('modalImage');
+const modalTitle = document.getElementById('modalTitle');
+const modalPrice = document.getElementById('modalPrice');
+const sizes = document.getElementById('sizes');
+const bagPanel = document.getElementById('bagPanel');
+const checkoutBackdrop = document.getElementById('checkoutBackdrop');
 
 let selectedProduct = null;
 let selectedSize = '';
+let inventory = {};
+let inventoryLoaded = false;
+const INVENTORY_SIZES = ['S','M','L','XL','2XL','3XL'];
 
-let bag =
-  JSON.parse(
-    localStorage.getItem('nspBag') || '[]'
-  );
+let bag = JSON.parse(localStorage.getItem('nspBag') || '[]');
 
+/* LIVE INVENTORY */
+async function loadInventory(){
+  try{
+    const response = await fetch('/api/inventory', {method:'GET',cache:'no-store'});
+    const result = await response.json();
+    if(!response.ok || !result.ok) throw new Error(result.error || 'Unable to load inventory.');
+
+    inventory = {};
+    (result.inventory || []).forEach(item => {
+      inventory[item.product] = {};
+      INVENTORY_SIZES.forEach(size => {
+        inventory[item.product][size] = Number(item.sizes?.[size]) || 0;
+      });
+    });
+    inventoryLoaded = true;
+    updateSizeAvailability();
+  }catch(error){
+    console.error('NSP inventory error:', error);
+    inventoryLoaded = false;
+    sizes.querySelectorAll('.size').forEach(button => {
+      button.disabled = false;
+      button.classList.remove('out-of-stock');
+      const availability = button.querySelector('.size-availability');
+      if(availability) availability.textContent = 'Check at checkout';
+    });
+  }
+}
+
+function getStock(productName,size){
+  return Number(inventory?.[productName]?.[size]) || 0;
+}
+
+function getBagQuantity(productName,size){
+  return bag.filter(item => item.name === productName && String(item.size).toUpperCase() === String(size).toUpperCase()).length;
+}
+
+function updateSizeAvailability(){
+  sizes.querySelectorAll('.size').forEach(button => {
+    const size = button.dataset.size;
+    const availability = button.querySelector('.size-availability');
+    const stock = selectedProduct ? getStock(selectedProduct.name,size) : 0;
+
+    button.classList.remove('out-of-stock');
+    button.disabled = false;
+
+    if(!inventoryLoaded){
+      if(availability) availability.textContent = 'Checking...';
+      return;
+    }
+
+    if(stock <= 0){
+      button.disabled = true;
+      button.classList.add('out-of-stock');
+      if(availability) availability.textContent = 'Out of stock';
+    }else if(availability){
+      availability.textContent = stock === 1 ? '1 left' : `${stock} left`;
+    }
+  });
+
+  if(selectedSize){
+    const selectedButton = sizes.querySelector(`.size[data-size="${selectedSize}"]`);
+    if(!selectedButton || selectedButton.disabled) selectedSize = '';
+  }
+}
 
 /* PRODUCTS */
-
-productsEl.innerHTML =
-  products.map((p,i)=>`
-
-    <article
-      class="product"
-      data-index="${i}"
-    >
-
-      <div class="product-image">
-
-        <img
-          src="${p.image}"
-          alt="${p.name}"
-          loading="lazy"
-        >
-
-      </div>
-
-      <div class="product-info">
-
-        <span class="product-name">
-          ${p.name}
-        </span>
-
-        <span class="product-price">
-          ₱${p.price}
-        </span>
-
-      </div>
-
-      <button class="product-cta">
-        View Product
-      </button>
-
-    </article>
-
-  `).join('');
-
+productsEl.innerHTML = products.map((p,i)=>`
+  <article class="product" data-index="${i}">
+    <div class="product-image"><img src="${p.image}" alt="${p.name}" loading="lazy"></div>
+    <div class="product-info"><span class="product-name">${p.name}</span><span class="product-price">₱${p.price}</span></div>
+    <button class="product-cta">View Product</button>
+  </article>
+`).join('');
 
 /* OPEN PRODUCT */
-
 function openProduct(i){
-
-  selectedProduct =
-    products[i];
-
+  selectedProduct = products[i];
   selectedSize = '';
-
-  modalImage.src =
-    selectedProduct.image;
-
-  modalImage.alt =
-    selectedProduct.name;
-
-  modalTitle.textContent =
-    selectedProduct.name;
-
-  modalPrice.textContent =
-    `₱${selectedProduct.price}`;
-
-  sizes
-    .querySelectorAll('.size')
-    .forEach(b =>
-      b.classList.remove('selected')
-    );
-
+  modalImage.src = selectedProduct.image;
+  modalImage.alt = selectedProduct.name;
+  modalTitle.textContent = selectedProduct.name;
+  modalPrice.textContent = `₱${selectedProduct.price}`;
+  sizes.querySelectorAll('.size').forEach(b=>b.classList.remove('selected'));
+  updateSizeAvailability();
   modal.classList.add('open');
-
+  loadInventory();
 }
-
 
 /* PRODUCT CLICK */
-
-productsEl.addEventListener(
-  'click',
-  e => {
-
-    const card =
-      e.target.closest('.product');
-
-    if(card){
-
-      openProduct(
-        Number(card.dataset.index)
-      );
-
-    }
-
-  }
-);
-
+productsEl.addEventListener('click',e=>{
+  const card = e.target.closest('.product');
+  if(card) openProduct(Number(card.dataset.index));
+});
 
 /* SIZE SELECT */
-
-sizes.addEventListener(
-  'click',
-  e => {
-
-    if(
-      e.target.classList.contains('size')
-    ){
-
-      sizes
-        .querySelectorAll('.size')
-        .forEach(b =>
-          b.classList.remove('selected')
-        );
-
-      e.target.classList.add('selected');
-
-      selectedSize =
-        e.target.textContent;
-
-    }
-
+sizes.addEventListener('click',e=>{
+  if(e.target.classList.contains('size') || e.target.closest('.size')){
+    const button = e.target.closest('.size');
+    if(!button || button.disabled) return;
+    sizes.querySelectorAll('.size').forEach(b=>b.classList.remove('selected'));
+    button.classList.add('selected');
+    selectedSize = button.dataset.size;
   }
-);
-
+});
 
 /* ADD TO BAG */
+document.getElementById('addButton').onclick=()=>{
+  if(!selectedSize){
+    alert('Please select an available size.');
+    return;
+  }
 
-document
-  .getElementById('addButton')
-  .onclick = () => {
-
-    if(!selectedSize){
-
-      alert(
-        'Please select a size.'
-      );
-
+  if(inventoryLoaded){
+    const stock = getStock(selectedProduct.name,selectedSize);
+    const alreadyInBag = getBagQuantity(selectedProduct.name,selectedSize);
+    if(stock <= alreadyInBag){
+      alert(stock <= 0 ? 'This size is out of stock.' : `Only ${stock} available for Size ${selectedSize}.`);
+      loadInventory();
       return;
-
     }
+  }
 
-    bag.push({
-      ...selectedProduct,
-      size:selectedSize
-    });
-
-    localStorage.setItem(
-      'nspBag',
-      JSON.stringify(bag)
-    );
-
-    modal.classList.remove('open');
-
-    renderBag();
-
-    bagPanel.classList.add('open');
-
-  };
-
+  bag.push({...selectedProduct,size:selectedSize});
+  localStorage.setItem('nspBag',JSON.stringify(bag));
+  modal.classList.remove('open');
+  renderBag();
+  bagPanel.classList.add('open');
+};
 
 /* CLOSE PRODUCT MODAL */
-
-document
-  .getElementById('closeModal')
-  .onclick = () =>
-    modal.classList.remove('open');
-
-
-modal.addEventListener(
-  'click',
-  e => {
-
-    if(e.target === modal){
-
-      modal.classList.remove('open');
-
-    }
-
-  }
-);
-
+document.getElementById('closeModal').onclick=()=>modal.classList.remove('open');
+modal.addEventListener('click',e=>{if(e.target===modal) modal.classList.remove('open')});
 
 /* RENDER BAG */
-
 function renderBag(){
-
-  document.getElementById(
-    'bagCount'
-  ).textContent =
-    bag.length;
-
-
-  const el =
-    document.getElementById(
-      'bagItems'
-    );
-
-
+  document.getElementById('bagCount').textContent=bag.length;
+  const el=document.getElementById('bagItems');
   if(!bag.length){
-
-    el.innerHTML =
-      '<p class="empty">Your bag is empty.</p>';
-
-    document.getElementById(
-      'bagTotal'
-    ).textContent =
-      '₱0';
-
+    el.innerHTML='<p class="empty">Your bag is empty.</p>';
+    document.getElementById('bagTotal').textContent='₱0';
     return;
-
   }
-
-
-  el.innerHTML =
-    bag.map((p,i)=>`
-
-      <div class="bag-item">
-
-        <img
-          src="${p.image}"
-          alt="${p.name}"
-        >
-
-        <div>
-
-          <h4>
-            ${p.name}
-          </h4>
-
-          <p>
-            Size ${p.size} · ₱${p.price}
-          </p>
-
-        </div>
-
-        <button
-          class="remove"
-          data-remove="${i}"
-        >
-          Remove
-        </button>
-
-      </div>
-
-    `).join('');
-
-
-  document.getElementById(
-    'bagTotal'
-  ).textContent =
-    '₱' +
-    bag.reduce(
-      (s,p) => s + p.price,
-      0
-    );
-
+  el.innerHTML=bag.map((p,i)=>`
+    <div class="bag-item">
+      <img src="${p.image}" alt="${p.name}">
+      <div><h4>${p.name}</h4><p>Size ${p.size} · ₱${p.price}</p></div>
+      <button class="remove" data-remove="${i}">Remove</button>
+    </div>
+  `).join('');
+  document.getElementById('bagTotal').textContent='₱'+bag.reduce((s,p)=>s+p.price,0);
 }
 
+document.getElementById('bagItems').addEventListener('click',e=>{
+  if(e.target.dataset.remove!==undefined){
+    bag.splice(Number(e.target.dataset.remove),1);
+    localStorage.setItem('nspBag',JSON.stringify(bag));
+    renderBag();
+  }
+});
 
-/* REMOVE BAG ITEM */
-
-document
-  .getElementById('bagItems')
-  .addEventListener(
-    'click',
-    e => {
-
-      if(
-        e.target.dataset.remove !== undefined
-      ){
-
-        bag.splice(
-          Number(
-            e.target.dataset.remove
-          ),
-          1
-        );
-
-        localStorage.setItem(
-          'nspBag',
-          JSON.stringify(bag)
-        );
-
-        renderBag();
-
-      }
-
-    }
-  );
-
-
-/* OPEN BAG */
-
-document
-  .getElementById('bagButton')
-  .onclick = () =>
-    bagPanel.classList.add('open');
-
-
-/* CLOSE BAG */
-
-document
-  .getElementById('bagClose')
-  .onclick = () =>
-    bagPanel.classList.remove('open');
-
+document.getElementById('bagButton').onclick=()=>bagPanel.classList.add('open');
+document.getElementById('bagClose').onclick=()=>bagPanel.classList.remove('open');
 
 /* CHECKOUT */
+document.getElementById('checkout').onclick=()=>{
+  if(!bag.length){alert('Your bag is empty.');return;}
+  const checkoutItems=document.getElementById('checkoutItems');
+  checkoutItems.innerHTML=bag.map(p=>`
+    <div class="order-summary-item">
+      <div><strong>${p.name}</strong><span>Size ${p.size}</span></div>
+      <div class="order-summary-price">₱${p.price}</div>
+    </div>
+  `).join('');
+  checkoutBackdrop.classList.add('open');
+};
 
-document
-  .getElementById('checkout')
-  .onclick = () => {
+document.getElementById('checkoutClose').onclick=()=>checkoutBackdrop.classList.remove('open');
+checkoutBackdrop.addEventListener('click',e=>{if(e.target===checkoutBackdrop) checkoutBackdrop.classList.remove('open')});
 
-    if(!bag.length){
+document.getElementById('checkoutForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!bag.length){alert('Your bag is empty.');return;}
 
-      alert(
-        'Your bag is empty.'
-      );
-
-      return;
-
-    }
-
-    renderCheckout();
-
-    checkoutBackdrop.classList.add(
-      'open'
-    );
-
+  const submitButton=document.querySelector('.place-order');
+  const customer={
+    name:document.getElementById('customerName').value.trim(),
+    phone:document.getElementById('customerPhone').value.trim(),
+    email:document.getElementById('customerEmail').value.trim(),
+    address:document.getElementById('customerAddress').value.trim()
   };
 
+  const total=bag.reduce((sum,item)=>sum+Number(item.price||0),0);
+  const orderNumber='NSP-'+new Date().getFullYear()+'-'+Math.floor(1000+Math.random()*9000);
+  const orderItems=bag.map(item=>`${item.name} | Size ${item.size} | ₱${item.price}`).join('\n');
+  const orderText=`NSP ORDER\n\nOrder Number: ${orderNumber}\nName: ${customer.name}\nPhone: ${customer.phone}\nEmail: ${customer.email}\nAddress: ${customer.address}\n\nORDER\n${orderItems}\n\nTOTAL: ₱${total}`;
 
-/* RENDER CHECKOUT */
+  if(submitButton){submitButton.disabled=true;submitButton.textContent='Saving Order...';}
 
-function renderCheckout(){
+  try{
+    const response=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderNumber,customer,items:[...bag],total})});
+    const result=await response.json();
+    if(!response.ok || !result.ok) throw new Error(result.error||'Unable to save the order.');
 
-  const checkoutItems =
-    document.getElementById(
-      'checkoutItems'
-    );
-
-
-  checkoutItems.innerHTML =
-    bag.map(p=>`
-
-      <div class="order-summary-item">
-
-        <img
-          src="${p.image}"
-          alt="${p.name}"
-        >
-
-        <div>
-
-          <h4>
-            ${p.name}
-          </h4>
-
-          <p>
-            Size ${p.size}
-          </p>
-
-        </div>
-
-        <div class="order-summary-price">
-          ₱${p.price}
-        </div>
-
-      </div>
-
-    `).join('');
-
-
-  const total =
-    bag.reduce(
-      (sum,p) =>
-        sum + p.price,
-      0
-    );
-
-
-  checkoutItems.innerHTML += `
-
-    <div class="order-total">
-
-      <span>
-        Total
-      </span>
-
-      <span>
-        ₱${total}
-      </span>
-
-    </div>
-
-  `;
-
-}
-
-
-/* CLOSE CHECKOUT */
-
-document
-  .getElementById('checkoutClose')
-  .onclick = () =>
-    checkoutBackdrop.classList.remove(
-      'open'
-    );
-
-
-checkoutBackdrop.addEventListener(
-  'click',
-  e => {
-
-    if(
-      e.target === checkoutBackdrop
-    ){
-
-      checkoutBackdrop.classList.remove(
-        'open'
-      );
-
-    }
-
+    localStorage.setItem('nspLastOrder',JSON.stringify({orderNumber,customer,items:[...bag],total,orderText}));
+    showSuccess(orderNumber,customer,total,orderText);
+    bag=[];
+    localStorage.setItem('nspBag',JSON.stringify(bag));
+    renderBag();
+  }catch(error){
+    console.error('NSP order submission error:',error);
+    alert(error.message||'We could not save your order right now. Please try again.');
+    if(submitButton){submitButton.disabled=false;submitButton.textContent='Place Order';}
   }
-);
-
-
-/* CREATE ORDER NUMBER */
-
-function createOrderNumber(){
-
-  const date =
-    new Date();
-
-  const random =
-    Math.floor(
-      1000 +
-      Math.random() * 9000
-    );
-
-  return `NSP-${date.getFullYear()}-${random}`;
-
-}
-
-
-/* SUBMIT ORDER */
-
-document
-  .getElementById('checkoutForm')
-  .addEventListener(
-    'submit',
-    async e => {
-
-      e.preventDefault();
-
-      if(!bag.length){
-
-        alert(
-          'Your bag is empty.'
-        );
-
-        return;
-
-      }
-
-      const customer = {
-
-        name:
-          document
-            .getElementById(
-              'customerName'
-            )
-            .value
-            .trim(),
-
-        phone:
-          document
-            .getElementById(
-              'customerPhone'
-            )
-            .value
-            .trim(),
-
-        email:
-          document
-            .getElementById(
-              'customerEmail'
-            )
-            .value
-            .trim(),
-
-        address:
-          document
-            .getElementById(
-              'customerAddress'
-            )
-            .value
-            .trim()
-
-      };
-
-      const orderNumber =
-        createOrderNumber();
-
-      const total =
-        bag.reduce(
-          (sum,p) =>
-            sum + p.price,
-          0
-        );
-
-      const orderItems =
-        bag.map(
-          p =>
-            `${p.name} — Size ${p.size} — ₱${p.price}`
-        ).join('\n');
-
-      const orderText =
-
-`NSP ORDER
-
-Order Number: ${orderNumber}
-
-CUSTOMER
-Name: ${customer.name}
-Phone: ${customer.phone}
-Email: ${customer.email}
-Address: ${customer.address}
-
-ORDER
-${orderItems}
-
-TOTAL: ₱${total}`;
-
-      const submitButton =
-        document.querySelector(
-          '.place-order'
-        );
-
-      if(submitButton){
-
-        submitButton.disabled = true;
-
-        submitButton.textContent =
-          'Saving Order...';
-
-      }
-
-      try{
-
-        const response =
-          await fetch(
-            '/api/orders',
-            {
-              method:'POST',
-
-              headers:{
-                'Content-Type':
-                  'application/json'
-              },
-
-              body:
-                JSON.stringify({
-                  orderNumber,
-                  customer,
-                  items:[...bag],
-                  total
-                })
-            }
-          );
-
-        const result =
-          await response.json();
-
-        if(
-          !response.ok ||
-          !result.ok
-        ){
-
-          throw new Error(
-            result.error ||
-            'Unable to save the order.'
-          );
-
-        }
-
-        localStorage.setItem(
-          'nspLastOrder',
-          JSON.stringify({
-            orderNumber,
-            customer,
-            items:[...bag],
-            total,
-            orderText
-          })
-        );
-
-        showSuccess(
-          orderNumber,
-          customer,
-          total,
-          orderText
-        );
-
-        bag = [];
-
-        localStorage.setItem(
-          'nspBag',
-          JSON.stringify(bag)
-        );
-
-        renderBag();
-
-      }catch(error){
-
-        console.error(
-          'NSP order submission error:',
-          error
-        );
-
-        alert(
-          'We could not save your order right now. Please try again.'
-        );
-
-        if(submitButton){
-
-          submitButton.disabled = false;
-
-          submitButton.textContent =
-            'Place Order';
-
-        }
-
-      }
-
-    }
-  );
-
+});
 
 /* SUCCESS SCREEN */
-
-function showSuccess(
-  orderNumber,
-  customer,
-  total,
-  orderText
-){
-
-  const body =
-    document.getElementById(
-      'checkoutBody'
-    );
-
-
-  body.innerHTML = `
-
+function showSuccess(orderNumber,customer,total,orderText){
+  const body=document.getElementById('checkoutBackdrop').querySelector('.checkout-body');
+  body.innerHTML=`
     <div class="success-screen">
-
-      <div class="success-icon">
-        ✓
-      </div>
-
-      <h2>
-        Order<br>
-        Received.
-      </h2>
-
-      <p>
-        Thank you, ${escapeHtml(customer.name)}.
-        Your NSP order has been prepared successfully.
-      </p>
-
+      <div class="success-icon">✓</div>
+      <h2>Order<br>Received.</h2>
+      <p>Thank you, ${escapeHtml(customer.name)}. Your NSP order has been prepared successfully.</p>
       <div class="success-order">
-
-        <strong>
-          Order ${orderNumber}
-        </strong>
-
-        <br><br>
-
-        <strong>
-          Customer:
-        </strong>
-        ${escapeHtml(customer.name)}
-
-        <br>
-
-        <strong>
-          Phone:
-        </strong>
-        ${escapeHtml(customer.phone)}
-
-        <br>
-
-        <strong>
-          Total:
-        </strong>
-        ₱${total}
-
-        <br><br>
-
-        NSP will confirm your order,
-        availability, shipping, and payment
-        details with you.
-
+        <strong>Order ${orderNumber}</strong><br><br>
+        <strong>Customer:</strong> ${escapeHtml(customer.name)}<br>
+        <strong>Phone:</strong> ${escapeHtml(customer.phone)}<br>
+        <strong>Total:</strong> ₱${total}<br><br>
+        NSP will confirm your order, availability, shipping, and payment details with you.
       </div>
-
       <div class="success-actions">
-
-        <button
-          id="copyOrder"
-        >
-          Copy Order Details
-        </button>
-
-        <button
-          class="secondary"
-          id="finishOrder"
-        >
-          Continue Shopping
-        </button>
-
+        <button id="copyOrder">Copy Order Details</button>
+        <button class="secondary" id="finishOrder">Continue Shopping</button>
       </div>
+    </div>`;
 
-    </div>
+  document.getElementById('copyOrder').onclick=async()=>{
+    try{
+      await navigator.clipboard.writeText(orderText);
+      document.getElementById('copyOrder').textContent='Copied ✓';
+    }catch{
+      alert('Unable to copy automatically. Please use the order information shown on screen.');
+    }
+  };
 
-  `;
-
-
-  document
-    .getElementById('copyOrder')
-    .onclick = async () => {
-
-      try{
-
-        await navigator.clipboard.writeText(
-          orderText
-        );
-
-        document
-          .getElementById(
-            'copyOrder'
-          )
-          .textContent =
-          'Copied ✓';
-
-      }catch{
-
-        alert(
-          'Unable to copy automatically. Please use the order information shown on screen.'
-        );
-
-      }
-
-    };
-
-
-  document
-    .getElementById('finishOrder')
-    .onclick = () => {
-
-      checkoutBackdrop.classList.remove(
-        'open'
-      );
-
-      location.reload();
-
-    };
-
+  document.getElementById('finishOrder').onclick=()=>location.reload();
 }
-
 
 /* BASIC HTML ESCAPE */
-
 function escapeHtml(value){
-
-  return value
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#039;');
-
+  return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 }
 
-
 /* MOBILE MENU */
-
-document
-  .getElementById('menuBtn')
-  .onclick = () =>
-    document
-      .getElementById('navLinks')
-      .classList.toggle('active');
-
-
-document
-  .querySelectorAll('.nav-links a')
-  .forEach(
-    a =>
-      a.onclick = () =>
-        document
-          .getElementById(
-            'navLinks'
-          )
-          .classList.remove(
-            'active'
-          )
-  );
-
+document.getElementById('menuBtn').onclick=()=>document.getElementById('navLinks').classList.toggle('active');
+document.querySelectorAll('.nav-links a').forEach(a=>a.onclick=()=>document.getElementById('navLinks').classList.remove('active'));
 
 /* INITIAL BAG */
-
 renderBag();
-
+loadInventory();
 </script>
-
 </body>
 </html>
