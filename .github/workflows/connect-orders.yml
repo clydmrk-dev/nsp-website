@@ -1,0 +1,226 @@
+name: Connect NSP Checkout to Orders API
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - index.html
+      - .github/workflows/connect-orders.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  connect-orders:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Patch checkout submission
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          start_marker = '/* SUBMIT ORDER */'
+          end_marker = '/* SUCCESS SCREEN */'
+
+          if start_marker not in text or end_marker not in text:
+              raise SystemExit('Checkout markers were not found in index.html.')
+
+          start = text.index(start_marker)
+          end = text.index(end_marker, start)
+
+          new_block = r'''/* SUBMIT ORDER */
+
+document
+  .getElementById('checkoutForm')
+  .addEventListener(
+    'submit',
+    async e => {
+
+      e.preventDefault();
+
+      if(!bag.length){
+
+        alert(
+          'Your bag is empty.'
+        );
+
+        return;
+
+      }
+
+      const customer = {
+
+        name:
+          document
+            .getElementById(
+              'customerName'
+            )
+            .value
+            .trim(),
+
+        phone:
+          document
+            .getElementById(
+              'customerPhone'
+            )
+            .value
+            .trim(),
+
+        email:
+          document
+            .getElementById(
+              'customerEmail'
+            )
+            .value
+            .trim(),
+
+        address:
+          document
+            .getElementById(
+              'customerAddress'
+            )
+            .value
+            .trim()
+
+      };
+
+      const orderNumber =
+        createOrderNumber();
+
+      const total =
+        bag.reduce(
+          (sum,p) =>
+            sum + p.price,
+          0
+        );
+
+      const orderItems =
+        bag.map(
+          p =>
+            `${p.name} — Size ${p.size} — ₱${p.price}`
+        ).join('\\n');
+
+      const orderText =
+
+`NSP ORDER
+
+Order Number: ${orderNumber}
+
+CUSTOMER
+Name: ${customer.name}
+Phone: ${customer.phone}
+Email: ${customer.email}
+Address: ${customer.address}
+
+ORDER
+${orderItems}
+
+TOTAL: ₱${total}`;
+
+      const submitButton =
+        document.querySelector('.place-order');
+
+      if(submitButton){
+        submitButton.disabled = true;
+        submitButton.textContent = 'Saving Order...';
+      }
+
+      try{
+
+        const response =
+          await fetch('/api/orders', {
+            method:'POST',
+            headers:{
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+              orderNumber,
+              customer,
+              items:[...bag],
+              total
+            })
+          });
+
+        const result =
+          await response.json();
+
+        if(!response.ok || !result.ok){
+          throw new Error(
+            result.error ||
+            'Unable to save the order.'
+          );
+        }
+
+        localStorage.setItem(
+          'nspLastOrder',
+          JSON.stringify({
+            orderNumber,
+            customer,
+            items:[...bag],
+            total,
+            orderText
+          })
+        );
+
+        showSuccess(
+          orderNumber,
+          customer,
+          total,
+          orderText
+        );
+
+        bag = [];
+
+        localStorage.setItem(
+          'nspBag',
+          JSON.stringify(bag)
+        );
+
+        renderBag();
+
+      }catch(error){
+
+        console.error('NSP order submission error:', error);
+
+        alert(
+          'We could not save your order right now. Please try again.'
+        );
+
+        if(submitButton){
+          submitButton.disabled = false;
+          submitButton.textContent = 'Place Order';
+        }
+
+      }
+
+    }
+  );
+
+
+'''
+
+          path.write_text(
+              text[:start] + new_block + text[end:],
+              encoding='utf-8'
+          )
+          PY
+
+      - name: Commit checkout connection
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "Checkout is already connected."
+            exit 0
+          fi
+          git commit -m "Connect NSP checkout to order API"
+          git push
