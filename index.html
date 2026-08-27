@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>NSP — None Shall Perish</title>
+  <meta
+    name="description"
+    content="None Shall Perish — Christian streetwear built for faith, purpose, and bold living."
+  />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f5f3;
+      color: #111;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 5%;
+      mix-blend-mode: difference;
+      color: white;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .nav-links a {
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      opacity: 0.55;
+    }
+
+    .menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 24px;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      min-height: 100vh;
+      background: #111;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 150px 5% 55px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 650px;
+      height: 650px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .hero-small {
+      position: relative;
+      z-index: 2;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+      opacity: 0.65;
+    }
+
+    .hero-title {
+      position: relative;
+      z-index: 2;
+      font-size: clamp(70px, 14vw, 210px);
+      line-height: 0.78;
+      font-weight: 900;
+      letter-spacing: -0.08em;
+      text-transform: uppercase;
+      max-width: 1400px;
+    }
+
+    .hero-bottom {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 55px;
+      gap: 40px;
+    }
+
+    .hero-description {
+      max-width: 420px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      color: #111;
+      padding: 17px 28px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: all 0.25s ease;
+    }
+
+    .hero-cta:hover {
+      background: #dcdcdc;
+      transform: translateY(-3px);
+    }
+
+    /* =========================
+       MARQUEE
+    ========================= */
+
+    .marquee {
+      background: #111;
+      color: white;
+      border-top: 1px solid #333;
+      border-bottom: 1px solid #333;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 18px 0;
+    }
+
+    .marquee-track {
+      display: inline-block;
+      animation: marquee 22s linear infinite;
+    }
+
+    .marquee span {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      margin-right: 45px;
+      text-transform: uppercase;
+    }
+
+    @keyframes marquee {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* =========================
+       SECTION
+    ========================= */
+
+    .section {
+      padding: 110px 5%;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 50px;
+      gap: 30px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+      opacity: 0.5;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(42px, 7vw, 90px);
+      line-height: 0.9;
+      letter-spacing: -0.06em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .section-link {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 800;
+      border-bottom: 1px solid #111;
+      padding-bottom: 5px;
+    }
+
+    /* =========================
+       PRODUCTS
+    ========================= */
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .product {
+      cursor: pointer;
+    }
+
+    .product-image {
+      aspect-ratio: 4 / 5;
+      background: #dededb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-image::after {
+      content: "NSP";
+      position: absolute;
+      font-size: clamp(50px, 8vw, 110px);
+      font-weight: 900;
+      letter-spacing: -0.08em;
+      opacity: 0.08;
+    }
+
+    .product-placeholder {
+      position: relative;
+      z-index: 2;
+      width: 42%;
+      height: 55%;
+      background: #111;
+      clip-path: polygon(
+        22% 0%,
+        38% 0%,
+        50% 8%,
+        62% 0%,
+        78% 0%,
+        100% 25%,
+        83% 39%,
+        73% 29%,
+        73% 100%,
+        27% 100%,
+        27% 29%,
+        17% 39%,
+        0% 25%
+      );
+      transition: transform 0.5s ease;
+    }
+
+    .product:hover .product-placeholder {
+      transform: scale(1.05);
+    }
+
+    .product-info {
+      padding-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .product-name {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .product-price {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* =========================
+       COLLECTION
+    ========================= */
+
+    .collection {
+      background: #111;
+      color: white;
+      min-height: 85vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .collection-content {
+      padding: 100px 8%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .collection-number {
+      font-size: 11px;
+      letter-spacing: 3px;
+      opacity: 0.45;
+      margin-bottom: 25px;
+    }
+
+    .collection-title {
+      font-size: clamp(65px, 10vw, 150px);
+      line-height: 0.78;
+      font-weight: 900;
+      letter-spacing: -0.08em;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+    }
+
+    .collection-text {
+      max-width: 400px;
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 35px;
+    }
+
+    .collection-button {
+      width: fit-content;
+      border: 1px solid white;
+      padding: 16px 25px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      transition: all 0.25s ease;
+    }
+
+    .collection-button:hover {
+      background: white;
+      color: #111;
+    }
+
+    .collection-visual {
+      min-height: 600px;
+      background: #dcdcd8;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .collection-visual::before {
+      content: "DISCIPLE";
+      position: absolute;
+      font-size: clamp(70px, 11vw, 180px);
+      line-height: 0.8;
+      font-weight: 900;
+      letter-spacing: -0.08em;
+      color: rgba(17, 17, 17, 0.08);
+      transform: rotate(-90deg);
+      white-space: nowrap;
+    }
+
+    .collection-shirt {
+      width: 45%;
+      height: 58%;
+      background: #111;
+      position: relative;
+      z-index: 2;
+      clip-path: polygon(
+        20% 0%,
+        36% 0%,
+        50% 7%,
+        64% 0%,
+        80% 0%,
+        100% 24%,
+        84% 38%,
+        73% 28%,
+        73% 100%,
+        27% 100%,
+        27% 28%,
+        16% 38%,
+        0% 24%
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .collection-shirt::after {
+      content: "NSP";
+      color: white;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -2px;
+    }
+
+    /* =========================
+       BRAND STATEMENT
+    ========================= */
+
+    .statement {
+      padding: 140px 5%;
+      text-align: center;
+      background: #e7e7e3;
+    }
+
+    .statement-small {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+      opacity: 0.5;
+      margin-bottom: 30px;
+    }
+
+    .statement-text {
+      max-width: 1200px;
+      margin: 0 auto;
+      font-size: clamp(35px, 6vw, 78px);
+      line-height: 1;
+      letter-spacing: -0.055em;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .statement-reference {
+      margin-top: 35px;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    /* =========================
+       ABOUT
+    ========================= */
+
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .about-title {
+      font-size: clamp(50px, 8vw, 110px);
+      font-weight: 900;
+      line-height: 0.85;
+      letter-spacing: -0.07em;
+      text-transform: uppercase;
+    }
+
+    .about-copy {
+      padding-top: 10px;
+    }
+
+    .about-copy p {
+      font-size: 18px;
+      line-height: 1.7;
+      margin-bottom: 25px;
+      max-width: 600px;
+    }
+
+    /* =========================
+       SOCIAL
+    ========================= */
+
+    .social {
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 120px 5%;
+    }
+
+    .social-title {
+      font-size: clamp(45px, 8vw, 110px);
+      line-height: 0.85;
+      letter-spacing: -0.07em;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 35px;
+    }
+
+    .social-text {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    .social-link {
+      display: inline-block;
+      border: 1px solid white;
+      padding: 16px 28px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: all 0.25s ease;
+    }
+
+    .social-link:hover {
+      background: white;
+      color: #111;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      background: #111;
+      color: white;
+      border-top: 1px solid #333;
+      padding: 45px 5% 30px;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      padding-bottom: 70px;
+    }
+
+    .footer-logo {
+      font-size: 55px;
+      font-weight: 900;
+      letter-spacing: -0.08em;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 55px;
+    }
+
+    .footer-column h4 {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.4;
+      margin-bottom: 18px;
+    }
+
+    .footer-column a {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #333;
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.4;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 800px) {
+      .navbar {
+        padding: 20px 6%;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: 70px;
+        right: 6%;
+        display: none;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 18px;
+        background: #111;
+        padding: 25px;
+        mix-blend-mode: normal;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      .hero {
+        padding: 130px 6% 40px;
+      }
+
+      .hero::before {
+        width: 400px;
+        height: 400px;
+      }
+
+      .hero-title {
+        font-size: clamp(62px, 18vw, 130px);
+      }
+
+      .hero-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 40px;
+      }
+
+      .section {
+        padding: 80px 6%;
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .products {
+        grid-template-columns: 1fr 1fr;
+        gap: 25px 12px;
+      }
+
+      .collection {
+        grid-template-columns: 1fr;
+      }
+
+      .collection-content {
+        padding: 80px 6%;
+      }
+
+      .collection-visual {
+        min-height: 500px;
+      }
+
+      .collection-shirt {
+        width: 45%;
+        height: 55%;
+      }
+
+      .about {
+        grid-template-columns: 1fr;
+        gap: 45px;
+      }
+
+      .statement {
+        padding: 90px 6%;
+      }
+
+      .social {
+        padding: 90px 6%;
+      }
+
+      .footer-top {
+        flex-direction: column;
+        padding-bottom: 45px;
+      }
+
+      .footer-links {
+        gap: 35px;
+        flex-wrap: wrap;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .products {
+        grid-template-columns: 1fr;
+      }
+
+      .product-image {
+        aspect-ratio: 1 / 1.15;
+      }
+
+      .footer-logo {
+        font-size: 45px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="navbar">
+    <a href="#" class="logo">NSP</a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#disciple">Disciple</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu">
+      ☰
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-small">
+      None Shall Perish — Est. 2026
+    </div>
+
+    <h1 class="hero-title">
+      None<br />
+      Shall<br />
+      Perish
+    </h1>
+
+    <div class="hero-bottom">
+      <p class="hero-description">
+        Christian streetwear created for those who carry their faith
+        beyond the walls of the church.
+      </p>
+
+      <a href="#shop" class="hero-cta">
+        Explore Collection →
+      </a>
+    </div>
+  </header>
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>Faith Over Fear</span>
+      <span>None Shall Perish</span>
+      <span>Walk By Faith</span>
+      <span>Made For The Called</span>
+      <span>Faith Over Fear</span>
+      <span>None Shall Perish</span>
+      <span>Walk By Faith</span>
+      <span>Made For The Called</span>
+    </div>
+  </div>
+
+  <!-- SHOP -->
+  <section class="section" id="shop">
+    <div class="section-header">
+      <div>
+        <div class="section-label">01 — Featured</div>
+        <h2 class="section-title">Shop NSP</h2>
+      </div>
+
+      <a href="#shop" class="section-link">
+        View All →
+      </a>
+    </div>
+
+    <div class="products">
+
+      <article class="product">
+        <div class="product-image">
+          <div class="product-placeholder"></div>
+        </div>
+
+        <div class="product-info">
+          <div class="product-name">NSP Essential Tee</div>
+          <div class="product-price">₱490</div>
+        </div>
+      </article>
+
+      <article class="product">
+        <div class="product-image">
+          <div class="product-placeholder"></div>
+        </div>
+
+        <div class="product-info">
+          <div class="product-name">Disciple Tee</div>
+          <div class="product-price">₱490</div>
+        </div>
+      </article>
+
+      <article class="product">
+        <div class="product-image">
+          <div class="product-placeholder"></div>
+        </div>
+
+        <div class="product-info">
+          <div class="product-name">NSP Hoodie</div>
+          <div class="product-price">Coming Soon</div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- DISCIPLE COLLECTION -->
+  <section class="collection" id="disciple">
+
+    <div class="collection-content">
+      <div class="collection-number">02 — Collection 001</div>
+
+      <h2 class="collection-title">
+        Disciple
+      </h2>
+
+      <p class="collection-text">
+        More than a piece of clothing. A reminder of who you are,
+        what you believe, and who you follow. The DISCIPLE collection
+        is made for those who choose to live their faith boldly.
+      </p>
+
+      <a href="#shop" class="collection-button">
+        Shop Disciple →
+      </a>
+    </div>
+
+    <div class="collection-visual">
+      <div class="collection-shirt"></div>
+    </div>
+
+  </section>
+
+  <!-- STATEMENT -->
+  <section class="statement">
+
+    <div class="statement-small">
+      Our Foundation
+    </div>
+
+    <p class="statement-text">
+      “For God so loved the world that He gave His one and only Son,
+      that whoever believes in Him shall not perish but have eternal life.”
+    </p>
+
+    <div class="statement-reference">
+      John 3:16
+    </div>
+
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+
+    <div class="about">
+
+      <h2 class="about-title">
+        Built<br />
+        On<br />
+        Faith.
+      </h2>
+
+      <div class="about-copy">
+
+        <p>
+          None Shall Perish is a Christian streetwear brand built
+          around one simple message: your faith should be lived,
+          not hidden.
+        </p>
+
+        <p>
+          NSP exists to create clothing that carries meaning.
+          Every collection is designed to remind us of the Gospel,
+          our identity in Christ, and the purpose we are called to live.
+        </p>
+
+        <p>
+          Wear the message. Live the message. Share the message.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- SOCIAL -->
+  <section class="social" id="contact">
+
+    <h2 class="social-title">
+      Follow<br />
+      The Journey.
+    </h2>
+
+    <p class="social-text">
+      Join the NSP community and follow our latest drops,
+      stories, and collections.
+    </p>
+
+    <a href="#" class="social-link">
+      Instagram →
+    </a>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+
+    <div class="footer-top">
+
+      <div class="footer-logo">
+        NSP
+      </div>
+
+      <div class="footer-links">
+
+        <div class="footer-column">
+          <h4>Navigate</h4>
+          <a href="#shop">Shop</a>
+          <a href="#disciple">Disciple</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </div>
+
+        <div class="footer-column">
+          <h4>Social</h4>
+          <a href="#">Instagram</a>
+          <a href="#">Facebook</a>
+          <a href="#">TikTok</a>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 None Shall Perish</span>
+      <span>Faith. Purpose. Eternity.</span>
+    </div>
+
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("navLinks");
+
+    menuBtn.addEventListener("click", () => {
+      navLinks.classList.toggle("active");
+    });
+
+    document.querySelectorAll(".nav-links a").forEach((link) => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("active");
+      });
+    });
+  </script>
+
+</body>
+</html>
