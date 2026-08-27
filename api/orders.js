@@ -7,21 +7,72 @@ export default async function handler(req, res) {
       return res.status(503).json({ ok: false, error: 'Order management is not configured yet.' });
     }
 
-    if (req.method === 'GET') {
-      if (!adminPassword) return res.status(503).json({ ok: false, error: 'Admin access is not configured yet.' });
-      if (req.headers['x-admin-password'] !== adminPassword) return res.status(401).json({ ok: false, error: 'Invalid admin password.' });
+    if (!adminPassword) {
+      return res.status(503).json({ ok: false, error: 'Admin access is not configured yet.' });
+    }
 
-      const response = await fetch(`${webhook}?action=orders`, { method: 'GET', redirect: 'follow' });
-      if (!response.ok) return res.status(502).json({ ok: false, error: 'The order service could not return orders.' });
+    if (req.headers['x-admin-password'] !== adminPassword && req.method !== 'POST') {
+      return res.status(401).json({ ok: false, error: 'Invalid admin password.' });
+    }
+
+    if (req.method === 'GET') {
+      const action = req.query?.action || 'orders';
+      const response = await fetch(`${webhook}?action=${encodeURIComponent(action)}`, {
+        method: 'GET',
+        redirect: 'follow'
+      });
+
+      if (!response.ok) {
+        return res.status(502).json({ ok: false, error: 'The order service could not return data.' });
+      }
+
       const data = await response.json();
-      return res.status(200).json({ ok: true, orders: Array.isArray(data.orders) ? data.orders : [] });
+      return res.status(200).json(data);
     }
 
     if (req.method === 'PATCH') {
-      if (!adminPassword) return res.status(503).json({ ok: false, error: 'Admin access is not configured yet.' });
-      if (req.headers['x-admin-password'] !== adminPassword) return res.status(401).json({ ok: false, error: 'Invalid admin password.' });
-
       const body = req.body || {};
+
+      if (body.action === 'updateInventory') {
+        const product = String(body.product || '').trim();
+        const sizes = body.sizes || {};
+        const allowedSizes = ['S', 'M', 'L', 'XL', '2XL', '3XL'];
+
+        if (!product) {
+          return res.status(400).json({ ok: false, error: 'Product is required.' });
+        }
+
+        const cleanSizes = {};
+        for (const size of allowedSizes) {
+          const value = Number(sizes[size]);
+          if (!Number.isInteger(value) || value < 0) {
+            return res.status(400).json({ ok: false, error: `Invalid inventory for size ${size}.` });
+          }
+          cleanSizes[size] = value;
+        }
+
+        const response = await fetch(webhook, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'updateInventory',
+            product,
+            sizes: cleanSizes
+          })
+        });
+
+        if (!response.ok) {
+          return res.status(502).json({ ok: false, error: 'The inventory service could not be updated.' });
+        }
+
+        const data = await response.json();
+        if (!data.ok) {
+          return res.status(400).json({ ok: false, error: data.error || 'Inventory could not be updated.' });
+        }
+
+        return res.status(200).json(data);
+      }
+
       const allowed = ['NEW', 'PROCESSING', 'SHIPPED', 'COMPLETED', 'CANCELLED'];
       const status = String(body.status || '').toUpperCase();
 
@@ -39,14 +90,21 @@ export default async function handler(req, res) {
         })
       });
 
-      if (!response.ok) return res.status(502).json({ ok: false, error: 'The order service could not update the order.' });
+      if (!response.ok) {
+        return res.status(502).json({ ok: false, error: 'The order service could not update the order.' });
+      }
+
       const data = await response.json();
-      if (!data.ok) return res.status(400).json({ ok: false, error: data.error || 'Order status could not be updated.' });
+      if (!data.ok) {
+        return res.status(400).json({ ok: false, error: data.error || 'Order status could not be updated.' });
+      }
 
       return res.status(200).json({ ok: true, orderNumber: body.orderNumber, status });
     }
 
-    if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method not allowed' });
+    if (req.method !== 'POST') {
+      return res.status(405).json({ ok: false, error: 'Method not allowed' });
+    }
 
     const body = req.body || {};
     if (!body.orderNumber || !body.customer || !Array.isArray(body.items)) {
@@ -65,7 +123,15 @@ export default async function handler(req, res) {
       })
     });
 
-    if (!response.ok) return res.status(502).json({ ok: false, error: 'The order service could not accept the order.' });
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok || data.ok === false) {
+      return res.status(400).json({
+        ok: false,
+        error: data.error || 'The order could not be accepted.'
+      });
+    }
+
     return res.status(200).json({ ok: true, orderNumber: body.orderNumber });
   } catch (error) {
     console.error('NSP order sync error:', error);
