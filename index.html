@@ -1997,10 +1997,9 @@ document
   .getElementById('checkoutForm')
   .addEventListener(
     'submit',
-    e => {
+    async e => {
 
       e.preventDefault();
-
 
       if(!bag.length){
 
@@ -2011,7 +2010,6 @@ document
         return;
 
       }
-
 
       const customer = {
 
@@ -2049,10 +2047,8 @@ document
 
       };
 
-
       const orderNumber =
         createOrderNumber();
-
 
       const total =
         bag.reduce(
@@ -2061,13 +2057,11 @@ document
           0
         );
 
-
       const orderItems =
         bag.map(
           p =>
             `${p.name} — Size ${p.size} — ₱${p.price}`
         ).join('\n');
-
 
       const orderText =
 
@@ -2086,37 +2080,106 @@ ${orderItems}
 
 TOTAL: ₱${total}`;
 
+      const submitButton =
+        document.querySelector(
+          '.place-order'
+        );
 
-      localStorage.setItem(
-        'nspLastOrder',
-        JSON.stringify({
+      if(submitButton){
+
+        submitButton.disabled = true;
+
+        submitButton.textContent =
+          'Saving Order...';
+
+      }
+
+      try{
+
+        const response =
+          await fetch(
+            '/api/orders',
+            {
+              method:'POST',
+
+              headers:{
+                'Content-Type':
+                  'application/json'
+              },
+
+              body:
+                JSON.stringify({
+                  orderNumber,
+                  customer,
+                  items:[...bag],
+                  total
+                })
+            }
+          );
+
+        const result =
+          await response.json();
+
+        if(
+          !response.ok ||
+          !result.ok
+        ){
+
+          throw new Error(
+            result.error ||
+            'Unable to save the order.'
+          );
+
+        }
+
+        localStorage.setItem(
+          'nspLastOrder',
+          JSON.stringify({
+            orderNumber,
+            customer,
+            items:[...bag],
+            total,
+            orderText
+          })
+        );
+
+        showSuccess(
           orderNumber,
           customer,
-          items:[...bag],
           total,
           orderText
-        })
-      );
+        );
 
+        bag = [];
 
-      showSuccess(
-        orderNumber,
-        customer,
-        total,
-        orderText
-      );
+        localStorage.setItem(
+          'nspBag',
+          JSON.stringify(bag)
+        );
 
+        renderBag();
 
-      bag = [];
+      }catch(error){
 
+        console.error(
+          'NSP order submission error:',
+          error
+        );
 
-      localStorage.setItem(
-        'nspBag',
-        JSON.stringify(bag)
-      );
+        alert(
+          'We could not save your order right now. Please try again.'
+        );
 
+        if(submitButton){
 
-      renderBag();
+          submitButton.disabled = false;
+
+          submitButton.textContent =
+            'Place Order';
+
+        }
+
+      }
 
     }
   );
