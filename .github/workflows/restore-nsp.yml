@@ -1,0 +1,24 @@
+name: Restore NSP storefront
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore previous storefront
+        run: |
+          git checkout 1b73160594c3785bba5ca3ab470c6515983ba531 -- index.html
+          rm -f .github/workflows/restore-nsp.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/restore-nsp.yml
+          git commit -m "Restore NSP storefront"
+          git push
