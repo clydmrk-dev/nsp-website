@@ -1,0 +1,42 @@
+name: Update navbar brand
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  update-navbar:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Change navbar brand to full name
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          old = '<a href="#top" class="logo"><img src="/logonsp.png" alt="None Shall Perish"></a>'
+          new = '<a href="#top" class="logo">NONE SHALL PERISH</a>'
+          if old not in s:
+              raise SystemExit('Expected navbar logo markup was not found.')
+          s = s.replace(old, new, 1)
+          css = '''\n/* FULL NAVBAR BRAND */\n.logo{\n  width:auto;\n  height:auto;\n  font-size:14px;\n  font-weight:800;\n  letter-spacing:2px;\n  white-space:nowrap;\n}\n'''
+          if '/* FULL NAVBAR BRAND */' not in s:
+              s = s.replace('</style>', css + '</style>', 1)
+          p.write_text(s)
+          PY
+
+      - name: Commit and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f .github/workflows/update-navbar-brand.yml
+          git add index.html .github/workflows/update-navbar-brand.yml
+          git diff --cached --quiet || git commit -m "Use full NSP name in navbar"
+          git push
