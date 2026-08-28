@@ -1,24 +1,20 @@
+import { validSession } from './admin-session.js';
+
 export default async function handler(req, res) {
   try {
     const webhook = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
-    const adminPassword = process.env.NSP_ADMIN_PASSWORD;
     const internalApiKey = process.env.NSP_INTERNAL_API_KEY;
 
     if (!webhook) return res.status(503).json({ ok: false, error: 'Order management is not configured yet.' });
-    if (!adminPassword) return res.status(503).json({ ok: false, error: 'Admin access is not configured yet.' });
     if (!internalApiKey) return res.status(503).json({ ok: false, error: 'Internal API security is not configured yet.' });
 
-    // Customer checkout is the only public operation. Every other method requires the admin password.
-    if (req.method !== 'POST' && req.headers['x-admin-password'] !== adminPassword) {
-      return res.status(401).json({ ok: false, error: 'Invalid admin password.' });
+    // Customer checkout remains public. Admin operations require the secure HttpOnly session cookie.
+    if (req.method !== 'POST' && !validSession(req)) {
+      return res.status(401).json({ ok: false, error: 'Admin session required.' });
     }
 
     if (req.method === 'GET') {
       const action = req.query?.action || 'orders';
-      if (action === 'orders' && req.headers['x-admin-password'] !== adminPassword) {
-        return res.status(401).json({ ok: false, error: 'Invalid admin password.' });
-      }
-
       const url = new URL(webhook);
       url.searchParams.set('action', action);
       if (action === 'orders') url.searchParams.set('key', internalApiKey);
@@ -75,30 +71,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, orderNumber: body.orderNumber, status });
     }
 
-    if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method not allowed' });
-
-    const body = req.body || {};
-    if (!body.orderNumber || !body.customer || !Array.isArray(body.items)) {
-      return res.status(400).json({ ok: false, error: 'Invalid order payload.' });
-    }
-
-    const response = await fetch(webhook, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        orderNumber: body.orderNumber,
-        createdAt: new Date().toISOString(),
-        customer: body.customer,
-        items: body.items,
-        total: body.total
-      })
-    });
-
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok || data.ok === false) {
-      return res.status(400).json({ ok: false, error: data.error || 'The order could not be accepted.' });
-    }
-    return res.status(200).json({ ok: true, orderNumber: body.orderNumber });
+    return res.status(405).json({ ok: false, error: 'Method not allowed' });
   } catch (error) {
     console.error('NSP order sync error:', error);
     return res.status(500).json({ ok: false, error: 'Unable to process the order right now.' });
