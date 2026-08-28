@@ -7,24 +7,24 @@
 <title>NSP Admin — Login</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;background:#f4f3ef;color:#111;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-.login{width:min(330px,100%);background:#fff;border:1px solid #ddd;padding:22px 26px 24px;box-shadow:0 14px 40px rgba(0,0,0,.05)}
-.logo-wrap{display:flex;justify-content:center;align-items:center;margin-bottom:18px;min-height:220px}
-.logo{display:block;width:min(520px,150%);height:auto;max-height:260px;object-fit:contain}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:9px;font-weight:900;letter-spacing:1.7px;text-transform:uppercase;margin-bottom:6px}
-.field input{width:100%;height:44px;padding:10px;border:1px solid #cfcfcf;background:#fff;outline:none;font-size:13px;color:#111}
+body{font-family:Arial,Helvetica,sans-serif;background:#f4f3ef;color:#111;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;position:relative;overflow:hidden}
+.logo-bg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0;padding:4vh 6vw 20vh}
+.logo-bg img{display:block;width:min(680px,72vw);height:auto;max-height:55vh;object-fit:contain}
+.login{position:relative;z-index:1;width:min(280px,calc(100vw - 36px));background:#fff;border:1px solid #ddd;padding:20px 22px 21px;box-shadow:0 12px 32px rgba(0,0,0,.08);margin-top:190px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:8px;font-weight:900;letter-spacing:1.6px;text-transform:uppercase;margin-bottom:5px}
+.field input{width:100%;height:40px;padding:9px;border:1px solid #cfcfcf;background:#fff;outline:none;font-size:12px;color:#111}
 .field input:focus{border-color:#111}
-.login-btn{width:100%;height:44px;border:1px solid #111;background:#111;color:#fff;padding:12px;font-size:10px;font-weight:900;letter-spacing:1.7px;text-transform:uppercase;margin-top:1px;cursor:pointer}
+.login-btn{width:100%;height:40px;border:1px solid #111;background:#111;color:#fff;padding:10px;font-size:9px;font-weight:900;letter-spacing:1.6px;text-transform:uppercase;margin-top:1px;cursor:pointer}
 .login-btn:disabled{opacity:.5;cursor:wait}
-.error{background:#fff0f0;color:#8b2222;border:1px solid #ecc;padding:10px;font-size:11px;margin-bottom:13px;display:none}
-.footer{margin-top:18px;text-align:center;font-size:8px;color:#999;letter-spacing:1.4px;text-transform:uppercase}
-@media(max-width:600px){body{padding:18px}.login{width:min(310px,100%);padding:20px 22px 22px}.logo-wrap{min-height:190px;margin-bottom:16px}.logo{width:min(460px,150%);max-height:220px}}
+.error{background:#fff0f0;color:#8b2222;border:1px solid #ecc;padding:9px;font-size:10px;margin-bottom:12px;display:none}
+.footer{margin-top:15px;text-align:center;font-size:7px;color:#999;letter-spacing:1.3px;text-transform:uppercase}
+@media(max-width:600px){body{padding:18px}.logo-bg{padding:5vh 4vw 25vh}.logo-bg img{width:min(560px,92vw);max-height:45vh}.login{width:min(270px,calc(100vw - 36px));padding:18px 20px 19px;margin-top:145px}}
 </style>
 </head>
 <body>
+<div class="logo-bg"><img src="/logonsp.png" alt="None Shall Perish"></div>
 <main class="login">
-<div class="logo-wrap"><img class="logo" src="/logonsp.png" alt="None Shall Perish"></div>
 <div id="error" class="error"></div>
 <form id="loginForm">
 <div class="field"><label for="username">Username</label><input id="username" name="username" type="text" autocomplete="username" required autofocus></div>
