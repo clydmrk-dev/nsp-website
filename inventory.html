@@ -43,7 +43,6 @@ table{width:100%;border-collapse:collapse;min-width:1050px}th,td{text-align:left
 <script>
 const sizes=['S','M','L','XL','2XL','3XL'];
 let inventory=[];
-let password=sessionStorage.getItem('nspAdminPassword')||'';
 function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function stockClass(v){return v===0?'out':v<=2?'low':''}
 function render(){
@@ -62,14 +61,13 @@ async function load(){
  document.getElementById('state').style.display='block';
  document.getElementById('state').textContent='Loading inventory...';
  document.getElementById('inventoryTable').style.display='none';
- if(!password)password=prompt('Enter NSP Admin Password:')||'';
- if(!password){document.getElementById('error').innerHTML='<div class="error">Admin password required.</div>';return}
  try{
-  const r=await fetch('/api/orders?action=inventory',{headers:{'x-admin-password':password}});
+  const r=await fetch('/api/orders?action=inventory');
   const data=await r.json();
+  if(r.status===401){location.replace('/admin-login.html');return}
   if(!r.ok||!data.ok)throw new Error(data.error||'Unable to load inventory.');
-  sessionStorage.setItem('nspAdminPassword',password);inventory=data.inventory||[];render();
- }catch(e){sessionStorage.removeItem('nspAdminPassword');password='';document.getElementById('error').innerHTML=`<div class="error">${esc(e.message)}</div>`;document.getElementById('state').style.display='none'}
+  inventory=data.inventory||[];render();
+ }catch(e){document.getElementById('error').innerHTML=`<div class="error">${esc(e.message)}</div>`;document.getElementById('state').style.display='none'}
 }
 async function saveRow(i,btn){
  const product=inventory[i];
@@ -79,8 +77,9 @@ async function saveRow(i,btn){
  btn.disabled=true;btn.textContent='SAVING...';
  const msg=document.getElementById('msg-'+i);msg.textContent='';
  try{
-  const r=await fetch('/api/orders',{method:'PATCH',headers:{'Content-Type':'application/json','x-admin-password':password},body:JSON.stringify({action:'updateInventory',product:product.product,sizes:clean})});
+  const r=await fetch('/api/orders',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'updateInventory',product:product.product,sizes:clean})});
   const data=await r.json();
+  if(r.status===401){location.replace('/admin-login.html');return}
   if(!r.ok||!data.ok)throw new Error(data.error||'Could not update inventory.');
   product.sizes=clean;render();
   const newMsg=document.getElementById('msg-'+i);if(newMsg)newMsg.textContent='Saved ✓';
