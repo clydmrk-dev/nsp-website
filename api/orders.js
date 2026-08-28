@@ -4,44 +4,27 @@ export default async function handler(req, res) {
     const adminPassword = process.env.NSP_ADMIN_PASSWORD;
     const internalApiKey = process.env.NSP_INTERNAL_API_KEY;
 
-    if (!webhook) {
-      return res.status(503).json({ ok: false, error: 'Order management is not configured yet.' });
-    }
+    if (!webhook) return res.status(503).json({ ok: false, error: 'Order management is not configured yet.' });
+    if (!adminPassword) return res.status(503).json({ ok: false, error: 'Admin access is not configured yet.' });
+    if (!internalApiKey) return res.status(503).json({ ok: false, error: 'Internal API security is not configured yet.' });
 
-    if (!adminPassword) {
-      return res.status(503).json({ ok: false, error: 'Admin access is not configured yet.' });
-    }
-
-    if (!internalApiKey) {
-      return res.status(503).json({ ok: false, error: 'Internal API security is not configured yet.' });
-    }
-
+    // Customer checkout is the only public operation. Every other method requires the admin password.
     if (req.method !== 'POST' && req.headers['x-admin-password'] !== adminPassword) {
       return res.status(401).json({ ok: false, error: 'Invalid admin password.' });
     }
 
     if (req.method === 'GET') {
       const action = req.query?.action || 'orders';
-
       if (action === 'orders' && req.headers['x-admin-password'] !== adminPassword) {
         return res.status(401).json({ ok: false, error: 'Invalid admin password.' });
       }
 
       const url = new URL(webhook);
       url.searchParams.set('action', action);
-      if (action === 'orders') {
-        url.searchParams.set('key', internalApiKey);
-      }
+      if (action === 'orders') url.searchParams.set('key', internalApiKey);
 
-      const response = await fetch(url.toString(), {
-        method: 'GET',
-        redirect: 'follow'
-      });
-
-      if (!response.ok) {
-        return res.status(502).json({ ok: false, error: 'The order service could not return data.' });
-      }
-
+      const response = await fetch(url.toString(), { method: 'GET', redirect: 'follow' });
+      if (!response.ok) return res.status(502).json({ ok: false, error: 'The order service could not return data.' });
       const data = await response.json();
       return res.status(200).json(data);
     }
@@ -53,10 +36,7 @@ export default async function handler(req, res) {
         const product = String(body.product || '').trim();
         const sizes = body.sizes || {};
         const allowedSizes = ['S', 'M', 'L', 'XL', '2XL', '3XL'];
-
-        if (!product) {
-          return res.status(400).json({ ok: false, error: 'Product is required.' });
-        }
+        if (!product) return res.status(400).json({ ok: false, error: 'Product is required.' });
 
         const cleanSizes = {};
         for (const size of allowedSizes) {
@@ -70,29 +50,16 @@ export default async function handler(req, res) {
         const response = await fetch(webhook, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'updateInventory',
-            product,
-            sizes: cleanSizes,
-            key: internalApiKey
-          })
+          body: JSON.stringify({ action: 'updateInventory', product, sizes: cleanSizes, key: internalApiKey })
         });
-
-        if (!response.ok) {
-          return res.status(502).json({ ok: false, error: 'The inventory service could not be updated.' });
-        }
-
+        if (!response.ok) return res.status(502).json({ ok: false, error: 'The inventory service could not be updated.' });
         const data = await response.json();
-        if (!data.ok) {
-          return res.status(400).json({ ok: false, error: data.error || 'Inventory could not be updated.' });
-        }
-
+        if (!data.ok) return res.status(400).json({ ok: false, error: data.error || 'Inventory could not be updated.' });
         return res.status(200).json(data);
       }
 
       const allowed = ['NEW', 'PROCESSING', 'SHIPPED', 'COMPLETED', 'CANCELLED'];
       const status = String(body.status || '').toUpperCase();
-
       if (!body.orderNumber || !allowed.includes(status)) {
         return res.status(400).json({ ok: false, error: 'Invalid order status update.' });
       }
@@ -100,29 +67,15 @@ export default async function handler(req, res) {
       const response = await fetch(webhook, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'updateStatus',
-          orderNumber: body.orderNumber,
-          status,
-          key: internalApiKey
-        })
+        body: JSON.stringify({ action: 'updateStatus', orderNumber: body.orderNumber, status, key: internalApiKey })
       });
-
-      if (!response.ok) {
-        return res.status(502).json({ ok: false, error: 'The order service could not update the order.' });
-      }
-
+      if (!response.ok) return res.status(502).json({ ok: false, error: 'The order service could not update the order.' });
       const data = await response.json();
-      if (!data.ok) {
-        return res.status(400).json({ ok: false, error: data.error || 'Order status could not be updated.' });
-      }
-
+      if (!data.ok) return res.status(400).json({ ok: false, error: data.error || 'Order status could not be updated.' });
       return res.status(200).json({ ok: true, orderNumber: body.orderNumber, status });
     }
 
-    if (req.method !== 'POST') {
-      return res.status(405).json({ ok: false, error: 'Method not allowed' });
-    }
+    if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method not allowed' });
 
     const body = req.body || {};
     if (!body.orderNumber || !body.customer || !Array.isArray(body.items)) {
@@ -142,14 +95,9 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json().catch(() => ({}));
-
     if (!response.ok || data.ok === false) {
-      return res.status(400).json({
-        ok: false,
-        error: data.error || 'The order could not be accepted.'
-      });
+      return res.status(400).json({ ok: false, error: data.error || 'The order could not be accepted.' });
     }
-
     return res.status(200).json({ ok: true, orderNumber: body.orderNumber });
   } catch (error) {
     console.error('NSP order sync error:', error);
