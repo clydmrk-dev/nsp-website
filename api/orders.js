@@ -2,6 +2,7 @@ export default async function handler(req, res) {
   try {
     const webhook = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
     const adminPassword = process.env.NSP_ADMIN_PASSWORD;
+    const internalApiKey = process.env.NSP_INTERNAL_API_KEY;
 
     if (!webhook) {
       return res.status(503).json({ ok: false, error: 'Order management is not configured yet.' });
@@ -11,13 +12,28 @@ export default async function handler(req, res) {
       return res.status(503).json({ ok: false, error: 'Admin access is not configured yet.' });
     }
 
-    if (req.headers['x-admin-password'] !== adminPassword && req.method !== 'POST') {
+    if (!internalApiKey) {
+      return res.status(503).json({ ok: false, error: 'Internal API security is not configured yet.' });
+    }
+
+    if (req.method !== 'POST' && req.headers['x-admin-password'] !== adminPassword) {
       return res.status(401).json({ ok: false, error: 'Invalid admin password.' });
     }
 
     if (req.method === 'GET') {
       const action = req.query?.action || 'orders';
-      const response = await fetch(`${webhook}?action=${encodeURIComponent(action)}`, {
+
+      if (action === 'orders' && req.headers['x-admin-password'] !== adminPassword) {
+        return res.status(401).json({ ok: false, error: 'Invalid admin password.' });
+      }
+
+      const url = new URL(webhook);
+      url.searchParams.set('action', action);
+      if (action === 'orders') {
+        url.searchParams.set('key', internalApiKey);
+      }
+
+      const response = await fetch(url.toString(), {
         method: 'GET',
         redirect: 'follow'
       });
@@ -57,7 +73,8 @@ export default async function handler(req, res) {
           body: JSON.stringify({
             action: 'updateInventory',
             product,
-            sizes: cleanSizes
+            sizes: cleanSizes,
+            key: internalApiKey
           })
         });
 
@@ -86,7 +103,8 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           action: 'updateStatus',
           orderNumber: body.orderNumber,
-          status
+          status,
+          key: internalApiKey
         })
       });
 
