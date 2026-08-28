@@ -71,6 +71,31 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, orderNumber: body.orderNumber, status });
     }
 
+    if (req.method === 'POST') {
+      const body = req.body || {};
+      if (!body.orderNumber || !body.customer || !Array.isArray(body.items)) {
+        return res.status(400).json({ ok: false, error: 'Invalid order payload.' });
+      }
+
+      const response = await fetch(webhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderNumber: body.orderNumber,
+          createdAt: new Date().toISOString(),
+          customer: body.customer,
+          items: body.items,
+          total: body.total
+        })
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || data.ok === false) {
+        return res.status(400).json({ ok: false, error: data.error || 'The order could not be accepted.' });
+      }
+      return res.status(200).json({ ok: true, orderNumber: body.orderNumber });
+    }
+
     return res.status(405).json({ ok: false, error: 'Method not allowed' });
   } catch (error) {
     console.error('NSP order sync error:', error);
