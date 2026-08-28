@@ -8,27 +8,23 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,Helvetica,sans-serif;background:#f4f3ef;color:#111;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-.login{width:min(390px,100%);background:#fff;border:1px solid #ddd;padding:30px 34px 28px;box-shadow:0 14px 40px rgba(0,0,0,.04)}
-.logo-wrap{display:flex;justify-content:center;align-items:center;margin-bottom:24px;min-height:210px}
-.logo{display:block;width:min(330px,96%);height:auto;max-height:240px;object-fit:contain}
-.eyebrow{font-size:10px;font-weight:900;letter-spacing:2.2px;text-transform:uppercase;color:#555;margin-bottom:10px}
-.subtitle{font-size:13px;color:#777;line-height:1.5;margin-bottom:26px}
-.field{margin-bottom:17px}
-.field label{display:block;font-size:10px;font-weight:900;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:7px}
-.field input{width:100%;height:48px;padding:12px;border:1px solid #cfcfcf;background:#fff;outline:none;font-size:14px;color:#111}
+.login{width:min(330px,100%);background:#fff;border:1px solid #ddd;padding:22px 26px 24px;box-shadow:0 14px 40px rgba(0,0,0,.05)}
+.logo-wrap{display:flex;justify-content:center;align-items:center;margin-bottom:18px;min-height:220px}
+.logo{display:block;width:min(520px,150%);height:auto;max-height:260px;object-fit:contain}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:9px;font-weight:900;letter-spacing:1.7px;text-transform:uppercase;margin-bottom:6px}
+.field input{width:100%;height:44px;padding:10px;border:1px solid #cfcfcf;background:#fff;outline:none;font-size:13px;color:#111}
 .field input:focus{border-color:#111}
-.login-btn{width:100%;height:48px;border:1px solid #111;background:#111;color:#fff;padding:13px;font-size:11px;font-weight:900;letter-spacing:1.8px;text-transform:uppercase;margin-top:2px;cursor:pointer}
+.login-btn{width:100%;height:44px;border:1px solid #111;background:#111;color:#fff;padding:12px;font-size:10px;font-weight:900;letter-spacing:1.7px;text-transform:uppercase;margin-top:1px;cursor:pointer}
 .login-btn:disabled{opacity:.5;cursor:wait}
-.error{background:#fff0f0;color:#8b2222;border:1px solid #ecc;padding:11px;font-size:12px;margin-bottom:15px;display:none}
-.footer{margin-top:25px;text-align:center;font-size:9px;color:#999;letter-spacing:1.5px;text-transform:uppercase}
-@media(max-width:600px){.login{padding:26px 24px 24px}.logo-wrap{min-height:170px;margin-bottom:20px}.logo{width:min(300px,96%)}.subtitle{font-size:13px;margin-bottom:24px}}
+.error{background:#fff0f0;color:#8b2222;border:1px solid #ecc;padding:10px;font-size:11px;margin-bottom:13px;display:none}
+.footer{margin-top:18px;text-align:center;font-size:8px;color:#999;letter-spacing:1.4px;text-transform:uppercase}
+@media(max-width:600px){body{padding:18px}.login{width:min(310px,100%);padding:20px 22px 22px}.logo-wrap{min-height:190px;margin-bottom:16px}.logo{width:min(460px,150%);max-height:220px}}
 </style>
 </head>
 <body>
 <main class="login">
 <div class="logo-wrap"><img class="logo" src="/ChatGPT%20Image%20Aug%2028,%202026,%2011_33_42%20PM.png" alt="None Shall Perish"></div>
-<div class="eyebrow">Secure access</div>
-<p class="subtitle">Sign in to manage NSP orders and inventory.</p>
 <div id="error" class="error"></div>
 <form id="loginForm">
 <div class="field"><label for="username">Username</label><input id="username" name="username" type="text" autocomplete="username" required autofocus></div>
