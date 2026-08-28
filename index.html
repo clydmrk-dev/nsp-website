@@ -58,6 +58,19 @@ button{
   font-weight:900;
   letter-spacing:-.08em;
 }
+
+.logo{
+  display:flex;
+  align-items:center;
+  width:72px;
+  height:40px;
+}
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  filter:brightness(0) invert(1);
+}
 .nav-links{
   display:flex;
   gap:30px;
@@ -938,7 +951,7 @@ footer{
 <body>
 
 <nav class="navbar">
-  <a href="#top" class="logo">NSP</a>
+  <a href="#top" class="logo"><img src="/logonsp.png" alt="None Shall Perish"></a>
   <ul class="nav-links" id="navLinks">
     <li><a href="#shop">Shop</a></li>
     <li><a href="#collection-316">316</a></li>
