@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#111111">
+<meta name="theme-color" content="#0A0A0A">
 <meta name="description" content="None Shall Perish — Christian streetwear built on faith, purpose, and eternity.">
 <title>NSP — None Shall Perish</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,9 +12,11 @@
 
 <style>
 :root{
-  --black:#111;
-  --cream:#f4f3ef;
-  --soft:#e8e7e2;
+  --black:#0A0A0A;
+  --burgundy:#7A1118;
+  --forest:#123B2A;
+  --cream:#F4F1E8;
+  --soft:var(--forest);
 }
 *{
   box-sizing:border-box;
@@ -53,7 +55,7 @@ button{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  color:#fff;
+  color:var(--cream);
   mix-blend-mode:difference;
 }
 .logo{
@@ -77,7 +79,7 @@ button{
 .bag-button{
   border:0;
   background:none;
-  color:#fff;
+  color:var(--cream);
 }
 .menu-btn{
   display:none;
@@ -97,8 +99,8 @@ button{
   border-radius:50%;
   align-items:center;
   justify-content:center;
-  background:#fff;
-  color:#111;
+  background:var(--cream);
+  color:var(--black);
   font-size:9px;
 }
 
@@ -106,8 +108,8 @@ button{
 .hero{
   min-height:100vh;
   padding:145px 5% 55px;
-  background:#111;
-  color:#fff;
+  background:var(--black);
+  color:var(--cream);
   display:flex;
   flex-direction:column;
   justify-content:flex-end;
@@ -179,8 +181,8 @@ button{
   justify-content:center;
   min-height:50px;
   padding:0 24px;
-  background:#fff;
-  color:#111;
+  background:var(--cream);
+  color:var(--black);
   border:0;
   font-size:10px;
   font-weight:900;
@@ -190,15 +192,15 @@ button{
 }
 .button:hover{
   transform:translateY(-3px);
-  background:#ddd;
+  background:var(--forest);
 }
 
 /* MARQUEE */
 .marquee{
-  background:#111;
-  color:#fff;
-  border-top:1px solid #333;
-  border-bottom:1px solid #333;
+  background:var(--black);
+  color:var(--cream);
+  border-top:1px solid rgba(244,241,232,.18);
+  border-bottom:1px solid rgba(244,241,232,.18);
   overflow:hidden;
   white-space:nowrap;
   padding:16px 0;
@@ -249,7 +251,7 @@ button{
 }
 .text-link{
   padding-bottom:5px;
-  border-bottom:1px solid #111;
+  border-bottom:1px solid var(--black);
   font-size:10px;
   font-weight:900;
   letter-spacing:1.5px;
@@ -307,7 +309,7 @@ button{
   margin-top:12px;
   width:100%;
   padding:12px;
-  border:1px solid #111;
+  border:1px solid var(--black);
   background:transparent;
   font-size:9px;
   font-weight:900;
@@ -315,16 +317,17 @@ button{
   text-transform:uppercase;
 }
 .product-cta:hover{
-  background:#111;
-  color:#fff;
+  background:var(--burgundy);
+  color:var(--cream);
+  border-color:var(--burgundy);
 }
 
 /* COLLECTION */
 .collection{
   display:grid;
   grid-template-columns:1fr 1fr;
-  background:#111;
-  color:#fff;
+  background:var(--burgundy);
+  color:var(--cream);
 }
 .collection-copy{
   padding:100px 8%;
@@ -354,22 +357,22 @@ button{
 }
 .outline-button{
   width:fit-content;
-  border:1px solid #fff;
+  border:1px solid var(--cream);
   padding:16px 23px;
   background:transparent;
-  color:#fff;
+  color:var(--cream);
   font-size:10px;
   font-weight:900;
   letter-spacing:1.5px;
   text-transform:uppercase;
 }
 .outline-button:hover{
-  background:#fff;
-  color:#111;
+  background:var(--cream);
+  color:var(--burgundy);
 }
 .collection-image{
   min-height:650px;
-  background:#d9d8d3;
+  background:var(--forest);
   padding:45px;
   display:flex;
   align-items:center;
@@ -388,7 +391,7 @@ button{
 .statement{
   padding:135px 5%;
   text-align:center;
-  background:#e4e3de;
+  background:#E9E4D8;
 }
 .statement-text{
   max-width:1200px;
@@ -431,8 +434,8 @@ button{
 /* SOCIAL */
 .social{
   padding:120px 5%;
-  background:#111;
-  color:#fff;
+  background:var(--black);
+  color:var(--cream);
   text-align:center;
 }
 .social h2{
@@ -454,9 +457,9 @@ button{
 
 /* FOOTER */
 footer{
-  background:#111;
-  color:#fff;
-  border-top:1px solid #333;
+  background:var(--black);
+  color:var(--cream);
+  border-top:1px solid rgba(244,241,232,.18);
   padding:45px 5% 25px;
 }
 .footer-top{
@@ -476,7 +479,7 @@ footer{
 }
 .footer-column h4{
   margin-bottom:17px;
-  color:#777;
+  color:#B9B1A3;
   font-size:9px;
   letter-spacing:2px;
   text-transform:uppercase;
@@ -487,11 +490,11 @@ footer{
   font-size:11px;
 }
 .footer-bottom{
-  border-top:1px solid #333;
+  border-top:1px solid rgba(244,241,232,.18);
   padding-top:18px;
   display:flex;
   justify-content:space-between;
-  color:#666;
+  color:#B9B1A3;
   font-size:9px;
   letter-spacing:1px;
   text-transform:uppercase;
@@ -599,15 +602,15 @@ footer{
   min-width:52px;
   padding:12px 15px;
   background:transparent;
-  border:1px solid #aaa;
+  border:1px solid #9A9388;
   font-size:10px;
   font-weight:800;
 }
 .size.selected,
 .size:hover{
-  background:#111;
-  color:#fff;
-  border-color:#111;
+  background:var(--burgundy);
+  color:var(--cream);
+  border-color:var(--burgundy);
 }
 .size:disabled{
   cursor:not-allowed;
@@ -618,8 +621,8 @@ footer{
   width:100%;
   padding:17px;
   border:0;
-  background:#111;
-  color:#fff;
+  background:var(--burgundy);
+  color:var(--cream);
   font-size:10px;
   font-weight:900;
   letter-spacing:1.5px;
@@ -647,7 +650,7 @@ footer{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  border-bottom:1px solid #ccc;
+  border-bottom:1px solid #D6D0C4;
   padding-bottom:20px;
   margin-bottom:25px;
 }
@@ -666,7 +669,7 @@ footer{
   gap:12px;
   align-items:center;
   padding:14px 0;
-  border-bottom:1px solid #ccc;
+  border-bottom:1px solid #D6D0C4;
 }
 .bag-item img{
   width:70px;
@@ -702,8 +705,8 @@ footer{
   margin-top:20px;
   padding:17px;
   border:0;
-  background:#111;
-  color:#fff;
+  background:var(--burgundy);
+  color:var(--cream);
   font-size:10px;
   font-weight:900;
   letter-spacing:1.5px;
@@ -747,7 +750,7 @@ footer{
 }
 .checkout-header{
   padding:40px 45px 25px;
-  border-bottom:1px solid #ccc;
+  border-bottom:1px solid #D6D0C4;
 }
 .checkout-header .label{
   margin-bottom:8px;
@@ -786,8 +789,8 @@ footer{
 .form-group input,
 .form-group textarea{
   width:100%;
-  border:1px solid #aaa;
-  background:#fff;
+  border:1px solid #9A9388;
+  background:var(--cream);
   padding:13px 14px;
   font:inherit;
   font-size:12px;
@@ -798,14 +801,14 @@ footer{
   resize:vertical;
 }
 .order-summary{
-  border-top:1px solid #ccc;
+  border-top:1px solid #D6D0C4;
 }
 .summary-item{
   display:flex;
   justify-content:space-between;
   gap:15px;
   padding:15px 0;
-  border-bottom:1px solid #ccc;
+  border-bottom:1px solid #D6D0C4;
   font-size:11px;
 }
 .summary-item span:last-child{
@@ -817,8 +820,8 @@ footer{
   margin-top:22px;
   padding:17px;
   border:0;
-  background:#111;
-  color:#fff;
+  background:var(--burgundy);
+  color:var(--cream);
   font-size:10px;
   font-weight:900;
   letter-spacing:1.5px;
@@ -838,7 +841,7 @@ footer{
   width:70px;
   height:70px;
   margin:0 auto 30px;
-  border:1px solid #111;
+  border:1px solid var(--black);
   border-radius:50%;
   display:flex;
   align-items:center;
@@ -861,7 +864,7 @@ footer{
   max-width:520px;
   margin:0 auto;
   padding:25px;
-  border:1px solid #ccc;
+  border:1px solid #D6D0C4;
   text-align:left;
   font-size:12px;
   line-height:1.7;
@@ -874,9 +877,9 @@ footer{
 }
 .success-actions button{
   padding:14px 20px;
-  border:1px solid #111;
-  background:#111;
-  color:#fff;
+  border:1px solid var(--black);
+  background:var(--burgundy);
+  color:var(--cream);
   font-size:9px;
   font-weight:900;
   letter-spacing:1.2px;
@@ -884,13 +887,13 @@ footer{
 }
 .success-actions .secondary{
   background:transparent;
-  color:#111;
+  color:var(--black);
 }
 
 @media(max-width:800px){
   .navbar{height:70px;padding:0 6%}
   .menu-btn{display:block}
-  .nav-links{position:absolute;top:70px;right:6%;display:none;flex-direction:column;align-items:flex-end;gap:18px;padding:23px;background:#111;color:#fff;mix-blend-mode:normal}
+  .nav-links{position:absolute;top:70px;right:6%;display:none;flex-direction:column;align-items:flex-end;gap:18px;padding:23px;background:var(--black);color:var(--cream);mix-blend-mode:normal}
   .nav-links.active{display:flex}
   .bag-button{margin-left:auto;margin-right:18px}
   .hero{padding:125px 6% 42px}
