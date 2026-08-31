@@ -1,4 +1,4 @@
-name: NSP editorial refresh
+name: NSP final hero fix
 
 on:
   push:
@@ -8,91 +8,73 @@ permissions:
   contents: write
 
 jobs:
-  refresh:
+  fix:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Apply editorial styling
+      - name: Fix hero title and eyebrow only
         run: |
           python - <<'PY'
           from pathlib import Path
           p = Path('index.html')
-          s = p.read_text()
-          marker = '</style>'
+          s = p.read_text(encoding='utf-8')
+
           css = r'''
 
-/* NSP EDITORIAL / NOT-YET-HOME-INSPIRED DIRECTION */
-:root{--nsp-cream:#f2f0eb;}
-body{background:var(--nsp-cream);}
-.navbar{height:88px;padding:0 4.2%;transition:background .35s,color .35s,height .35s;}
-.logo{width:auto;min-width:150px;height:34px;}
-.logo img{width:150px;height:34px;object-fit:contain;object-position:left center;}
-.nav-links{gap:34px;letter-spacing:2px;}
-.bag-button{letter-spacing:2px;}
-.hero{min-height:100svh;padding:120px 4.2% 42px;justify-content:flex-end;}
-.hero:before{width:min(70vw,900px);opacity:.65;}
-.hero:after{right:4.2%;top:120px;}
-.eyebrow{margin-bottom:18px;letter-spacing:4px;}
-.hero-logo{width:min(86vw,980px);margin-left:-1.2%;}
-.hero-logo img{max-height:50vh;}
-.hero-bottom{margin-top:42px;padding-top:28px;border-top:1px solid rgba(255,255,255,.16);}
-.hero-copy{font-size:13px;max-width:420px;}
-.button{min-height:48px;padding:0 27px;}
-.marquee{padding:14px 0;}
-.section{padding:125px 4.2%;}
-.section-head{margin-bottom:55px;}
-.section-title{letter-spacing:-.08em;}
-.products{grid-template-columns:repeat(2,1fr);gap:52px 18px;}
-.product-image{aspect-ratio:4/5;background:#e7e5df;padding:35px;}
-.product-image img{transition:transform .7s cubic-bezier(.2,.7,.2,1);}
-.product:hover img{transform:scale(1.045);}
-.product-info{padding-top:16px;}
-.product-name,.product-price{font-size:10px;letter-spacing:1.2px;}
-.product-cta{margin-top:14px;padding:13px;}
-.collection{grid-template-columns:1fr 1.05fr;}
-.collection-copy{padding:110px 9%;}
-.collection-image{min-height:720px;padding:55px;}
-.statement{padding:155px 6%;}
-.about{gap:110px;}
-.about-copy p{font-size:16px;}
-.social{padding:145px 5%;}
-footer{padding:55px 4.2% 28px;}
-.footer-logo{font-size:52px;}
+/* NSP HERO FINAL POSITIONING — title and eyebrow only */
+.hero h1{
+  position:absolute !important;
+  z-index:2 !important;
+  top:50% !important;
+  left:50% !important;
+  width:90% !important;
+  margin:0 !important;
+  text-align:center !important;
+  white-space:nowrap !important;
+  transform:translate(-50%,-50%) !important;
+}
+.eyebrow{
+  position:absolute !important;
+  z-index:2 !important;
+  top:calc(50% - 92px) !important;
+  left:50% !important;
+  width:100% !important;
+  margin:0 !important;
+  text-align:center !important;
+  transform:translateX(-50%) !important;
+}
 @media(max-width:800px){
-.navbar{height:70px;padding:0 5%;}
-.logo{min-width:120px;width:120px;}
-.logo img{width:120px;}
-.nav-links{display:none;}
-.menu-btn{display:block;}
-.bag-button{font-size:10px;}
-.hero{padding:105px 5% 30px;}
-.hero-logo{width:96vw;margin-left:-2%;}
-.hero-logo img{max-height:42vh;}
-.hero-bottom{margin-top:30px;padding-top:20px;display:block;}
-.hero-copy{max-width:330px;margin-bottom:22px;}
-.section{padding:90px 5%;}
-.products{grid-template-columns:1fr;gap:42px;}
-.collection{grid-template-columns:1fr;}
-.collection-image{min-height:520px;}
-.about{grid-template-columns:1fr;gap:45px;}
-.footer-top{display:block;}
-.footer-links{margin-top:45px;gap:35px;}
+  .hero h1{
+    width:96% !important;
+    font-size:clamp(30px,10vw,80px) !important;
+  }
+  .eyebrow{
+    top:calc(50% - 58px) !important;
+    font-size:9px !important;
+  }
 }
 '''
-          if 'NSP EDITORIAL / NOT-YET-HOME-INSPIRED DIRECTION' not in s:
-              if marker not in s:
-                  raise SystemExit('style closing marker not found')
-              s = s.replace(marker, css + '\n' + marker, 1)
-              p.write_text(s)
+
+          marker = '/* NSP HERO FINAL POSITIONING — title and eyebrow only */'
+          if marker not in s:
+              s = s.replace('</style>', css + '\n</style>', 1)
+              p.write_text(s, encoding='utf-8')
+          else:
+              print('Hero fix already present.')
           PY
 
-      - name: Commit refresh and remove workflow
+      - name: Remove auto-modifying workflows
         run: |
+          rm -f .github/workflows/nsp-editorial-refresh.yml
+          rm -f .github/workflows/patch-orders.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          rm -f .github/workflows/nsp-editorial-refresh.yml
-          git add index.html .github/workflows/nsp-editorial-refresh.yml
-          git diff --cached --quiet || git commit -m "Refresh NSP storefront with editorial streetwear direction"
+          git add index.html .github/workflows
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "Fix NSP hero center alignment and disable auto patches"
           git push
