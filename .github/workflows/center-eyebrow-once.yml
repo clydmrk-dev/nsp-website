@@ -1,0 +1,33 @@
+name: Center NSP eyebrow once
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  fix:
+    if: github.actor == 'clydmrk-dev'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Center eyebrow text
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          old = '''.eyebrow{\n  position:relative;'''
+          new = '''.eyebrow{\n  width:100%;\n  text-align:center;\n  position:relative;'''
+          if old in s and 'width:100%;\n  text-align:center;' not in s[s.index('.eyebrow{'):s.index('.eyebrow{')+250]:
+              s = s.replace(old, new, 1)
+              p.write_text(s)
+          PY
+      - name: Commit change
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet || git commit -m "Center NSP Est. 2026 eyebrow"
+          git push
