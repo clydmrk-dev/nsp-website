@@ -931,6 +931,44 @@ h1, h2, h3, .hero h1, .section-title, .collection h2, .statement-text, .about h2
 .hero h1 { font-weight: 600; letter-spacing: -.055em; }
 .section-title, .collection h2, .statement-text, .about h2, .social h2, .modal-title { font-weight: 600; }
 </style>
+<style id="nsp-hero-position-fix">
+/* Keep the existing hero copy and Explore Collection control in place. */
+.hero { position:relative; }
+.hero .eyebrow {
+  position:absolute;
+  z-index:2;
+  left:50%;
+  top:calc(50% - 88px);
+  transform:translateX(-50%);
+  width:max-content;
+  max-width:90vw;
+  margin:0;
+  text-align:center;
+  white-space:nowrap;
+}
+.hero h1 {
+  position:absolute;
+  z-index:2;
+  left:50%;
+  top:50%;
+  width:100%;
+  margin:0;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  white-space:nowrap;
+}
+@media (max-width:700px) {
+  .hero .eyebrow {
+    top:calc(50% - 58px);
+    max-width:94vw;
+    font-size:9px;
+    letter-spacing:2px;
+  }
+  .hero h1 {
+    font-size:clamp(34px,10vw,80px);
+  }
+}
+</style>
 </head>
 <body>
 
