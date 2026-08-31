@@ -1,0 +1,81 @@
+name: One-time NSP product detail upgrade
+on:
+  push:
+    paths:
+      - '.github/workflows/one-time-product-detail-upgrade.yml'
+permissions:
+  contents: write
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upgrade product detail experience
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          if 'nsp-product-gallery' in s:
+              print('Upgrade already present; nothing to do.')
+              raise SystemExit(0)
+          gallery_html = '''
+      <div class="nsp-product-gallery" id="nspProductGallery" aria-label="Product images">
+        <button class="nsp-gallery-arrow nsp-gallery-prev" id="nspGalleryPrev" type="button" aria-label="Previous product image">←</button>
+        <div class="nsp-gallery-stage"><img id="nspGalleryImage" src="" alt=""></div>
+        <button class="nsp-gallery-arrow nsp-gallery-next" id="nspGalleryNext" type="button" aria-label="Next product image">→</button>
+        <div class="nsp-gallery-thumbs" id="nspGalleryThumbs"></div>
+      </div>
+'''
+          s = s.replace('<div class="modal-image"><img id="modalImage" src="" alt=""></div>', gallery_html, 1)
+          css = '''
+<style id="nsp-product-gallery">
+.nsp-product-gallery{position:relative;background:var(--soft);min-height:500px;padding:24px;display:grid;grid-template-columns:42px 1fr 42px;grid-template-rows:1fr auto;gap:12px;align-items:center;}
+.nsp-gallery-stage{grid-column:2;grid-row:1;min-width:0;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.nsp-gallery-stage img{width:100%;height:100%;max-height:620px;object-fit:contain;transition:opacity .18s ease,transform .25s ease;}
+.nsp-gallery-arrow{width:38px;height:38px;border:1px solid rgba(10,10,10,.35);background:rgba(244,241,232,.86);color:var(--black);display:flex;align-items:center;justify-content:center;font-size:16px;transition:.2s;}
+.nsp-gallery-arrow:hover:not(:disabled){background:var(--burgundy);border-color:var(--burgundy);color:var(--cream);}
+.nsp-gallery-arrow:disabled{opacity:.25;cursor:not-allowed;}
+.nsp-gallery-prev{grid-column:1;grid-row:1;}.nsp-gallery-next{grid-column:3;grid-row:1;}
+.nsp-gallery-thumbs{grid-column:1 / -1;grid-row:2;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.nsp-gallery-thumb{width:58px;height:58px;padding:4px;border:1px solid transparent;background:var(--cream);opacity:.55;cursor:pointer;}
+.nsp-gallery-thumb.active{border-color:var(--burgundy);opacity:1;}.nsp-gallery-thumb img{width:100%;height:100%;object-fit:contain;}
+@media(max-width:800px){.nsp-product-gallery{min-height:350px;padding:16px;grid-template-columns:34px 1fr 34px;}.nsp-gallery-arrow{width:32px;height:32px;font-size:14px;}.nsp-gallery-thumb{width:48px;height:48px;}}
+</style>
+'''
+          s = s.replace('</head>', css + '</head>', 1)
+          js = '''
+<script id="nsp-product-gallery-script">
+(function(){
+  const gallery=document.getElementById('nspProductGallery'); if(!gallery)return;
+  const image=document.getElementById('nspGalleryImage'),thumbs=document.getElementById('nspGalleryThumbs'),prev=document.getElementById('nspGalleryPrev'),next=document.getElementById('nspGalleryNext'),modal=document.getElementById('modal');
+  let current=0,currentImages=[];
+  function getImages(){
+    if(typeof selectedProduct!=='undefined'&&selectedProduct&&Array.isArray(selectedProduct.gallery)&&selectedProduct.gallery.length)return selectedProduct.gallery;
+    const fallback=document.getElementById('modalImage'); return fallback&&fallback.src?[fallback.src]:[];
+  }
+  function render(){
+    if(!currentImages.length)return; current=Math.max(0,Math.min(current,currentImages.length-1));
+    image.style.opacity='0'; setTimeout(()=>{image.src=currentImages[current];image.style.opacity='1';},80);
+    thumbs.innerHTML=currentImages.map((src,i)=>`<button class="nsp-gallery-thumb${i===current?' active':''}" type="button" data-index="${i}" aria-label="View image ${i+1}"><img src="${src}" alt=""></button>`).join('');
+    prev.disabled=currentImages.length<=1||current===0; next.disabled=currentImages.length<=1||current===currentImages.length-1;
+  }
+  function sync(){currentImages=getImages();current=0;render();}
+  prev.addEventListener('click',()=>{if(current>0){current--;render();}}); next.addEventListener('click',()=>{if(current<currentImages.length-1){current++;render();}});
+  thumbs.addEventListener('click',e=>{const b=e.target.closest('.nsp-gallery-thumb');if(!b)return;current=Number(b.dataset.index)||0;render();});
+  new MutationObserver(m=>{if(m.some(x=>x.attributeName==='class'&&modal.classList.contains('open')))sync();}).observe(modal,{attributes:true});
+  sync();
+})();
+</script>
+'''
+          s = s.replace('</body>', js + '</body>', 1)
+          p.write_text(s)
+          PY
+      - name: Commit upgrade and remove one-time workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -f .github/workflows/one-time-product-detail-upgrade.yml
+          git add index.html .github/workflows/one-time-product-detail-upgrade.yml
+          git commit -m 'Upgrade NSP product detail experience'
+          git push
