@@ -16,31 +16,73 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          path = Path('index.html')
-          text = path.read_text(encoding='utf-8')
+          import re
+          path=Path('index.html')
+          text=path.read_text(encoding='utf-8')
 
-          replacements = [
-          (''' .logo{\n  font-size:25px;\n  font-weight:900;\n  letter-spacing:-.08em;\n}'''.lstrip(), '''.logo{\n  display:none;\n}'''),
-          (''' .menu-btn,\n.bag-button{\n  border:0;\n  background:none;\n  color:var(--cream);\n}'''.lstrip(), '''.menu-btn,\n.bag-button{\n  border:0;\n  background:none;\n  color:var(--cream);\n}\n.menu-btn{\n  display:flex;\n  flex-direction:column;\n  justify-content:center;\n  gap:5px;\n  width:34px;\n  height:34px;\n  padding:5px 0;\n}\n.menu-btn span{\n  display:block;\n  width:28px;\n  height:2px;\n  background:currentColor;\n}\n.bag-button{\n  font-size:0;\n  width:34px;\n  height:34px;\n  display:inline-flex;\n  align-items:center;\n  justify-content:center;\n}\n.bag-button::before{\n  content:'\\1F6D2';\n  font-size:18px;\n  line-height:1;\n}\n.bag-count{\n  position:absolute;\n  min-width:15px;\n  height:15px;\n  margin:0 0 18px 18px;\n  font-size:8px;\n}'''),
-          (''' .menu-btn{\n  display:none;\n  font-size:25px;\n}'''.lstrip(), '''.menu-btn{\n  display:flex;\n}'''),
-          (''' .add-button{\n  width:100%;\n  padding:17px;\n  border:0;\n  background:var(--burgundy);'''.lstrip(), '''.add-button{\n  width:100%;\n  padding:17px;\n  border:0;\n  background:var(--forest);'''),
-          (''' .checkout{\n  width:100%;\n  margin-top:20px;\n  padding:17px;\n  border:0;\n  background:var(--burgundy);'''.lstrip(), '''.checkout{\n  width:100%;\n  margin-top:20px;\n  padding:17px;\n  border:0;\n  background:var(--forest);'''),
-          (''' .place-order{\n  width:100%;\n  margin-top:22px;\n  padding:17px;\n  border:0;\n  background:var(--burgundy);'''.lstrip(), '''.place-order{\n  width:100%;\n  margin-top:22px;\n  padding:17px;\n  border:0;\n  background:var(--forest);'''),
-          ('''  <button class="menu-btn" id="menuBtn">☰</button>''', '''  <button class="menu-btn" id="menuBtn" aria-label="Open navigation"><span></span><span></span><span></span></button>'''),
-          ('''  <button class="bag-button" id="bagButton">Bag <span class="bag-count" id="bagCount">0</span></button>''', '''  <button class="bag-button" id="bagButton" aria-label="Open shopping cart"><span class="bag-count" id="bagCount">0</span></button>'''),
-          ('''  <div class="collection-image"><img src="/2.png" alt="NSP 316 Collection"></div>''', '''  <div class="collection-image"><img id="collection316Image" src="/2.png" alt="NSP 316 Collection"></div>'''),
-          ('''<section class="statement"><div class="label">Our Foundation</div><p class="statement-text">“For God so loved the world that He gave His one and only Son, that whoever believes in Him shall not perish but have eternal life.”</p><div class="reference">John 3:16</div></section>''', '''<section class="statement"><div class="label">Our Foundation</div><p class="statement-text">“For God so <span class="foundation-accent">loved</span> the world that He gave His one and only Son, that whoever believes in Him shall not perish but have <span class="foundation-accent">eternal life</span>.”</p><div class="reference foundation-accent">John 3:16</div></section>'''),
-          (''' .reference{\n  margin-top:30px;'''.lstrip(), '''.foundation-accent{\n  color:var(--burgundy);\n}\n.reference{\n  margin-top:30px;'''),
-          ('''  <article class="product" data-index="${i}">\n    <div class="product-image"><img src="${p.image}" alt="${p.name}" loading="lazy"></div>''', '''  <article class="product" data-index="${i}">\n    <div class="product-image"><img src="${p.image}" data-front="${p.gallery[0] || p.image}" data-back="${p.gallery[1] || p.image}" alt="${p.name}" loading="lazy"></div>'''),
-          ('''productsEl.innerHTML = products.map((p,i)=>`\n  <article class="product" data-index="${i}">\n    <div class="product-image"><img src="${p.image}" alt="${p.name}" loading="lazy"></div>''', '''productsEl.innerHTML = products.map((p,i)=>`\n  <article class="product" data-index="${i}">\n    <div class="product-image"><img src="${p.image}" data-front="${p.gallery[0] || p.image}" data-back="${p.gallery[1] || p.image}" alt="${p.name}" loading="lazy"></div>'''),
-          ('''function getProductGallery(product){''', '''productsEl.querySelectorAll('.product').forEach(card=>{\n  const image=card.querySelector('.product-image img');\n  if(!image) return;\n  card.addEventListener('mouseenter',()=>{ image.src=image.dataset.back || image.dataset.front; });\n  card.addEventListener('mouseleave',()=>{ image.src=image.dataset.front || image.src; });\n  card.addEventListener('focusin',()=>{ image.src=image.dataset.back || image.dataset.front; });\n  card.addEventListener('focusout',()=>{ image.src=image.dataset.front || image.src; });\n});\n\nconst collection316Images=['/2.png','/3.png','/4.png','/5.png','/6.png','/7.png'];\nlet collection316Index=0;\nconst collection316Image=document.getElementById('collection316Image');\nif(collection316Image){\n  setInterval(()=>{\n    collection316Index=(collection316Index+1)%collection316Images.length;\n    collection316Image.style.opacity='0';\n    setTimeout(()=>{ collection316Image.src=collection316Images[collection316Index]; collection316Image.style.opacity='1'; },180);\n  },3200);\n}\n\nfunction getProductGallery(product){'''),
-          ]
+          def replace_once(pattern, replacement, flags=0):
+              global text
+              new, count = re.subn(pattern, replacement, text, count=1, flags=flags)
+              if count != 1:
+                  raise SystemExit('Expected pattern not found: '+pattern[:100])
+              text=new
 
-          for old, new in replacements:
-              if old not in text:
-                  raise SystemExit('Expected source block not found: ' + old[:80].replace('\n',' '))
-              text=text.replace(old,new,1)
+          replace_once(r'\.logo\{\n  font-size:25px;\n  font-weight:900;\n  letter-spacing:-\.08em;\n\}', '.logo{display:none;}')
 
+          replace_once(r'\.menu-btn,\n\.bag-button\{\n  border:0;\n  background:none;\n  color:var\(--cream\);\n\}\n\.menu-btn\{\n  display:none;\n  font-size:25px;\n\}\n\.bag-button\{\n  font-size:11px;\n  font-weight:800;\n  letter-spacing:1\.5px;\n  text-transform:uppercase;\n\}\n\.bag-count\{\n  display:inline-flex;\n  min-width:18px;\n  height:18px;\n  margin-left:5px;\n  border-radius:50%;\n  align-items:center;\n  justify-content:center;\n  background:var\(--cream\);\n  color:var\(--black\);\n  font-size:9px;\n\}', '''.menu-btn,.bag-button{border:0;background:none;color:var(--cream);}
+.menu-btn{display:flex;flex-direction:column;justify-content:center;gap:5px;width:34px;height:34px;padding:5px 0;}
+.menu-btn span{display:block;width:28px;height:2px;background:currentColor;}
+.bag-button{font-size:0;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;position:relative;}
+.bag-button::before{content:'\\1F6D2';font-size:18px;line-height:1;}
+.bag-count{position:absolute;top:0;right:-2px;display:inline-flex;min-width:15px;height:15px;margin:0;border-radius:50%;align-items:center;justify-content:center;background:var(--cream);color:var(--black);font-size:8px;}''')
+
+          replace_once(r'<nav class="navbar">.*?</nav>', '''<nav class="navbar">
+  <button class="menu-btn" id="menuBtn" aria-label="Open navigation"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#shop">Shop</a></li>
+    <li><a href="#collection-316">316</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="bag-button" id="bagButton" aria-label="Open shopping cart"><span class="bag-count" id="bagCount">0</span></button>
+</nav>''', re.S)
+
+          replace_once(r'\.add-button\{\n  width:100%;\n  padding:17px;\n  border:0;\n  background:var\(--burgundy\);', '.add-button{\n  width:100%;\n  padding:17px;\n  border:0;\n  background:var(--forest);')
+          replace_once(r'\.checkout\{\n  width:100%;\n  margin-top:20px;\n  padding:17px;\n  border:0;\n  background:var\(--burgundy\);', '.checkout{\n  width:100%;\n  margin-top:20px;\n  padding:17px;\n  border:0;\n  background:var(--forest);')
+          replace_once(r'\.place-order\{\n  width:100%;\n  margin-top:22px;\n  padding:17px;\n  border:0;\n  background:var\(--burgundy\);', '.place-order{\n  width:100%;\n  margin-top:22px;\n  padding:17px;\n  border:0;\n  background:var(--forest);')
+
+          replace_once(r'<div class="collection-image"><img src="/2\.png" alt="NSP 316 Collection"></div>', '<div class="collection-image"><img id="collection316Image" src="/2.png" alt="NSP 316 Collection"></div>')
+
+          replace_once(r'<section class="statement"><div class="label">Our Foundation</div><p class="statement-text">.*?</p><div class="reference">John 3:16</div></section>', '<section class="statement"><div class="label">Our Foundation</div><p class="statement-text">“For God so <span class="foundation-accent">loved</span> the world that He gave His one and only Son, that whoever believes in Him shall not perish but have <span class="foundation-accent">eternal life</span>.”</p><div class="reference foundation-accent">John 3:16</div></section>', re.S)
+          replace_once(r'\.reference\{\n  margin-top:30px;', '.foundation-accent{color:var(--burgundy);}\n.reference{\n  margin-top:30px;')
+
+          replace_once(r'<div class="product-image"><img src="\$\{p\.image\}" alt="\$\{p\.name\}" loading="lazy"></div>', '<div class="product-image"><img src="${p.image}" data-front="${p.gallery[0] || p.image}" data-back="${p.gallery[1] || p.image}" alt="${p.name}" loading="lazy"></div>')
+
+          marker='function getProductGallery(product){'
+          gallery_js="""productsEl.querySelectorAll('.product').forEach(card=>{
+  const image=card.querySelector('.product-image img');
+  if(!image) return;
+  card.addEventListener('mouseenter',()=>{image.src=image.dataset.back||image.dataset.front;});
+  card.addEventListener('mouseleave',()=>{image.src=image.dataset.front||image.src;});
+  card.addEventListener('focusin',()=>{image.src=image.dataset.back||image.dataset.front;});
+  card.addEventListener('focusout',()=>{image.src=image.dataset.front||image.src;});
+});
+
+const collection316Images=['/2.png','/3.png','/4.png','/5.png','/6.png','/7.png'];
+let collection316Index=0;
+const collection316Image=document.getElementById('collection316Image');
+if(collection316Image){
+  setInterval(()=>{
+    collection316Index=(collection316Index+1)%collection316Images.length;
+    collection316Image.style.opacity='0';
+    setTimeout(()=>{collection316Image.src=collection316Images[collection316Index];collection316Image.style.opacity='1';},180);
+  },3200);
+}
+
+"""
+          if marker not in text:
+              raise SystemExit('Product gallery marker not found')
+          text=text.replace(marker,gallery_js+marker,1)
           path.write_text(text,encoding='utf-8')
 
       - name: Commit changes
