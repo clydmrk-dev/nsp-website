@@ -31,25 +31,39 @@ jobs:
 
           new = '''.hero h1{\n  position:relative;\n  z-index:2;\n  width:100%;\n  text-align:center;\n  white-space:nowrap;\n  font-family:"Great Vibes",cursive;\n  font-size:clamp(38px,8vw,125px);\n  line-height:.82;\n  letter-spacing:0;\n  font-weight:400;\n  text-transform:none;\n  transform:translateY(calc(-50vh + 113px + 4vw));\n}'''
 
-          if old not in text:
-              raise SystemExit("Expected hero h1 CSS block was not found; no changes made.")
-
-          text = text.replace(old, new, 1)
+          if old in text:
+              text = text.replace(old, new, 1)
 
           old_head = '<title>NSP — None Shall Perish</title>'
           new_head = '''<title>NSP — None Shall Perish</title>\n<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">'''
 
-          if old_head not in text:
-              raise SystemExit("Expected title tag was not found; no changes made.")
+          if old_head in text and 'fonts.googleapis.com/css2?family=Great+Vibes' not in text:
+              text = text.replace(old_head, new_head, 1)
 
-          text = text.replace(old_head, new_head, 1)
           path.write_text(text, encoding="utf-8")
 
-      - name: Commit the typography-only change
+      - name: Rename NSP product collections
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8")
+
+          # Rename the existing products without changing their images or galleries:
+          # Collection 03 -> Collection 02
+          # Collection 05 -> Collection 03
+          text = text.replace("NSP Collection 05", "NSP Collection __TEMP__")
+          text = text.replace("NSP Collection 03", "NSP Collection 02")
+          text = text.replace("NSP Collection __TEMP__", "NSP Collection 03")
+
+          path.write_text(text, encoding="utf-8")
+
+      - name: Commit the changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           git diff --cached --quiet && exit 0
-          git commit -m "Change NSP hero title to calligraphy font"
+          git commit -m "Rename NSP product collections"
           git push
