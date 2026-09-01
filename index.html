@@ -1017,6 +1017,33 @@ body.nsp-panel-open{overflow:hidden;}
   .nav-links{width:min(320px,78vw)!important;}
 }
 </style>
+
+<style id="nsp-menu-cart-final">
+/* Requested final menu/cart behavior */
+.nav-links{
+  background:#fff!important;
+  color:var(--black)!important;
+}
+.nav-links a{color:var(--black)!important;}
+.nsp-menu-close{
+  position:absolute;
+  top:24px;
+  right:24px;
+  width:36px;
+  height:36px;
+  border:1px solid rgba(10,10,10,.2);
+  background:transparent;
+  color:var(--black);
+  font:500 22px/1 Inter,Arial,sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+/* Only the three-line menu locks page scrolling. Cart must remain scrollable. */
+body.nsp-menu-open{overflow:hidden!important;}
+body.nsp-cart-open{overflow:auto!important;}
+</style>
 </head>
 <body>
 
@@ -1423,6 +1450,66 @@ renderBag();
   if(checkout)checkout.addEventListener('click',()=>{navbar.classList.remove('nsp-cart-open');document.body.classList.remove('nsp-panel-open');});
   const checkoutClose=document.getElementById('checkoutClose');
   if(checkoutClose)checkoutClose.addEventListener('click',()=>document.body.classList.remove('nsp-panel-open'));
+})();
+</script>
+
+<script id="nsp-menu-cart-final-script">
+(function(){
+  function init(){
+    const nav=document.getElementById('navLinks');
+    const menu=document.getElementById('menuBtn');
+    const bag=document.getElementById('bagButton');
+    const bagPanel=document.getElementById('bagPanel');
+    if(!nav||!menu)return;
+
+    if(!nav.querySelector('.nsp-menu-close')){
+      const close=document.createElement('button');
+      close.type='button';
+      close.className='nsp-menu-close';
+      close.setAttribute('aria-label','Close menu');
+      close.innerHTML='×';
+      nav.prepend(close);
+      close.addEventListener('click',function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        nav.classList.remove('active');
+        document.body.classList.remove('nsp-menu-open');
+        const header=document.querySelector('.navbar');
+        if(header) header.classList.remove('nsp-menu-open');
+      });
+    }
+
+    menu.addEventListener('click',function(){
+      requestAnimationFrame(function(){
+        const open=nav.classList.contains('active');
+        document.body.classList.toggle('nsp-menu-open',open);
+        if(open){
+          document.body.classList.remove('nsp-panel-open','nsp-cart-open');
+          if(bagPanel) bagPanel.classList.remove('open');
+        }
+      });
+    });
+
+    if(bag){
+      bag.addEventListener('click',function(){
+        requestAnimationFrame(function(){
+          nav.classList.remove('active');
+          document.body.classList.remove('nsp-menu-open');
+          /* Do not lock the page while cart is open. */
+          document.body.classList.remove('nsp-panel-open');
+          document.body.classList.add('nsp-cart-open');
+        });
+      });
+    }
+
+    const bagClose=document.getElementById('bagClose');
+    if(bagClose) bagClose.addEventListener('click',function(){
+      document.body.classList.remove('nsp-cart-open');
+      document.body.classList.remove('nsp-panel-open');
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
 })();
 </script>
 </body>
