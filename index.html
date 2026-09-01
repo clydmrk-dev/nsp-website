@@ -59,11 +59,7 @@ button{
   color:var(--cream);
   mix-blend-mode:difference;
 }
-.logo{
-  font-size:25px;
-  font-weight:900;
-  letter-spacing:-.08em;
-}
+.logo{display:none;}
 .nav-links{
   display:flex;
   gap:30px;
@@ -76,34 +72,12 @@ button{
 .nav-links a:hover{
   opacity:.55;
 }
-.menu-btn,
-.bag-button{
-  border:0;
-  background:none;
-  color:var(--cream);
-}
-.menu-btn{
-  display:none;
-  font-size:25px;
-}
-.bag-button{
-  font-size:11px;
-  font-weight:800;
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-}
-.bag-count{
-  display:inline-flex;
-  min-width:18px;
-  height:18px;
-  margin-left:5px;
-  border-radius:50%;
-  align-items:center;
-  justify-content:center;
-  background:var(--cream);
-  color:var(--black);
-  font-size:9px;
-}
+.menu-btn,.bag-button{border:0;background:none;color:var(--cream);}
+.menu-btn{display:flex;flex-direction:column;justify-content:center;gap:5px;width:34px;height:34px;padding:5px 0;}
+.menu-btn span{display:block;width:28px;height:2px;background:currentColor;}
+.bag-button{font-size:0;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;position:relative;}
+.bag-button::before{content:"\1F6D2";font-size:18px;line-height:1;}
+.bag-count{position:absolute;top:0;right:-2px;display:inline-flex;min-width:15px;height:15px;margin:0;border-radius:50%;align-items:center;justify-content:center;background:var(--cream);color:var(--black);font-size:8px;}
 
 /* HERO */
 .hero{
@@ -401,6 +375,7 @@ button{
   font-weight:900;
   text-transform:uppercase;
 }
+.foundation-accent{color:var(--burgundy);}
 .reference{
   margin-top:30px;
   font-size:10px;
@@ -621,7 +596,7 @@ footer{
   width:100%;
   padding:17px;
   border:0;
-  background:var(--burgundy);
+  background:var(--forest);
   color:var(--cream);
   font-size:10px;
   font-weight:900;
@@ -720,7 +695,7 @@ footer{
   margin-top:20px;
   padding:17px;
   border:0;
-  background:var(--burgundy);
+  background:var(--forest);
   color:var(--cream);
   font-size:10px;
   font-weight:900;
@@ -835,7 +810,7 @@ footer{
   margin-top:22px;
   padding:17px;
   border:0;
-  background:var(--burgundy);
+  background:var(--forest);
   color:var(--cream);
   font-size:10px;
   font-weight:900;
@@ -995,15 +970,14 @@ h1, h2, h3, .hero h1, .section-title, .collection h2, .statement-text, .about h2
 <body>
 
 <nav class="navbar">
-  <a href="#top" class="logo">NSP</a>
+  <button class="menu-btn" id="menuBtn" aria-label="Open navigation"><span></span><span></span><span></span></button>
   <ul class="nav-links" id="navLinks">
     <li><a href="#shop">Shop</a></li>
     <li><a href="#collection-316">316</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <button class="bag-button" id="bagButton">Bag <span class="bag-count" id="bagCount">0</span></button>
-  <button class="menu-btn" id="menuBtn">☰</button>
+  <button class="bag-button" id="bagButton" aria-label="Open shopping cart"><span class="bag-count" id="bagCount">0</span></button>
 </nav>
 
 <main id="top">
@@ -1030,10 +1004,10 @@ h1, h2, h3, .hero h1, .section-title, .collection h2, .statement-text, .about h2
     <p>Inspired by John 3:16 — a collection built around the message that God's love gives us hope beyond this life. Wear the message. Live the message. Share the message.</p>
     <button class="outline-button" onclick="document.getElementById('shop').scrollIntoView()">Shop 316 →</button>
   </div>
-  <div class="collection-image"><img src="/2.png" alt="NSP 316 Collection"></div>
+  <div class="collection-image"><img id="collection316Image" src="/2.png" alt="NSP 316 Collection"></div>
 </section>
 
-<section class="statement"><div class="label">Our Foundation</div><p class="statement-text">“For God so loved the world that He gave His one and only Son, that whoever believes in Him shall not perish but have eternal life.”</p><div class="reference">John 3:16</div></section>
+<section class="statement"><div class="label">Our Foundation</div><p class="statement-text">“For God so <span class="foundation-accent">loved</span> the world that He gave His one and only Son, that whoever believes in Him shall not perish but have <span class="foundation-accent">eternal life</span>.”</p><div class="reference foundation-accent">John 3:16</div></section>
 
 <section class="section" id="about"><div class="about"><h2>Built<br>On<br>Faith.</h2><div class="about-copy"><p>None Shall Perish is a Christian streetwear brand built around one simple message: your faith should be lived, not hidden.</p><p>NSP exists to create clothing that carries meaning — pieces that remind us of the Gospel, our identity in Christ, and the purpose we are called to live.</p><p>Wear the message. Live the message. Share the message.</p></div></div></section>
 
@@ -1193,11 +1167,22 @@ function showSelectedSizeStock(size){
 /* PRODUCTS */
 productsEl.innerHTML = products.map((p,i)=>`
   <article class="product" data-index="${i}">
-    <div class="product-image"><img src="${p.image}" alt="${p.name}" loading="lazy"></div>
+    <div class="product-image"><img src="${p.image}" data-front="${p.gallery[0] || p.image}" data-back="${p.gallery[1] || p.image}" alt="${p.name}" loading="lazy"></div>
     <div class="product-info"><span class="product-name">${p.name}</span><span class="product-price">₱${p.price}</span></div>
     <button class="product-cta">View Product</button>
   </article>
 `).join('');
+
+productsEl.querySelectorAll('.product').forEach(card=>{
+  const image=card.querySelector('.product-image img');
+  if(!image) return;
+  card.addEventListener('mouseenter',()=>{image.src=image.dataset.back||image.dataset.front;});
+  card.addEventListener('mouseleave',()=>{image.src=image.dataset.front||image.src;});
+});
+const collection316Images=['/2.png','/3.png','/4.png','/5.png','/6.png','/7.png'];
+let collection316Index=0;
+const collection316Image=document.getElementById('collection316Image');
+if(collection316Image){setInterval(()=>{collection316Index=(collection316Index+1)%collection316Images.length;collection316Image.style.opacity='0';setTimeout(()=>{collection316Image.src=collection316Images[collection316Index];collection316Image.style.opacity='1';},180);},3200);}
 
 function getProductGallery(product){
   return Array.isArray(product?.gallery) && product.gallery.length ? product.gallery : [product?.image].filter(Boolean);
