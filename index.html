@@ -927,6 +927,7 @@ footer{
   .footer-bottom{flex-direction:column;gap:8px}
   .success-actions{flex-direction:column}
 }
+\n/* NSP SIDEBAR PUSH BEHAVIOR */\n:root{--nsp-side-shift:320px;}\nbody{--nsp-page-shift:0px;}\nbody.nsp-menu-open{--nsp-page-shift:var(--nsp-side-shift);}\nbody.nsp-cart-open{--nsp-page-shift:calc(var(--nsp-side-shift) * -1);}\n.navbar, body > *:not(.navbar){transition:transform .45s cubic-bezier(.22,.61,.36,1);}\n.navbar{transform:translateX(var(--nsp-page-shift));}\nbody > *:not(.navbar){transform:translateX(var(--nsp-page-shift));}\n.nav-links{position:fixed!important;top:0!important;left:0!important;width:var(--nsp-side-shift)!important;height:100vh!important;overflow:hidden!important;}\n.cart-panel,.bag-panel,#bagPanel{height:100vh;overflow-y:auto;}\n
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
