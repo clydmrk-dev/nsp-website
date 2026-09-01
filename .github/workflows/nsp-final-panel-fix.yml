@@ -1,0 +1,47 @@
+name: NSP final panel behavior fix
+on:
+  push:
+    paths:
+      - '.github/nsp-final-panel-trigger.txt'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch existing site
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='NSP FINAL PANEL BEHAVIOR 2026-09-01'
+          if marker not in s:
+            css='''<style id="nsp-final-panel-behavior">
+/* NSP FINAL PANEL BEHAVIOR 2026-09-01 */
+:root{--nsp-panel-width:min(360px,82vw);--nsp-panel-ease:cubic-bezier(.22,.61,.36,1);}
+body> *{transition:transform .45s var(--nsp-panel-ease);}
+body.nsp-menu-open> *{transform:translateX(var(--nsp-panel-width));}
+body.nsp-menu-open>.navbar .nav-links{transform:translateX(calc(-1 * var(--nsp-panel-width)))!important;}
+body.nsp-cart-open> *{transform:translateX(calc(-1 * var(--nsp-panel-width)));}
+body.nsp-cart-open>.navbar{transform:translateX(calc(-1 * var(--nsp-panel-width)));}
+body.nsp-cart-open>.navbar .nav-links{transform:translateX(0)!important;}
+/* Keep menu full-height, white, and non-scrolling. */
+.navbar .nav-links{background:#fff!important;color:#0A0A0A!important;overflow:hidden!important;}
+/* Hide cart trigger while cart drawer is open and match menu trigger size. */
+body.nsp-cart-open .bag-button{opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
+.menu-btn,.bag-button{width:44px!important;height:44px!important;}
+.menu-btn span{width:34px!important;}
+.bag-button::before{font-size:24px!important;}
+</style>'''
+            s=s.replace('</head>',css+'\n</head>',1)
+            p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit site patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Fix NSP full-page panel push behavior"
+          git push
