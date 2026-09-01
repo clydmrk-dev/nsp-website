@@ -3,6 +3,10 @@
     {
       "source": "/favicon.ico",
       "destination": "/logonsp.png"
+    },
+    {
+      "source": "/cart",
+      "destination": "/cart.html"
     }
   ]
 }
