@@ -1,0 +1,53 @@
+name: Apply NSP product gallery
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  update-products:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Merge back photos into product galleries
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          old = """const products = [
+            {name:'NSP Collection 01',price:490,image:'/2.png',gallery:['/2.png']},
+            {name:'NSP Collection 02',price:490,image:'/3.png',gallery:['/3.png']},
+            {name:'NSP Collection 03',price:490,image:'/4.png',gallery:['/4.png']},
+            {name:'NSP Collection 04',price:490,image:'/5.png',gallery:['/5.png']},
+            {name:'NSP Collection 05',price:490,image:'/6.png',gallery:['/6.png']},
+            {name:'NSP Collection 06',price:490,image:'/7.png',gallery:['/7.png']}
+          ];"""
+
+          new = """const products = [
+            {name:'NSP Collection 01',price:490,image:'/2.png',gallery:['/2.png','/3.png']},
+            {name:'NSP Collection 03',price:490,image:'/4.png',gallery:['/4.png','/5.png']},
+            {name:'NSP Collection 05',price:490,image:'/6.png',gallery:['/6.png','/7.png']}
+          ];"""
+
+          if old not in text:
+              raise SystemExit('Expected product block was not found; no changes made.')
+
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Commit and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/apply-product-gallery.yml
+          git rm .github/workflows/apply-product-gallery.yml
+          git commit -m "Merge back photos into NSP product galleries"
+          git push
