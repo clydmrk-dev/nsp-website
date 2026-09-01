@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install parser
-        run: python3 -m pip install beautifulsoup4
       - name: Install clean navigation shell
         run: |
           python3 - <<'PY'
@@ -29,12 +27,13 @@ body{padding:0!important;margin:0!important}
 #nsp-site-canvas{width:100%;min-height:100vh;transform:none;transition:transform .45s var(--nsp-ease);will-change:transform}
 body.nsp-menu-open #nsp-site-canvas{transform:translate3d(var(--nsp-drawer),0,0)!important}
 body.nsp-cart-open #nsp-site-canvas{transform:translate3d(calc(-1 * var(--nsp-cart-drawer)),0,0)!important}
+body.nsp-menu-open>.navbar,body.nsp-cart-open>.navbar{position:fixed!important;transform:none!important;left:0!important;right:0!important;top:0!important}
 .navbar{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:5000!important;transform:none!important;mix-blend-mode:difference!important}
 .navbar .menu-btn,.navbar .bag-button{position:fixed!important;top:22px!important;z-index:5002!important}
 .navbar .menu-btn{left:calc(var(--nsp-drawer) + 5%)!important}
 .navbar .bag-button{right:5%!important}
 body.nsp-menu-open .navbar .menu-btn,body.nsp-cart-open .navbar .bag-button{display:none!important}
-.navbar .nav-links.active{display:flex!important;position:fixed!important;top:0!important;left:0!important;width:var(--nsp-drawer)!important;min-width:var(--nsp-drawer)!important;max-width:var(--nsp-drawer)!important;height:100vh!important;padding:80px 48px!important;margin:0!important;background:var(--cream)!important;color:var(--black)!important;mix-blend-mode:normal!important;z-index:5001!important;transform:none!important;box-shadow:none!important;overflow:hidden!important}
+body.nsp-menu-open>.navbar .nav-links.active,.navbar .nav-links.active{display:flex!important;position:fixed!important;top:0!important;left:0!important;width:var(--nsp-drawer)!important;min-width:var(--nsp-drawer)!important;max-width:var(--nsp-drawer)!important;height:100vh!important;padding:80px 48px!important;margin:0!important;background:var(--cream)!important;color:var(--black)!important;mix-blend-mode:normal!important;z-index:5001!important;transform:none!important;box-shadow:none!important;overflow:hidden!important}
 .navbar .nav-links.active a{color:var(--black)!important}
 body.nsp-menu-open{overflow:hidden!important}
 body.nsp-cart-open .bag-panel{position:fixed!important;top:0!important;right:0!important;left:auto!important;width:var(--nsp-cart-drawer)!important;max-width:var(--nsp-cart-drawer)!important;height:100vh!important;z-index:5001!important;transform:none!important;overflow-y:auto!important;background:var(--cream)!important;box-shadow:none!important}
