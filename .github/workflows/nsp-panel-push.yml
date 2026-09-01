@@ -1,0 +1,31 @@
+name: NSP panel push
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply panel push behavior
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          marker = '/* NSP PANEL PUSH FIX */'
+          if marker not in s:
+              css = '''\n<style>\n/* NSP PANEL PUSH FIX */\n:root{--nsp-panel-width:min(360px,88vw);}\nbody{transition:padding-left .38s cubic-bezier(.22,1,.36,1),padding-right .38s cubic-bezier(.22,1,.36,1);}\nbody.nsp-menu-open{padding-left:var(--nsp-panel-width);}\nbody.nsp-cart-open{padding-right:var(--nsp-panel-width);}\nbody.nsp-menu-open .navbar,body.nsp-cart-open .navbar{transition:transform .38s cubic-bezier(.22,1,.36,1);}\nbody.nsp-menu-open .navbar{transform:translateX(var(--nsp-panel-width));}\nbody.nsp-cart-open .navbar{transform:translateX(calc(var(--nsp-panel-width) * -1));}\n@media(max-width:700px){\n  body.nsp-menu-open{padding-left:0;}\n  body.nsp-cart-open{padding-right:0;}\n  body.nsp-menu-open .navbar{transform:translateX(var(--nsp-panel-width));}\n  body.nsp-cart-open .navbar{transform:translateX(calc(var(--nsp-panel-width) * -1));}\n}\n</style>\n'''
+              s = s.replace('</head>', css + '</head>', 1)
+              p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Push NSP header with side panels"
+          git push
