@@ -1045,6 +1045,23 @@ body.nsp-panel-open{overflow:hidden;}
 body.nsp-menu-open{overflow:hidden!important;}
 body.nsp-cart-open{overflow:auto!important;}
 </style>
+
+<style>
+/* NSP PANEL PUSH FIX */
+:root{--nsp-panel-width:min(360px,88vw);}
+body{transition:padding-left .38s cubic-bezier(.22,1,.36,1),padding-right .38s cubic-bezier(.22,1,.36,1);}
+body.nsp-menu-open{padding-left:var(--nsp-panel-width);}
+body.nsp-cart-open{padding-right:var(--nsp-panel-width);}
+body.nsp-menu-open .navbar,body.nsp-cart-open .navbar{transition:transform .38s cubic-bezier(.22,1,.36,1);}
+body.nsp-menu-open .navbar{transform:translateX(var(--nsp-panel-width));}
+body.nsp-cart-open .navbar{transform:translateX(calc(var(--nsp-panel-width) * -1));}
+@media(max-width:700px){
+  body.nsp-menu-open{padding-left:0;}
+  body.nsp-cart-open{padding-right:0;}
+  body.nsp-menu-open .navbar{transform:translateX(var(--nsp-panel-width));}
+  body.nsp-cart-open .navbar{transform:translateX(calc(var(--nsp-panel-width) * -1));}
+}
+</style>
 </head>
 <body>
 
