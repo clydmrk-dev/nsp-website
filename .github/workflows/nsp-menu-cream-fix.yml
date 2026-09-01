@@ -1,4 +1,4 @@
-name: NSP cream menu placement fix
+name: NSP cream panel controls fix
 on:
   push:
     paths:
@@ -10,48 +10,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Move menu into cream area and remove white bar
+      - name: Put both drawers in cream space and hide trigger buttons
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          marker='NSP CREAM MENU AREA FIX 2026-09-02'
+          marker='NSP CREAM PANELS CONTROLS FIX 2026-09-02'
           if marker not in s:
-            css='''<style id="nsp-cream-menu-area-fix">
-/* NSP CREAM MENU AREA FIX 2026-09-02 */
+            css='''<style id="nsp-cream-panels-controls-fix">
+/* NSP CREAM PANELS CONTROLS FIX 2026-09-02 */
 body.nsp-menu-open{background:var(--cream)!important;}
-body.nsp-menu-open .nav-links,
-body.nsp-menu-open .nav-links.active,
-body.nsp-menu-open .nav-links.nsp-reference-menu{
-  position:fixed!important;
-  top:0!important;
-  left:25vw!important;
-  right:auto!important;
-  width:43vw!important;
-  min-width:0!important;
-  max-width:none!important;
-  height:100vh!important;
-  padding:52px 44px!important;
-  margin:0!important;
-  background:var(--cream)!important;
-  color:var(--black)!important;
-  transform:none!important;
-  box-shadow:none!important;
-  mix-blend-mode:normal!important;
-  z-index:3000!important;
-  overflow:hidden!important;
-}
-body.nsp-menu-open .nav-links a,
-body.nsp-menu-open .nav-links.nsp-reference-menu a{color:var(--black)!important;}
-body.nsp-menu-open .nsp-menu-close{top:28px!important;right:28px!important;}
-@media(max-width:800px){
-  body.nsp-menu-open .nav-links,
-  body.nsp-menu-open .nav-links.active,
-  body.nsp-menu-open .nav-links.nsp-reference-menu{
-    left:22vw!important;width:78vw!important;min-width:0!important;max-width:none!important;padding:48px 32px!important;
-  }
-}
+body.nsp-menu-open .nav-links,body.nsp-menu-open .nav-links.active,body.nsp-menu-open .nav-links.nsp-reference-menu{position:fixed!important;top:0!important;left:0!important;right:auto!important;width:68vw!important;min-width:68vw!important;max-width:68vw!important;height:100vh!important;padding:52px 44px!important;margin:0!important;background:var(--cream)!important;color:var(--black)!important;transform:none!important;box-shadow:none!important;mix-blend-mode:normal!important;z-index:3000!important;overflow:hidden!important;}
+body.nsp-menu-open .nav-links a,body.nsp-menu-open .nav-links.nsp-reference-menu a{color:var(--black)!important;}
+body.nsp-menu-open .menu-btn{opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
+body.nsp-cart-open{background:var(--cream)!important;}
+body.nsp-cart-open .bag-panel{position:fixed!important;top:0!important;right:0!important;left:auto!important;width:39vw!important;min-width:39vw!important;max-width:39vw!important;height:100vh!important;margin:0!important;background:var(--cream)!important;color:var(--black)!important;transform:none!important;box-shadow:none!important;z-index:3000!important;overflow-y:auto!important;overflow-x:hidden!important;}
+body.nsp-cart-open .bag-button{opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
+body.nsp-menu-open::before,body.nsp-cart-open::before{display:none!important;content:none!important;}
+@media(max-width:800px){body.nsp-menu-open .nav-links,body.nsp-menu-open .nav-links.active,body.nsp-menu-open .nav-links.nsp-reference-menu{left:0!important;width:78vw!important;min-width:78vw!important;max-width:78vw!important;padding:48px 32px!important;}body.nsp-cart-open .bag-panel{width:88vw!important;min-width:88vw!important;max-width:88vw!important;}}
 </style>'''
             s=s.replace('</head>',css+'\n</head>',1)
             p.write_text(s,encoding='utf-8')
@@ -61,5 +38,5 @@ body.nsp-menu-open .nsp-menu-close{top:28px!important;right:28px!important;}
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "Move NSP menu into cream panel area"
+          git diff --cached --quiet || git commit -m "Fix NSP cream menu cart controls"
           git push
