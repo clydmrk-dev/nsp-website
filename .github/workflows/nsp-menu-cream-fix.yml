@@ -1,0 +1,65 @@
+name: NSP cream menu placement fix
+on:
+  push:
+    paths:
+      - '.github/nsp-menu-cream-trigger.txt'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Move menu into cream area and remove white bar
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='NSP CREAM MENU AREA FIX 2026-09-02'
+          if marker not in s:
+            css='''<style id="nsp-cream-menu-area-fix">
+/* NSP CREAM MENU AREA FIX 2026-09-02 */
+body.nsp-menu-open{background:var(--cream)!important;}
+body.nsp-menu-open .nav-links,
+body.nsp-menu-open .nav-links.active,
+body.nsp-menu-open .nav-links.nsp-reference-menu{
+  position:fixed!important;
+  top:0!important;
+  left:25vw!important;
+  right:auto!important;
+  width:43vw!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:100vh!important;
+  padding:52px 44px!important;
+  margin:0!important;
+  background:var(--cream)!important;
+  color:var(--black)!important;
+  transform:none!important;
+  box-shadow:none!important;
+  mix-blend-mode:normal!important;
+  z-index:3000!important;
+  overflow:hidden!important;
+}
+body.nsp-menu-open .nav-links a,
+body.nsp-menu-open .nav-links.nsp-reference-menu a{color:var(--black)!important;}
+body.nsp-menu-open .nsp-menu-close{top:28px!important;right:28px!important;}
+@media(max-width:800px){
+  body.nsp-menu-open .nav-links,
+  body.nsp-menu-open .nav-links.active,
+  body.nsp-menu-open .nav-links.nsp-reference-menu{
+    left:22vw!important;width:78vw!important;min-width:0!important;max-width:none!important;padding:48px 32px!important;
+  }
+}
+</style>'''
+            s=s.replace('</head>',css+'\n</head>',1)
+            p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Move NSP menu into cream panel area"
+          git push
