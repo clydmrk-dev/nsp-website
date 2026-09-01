@@ -1,0 +1,73 @@
+name: NSP clean navigation shell
+on:
+  push:
+    paths:
+      - '.github/nsp-clean-shell-trigger.txt'
+permissions:
+  contents: write
+jobs:
+  clean-shell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install parser
+        run: python3 -m pip install beautifulsoup4
+      - name: Install clean navigation shell
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='NSP CLEAN NAV SHELL 2026-09-02'
+          if marker in s:
+              raise SystemExit('clean shell already installed')
+          css=r'''<style id="nsp-clean-nav-shell">
+/* NSP CLEAN NAV SHELL 2026-09-02 */
+:root{--nsp-drawer:25vw;--nsp-cart-drawer:25vw;--nsp-ease:cubic-bezier(.22,.61,.36,1)}
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body{padding:0!important;margin:0!important}
+#nsp-site-canvas{width:100%;min-height:100vh;transform:none;transition:transform .45s var(--nsp-ease);will-change:transform}
+body.nsp-menu-open #nsp-site-canvas{transform:translate3d(var(--nsp-drawer),0,0)!important}
+body.nsp-cart-open #nsp-site-canvas{transform:translate3d(calc(-1 * var(--nsp-cart-drawer)),0,0)!important}
+.navbar{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:5000!important;transform:none!important;mix-blend-mode:difference!important}
+.navbar .menu-btn,.navbar .bag-button{position:fixed!important;top:22px!important;z-index:5002!important}
+.navbar .menu-btn{left:calc(var(--nsp-drawer) + 5%)!important}
+.navbar .bag-button{right:5%!important}
+body.nsp-menu-open .navbar .menu-btn,body.nsp-cart-open .navbar .bag-button{display:none!important}
+.navbar .nav-links.active{display:flex!important;position:fixed!important;top:0!important;left:0!important;width:var(--nsp-drawer)!important;min-width:var(--nsp-drawer)!important;max-width:var(--nsp-drawer)!important;height:100vh!important;padding:80px 48px!important;margin:0!important;background:var(--cream)!important;color:var(--black)!important;mix-blend-mode:normal!important;z-index:5001!important;transform:none!important;box-shadow:none!important;overflow:hidden!important}
+.navbar .nav-links.active a{color:var(--black)!important}
+body.nsp-menu-open{overflow:hidden!important}
+body.nsp-cart-open .bag-panel{position:fixed!important;top:0!important;right:0!important;left:auto!important;width:var(--nsp-cart-drawer)!important;max-width:var(--nsp-cart-drawer)!important;height:100vh!important;z-index:5001!important;transform:none!important;overflow-y:auto!important;background:var(--cream)!important;box-shadow:none!important}
+body.nsp-cart-open{overflow:auto!important}
+body.nsp-menu-open>main,body.nsp-menu-open>footer,body.nsp-cart-open>main,body.nsp-cart-open>footer{transform:none!important;width:auto!important;margin-left:0!important;margin-right:0!important;padding-left:0!important;padding-right:0!important}
+@media(max-width:800px){:root{--nsp-drawer:78vw;--nsp-cart-drawer:88vw}.navbar .menu-btn{left:auto!important;right:17%!important}.navbar .nav-links.active{width:var(--nsp-drawer)!important;min-width:var(--nsp-drawer)!important;max-width:var(--nsp-drawer)!important;padding:80px 30px!important}}
+</style>'''
+          js=r'''<script id="nsp-clean-nav-runtime">
+(function(){
+  function install(){
+    if(document.getElementById('nsp-site-canvas')) return;
+    var body=document.body;
+    var canvas=document.createElement('div');
+    canvas.id='nsp-site-canvas';
+    var keep=function(el){
+      if(!el || el.nodeType!==1) return true;
+      var c=(el.className||'').toString();
+      return el.classList.contains('navbar') || c.includes('bag-panel') || c.includes('modal-backdrop') || c.includes('checkout-backdrop') || c.includes('admin');
+    };
+    Array.from(body.children).forEach(function(el){ if(!keep(el)) canvas.appendChild(el); });
+    body.insertBefore(canvas,body.firstChild);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install); else install();
+})();
+</script>'''
+          s=s.replace('</head>',css+'\n</head>',1)
+          s=s.replace('</body>',js+'\n</body>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit clean shell
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Rebuild NSP navigation as clean sliding shell"
+          git push
