@@ -1,135 +1,77 @@
 name: Apply NSP sidebar and cart layout
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
   apply:
-    if: ${{ !contains(github.event.head_commit.message, 'Apply NSP sidebar and cart interaction layout') && !contains(github.event.head_commit.message, 'Remove temporary NSP layout workflow') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Patch index.html
+        shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
-          marker = '/* NSP SIDEBAR + CART LAYOUT 2026-09-01 */'
+          marker = 'NSP SIDEBAR + CART LAYOUT 2026-09-01'
           if marker not in s:
-              css = r'''
-<style id="nsp-sidebar-cart-layout">
+              css = '''<style id="nsp-sidebar-cart-layout">
 /* NSP SIDEBAR + CART LAYOUT 2026-09-01 */
 :root{--nsp-drawer-width:min(360px,82vw);}
 body{transition:transform .45s cubic-bezier(.22,.61,.36,1);}
 .navbar{transition:transform .45s cubic-bezier(.22,.61,.36,1);}
-.navbar .nav-links{
-  position:fixed!important;
-  inset:0 auto 0 0!important;
-  width:var(--nsp-drawer-width)!important;
-  height:100vh!important;
-  max-height:100vh!important;
-  margin:0!important;
-  padding:92px 42px 42px!important;
-  display:flex!important;
-  flex-direction:column!important;
-  justify-content:center!important;
-  align-items:flex-start!important;
-  gap:28px!important;
-  overflow:hidden!important;
-  overscroll-behavior:none!important;
-  background:#fff!important;
-  color:#0A0A0A!important;
-  mix-blend-mode:normal!important;
-  box-shadow:8px 0 35px rgba(0,0,0,.10)!important;
-  transform:translateX(-105%)!important;
-  visibility:hidden!important;
-  opacity:0!important;
-  transition:transform .45s cubic-bezier(.22,.61,.36,1),opacity .3s ease,visibility 0s linear .45s!important;
-  z-index:5000!important;
-}
-.navbar .nav-links.active{
-  transform:translateX(0)!important;
-  visibility:visible!important;
-  opacity:1!important;
-  transition:transform .45s cubic-bezier(.22,.61,.36,1),opacity .3s ease,visibility 0s!important;
-}
+.navbar .nav-links{position:fixed!important;inset:0 auto 0 0!important;width:var(--nsp-drawer-width)!important;height:100vh!important;max-height:100vh!important;margin:0!important;padding:92px 42px 42px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:flex-start!important;gap:28px!important;overflow:hidden!important;overscroll-behavior:none!important;background:#fff!important;color:#0A0A0A!important;mix-blend-mode:normal!important;box-shadow:8px 0 35px rgba(0,0,0,.10)!important;transform:translateX(-105%)!important;visibility:hidden!important;opacity:0!important;transition:transform .45s cubic-bezier(.22,.61,.36,1),opacity .3s ease,visibility 0s linear .45s!important;z-index:5000!important;}
+.navbar .nav-links.active{transform:translateX(0)!important;visibility:visible!important;opacity:1!important;transition:transform .45s cubic-bezier(.22,.61,.36,1),opacity .3s ease,visibility 0s!important;}
 .navbar .nav-links a{color:#0A0A0A!important;font-size:12px!important;letter-spacing:2px!important;}
-.navbar .nav-links .nsp-menu-close{
-  position:absolute!important;
-  top:24px!important;
-  right:24px!important;
-  width:42px!important;
-  height:42px!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  border:1px solid rgba(10,10,10,.18)!important;
-  background:transparent!important;
-  color:#0A0A0A!important;
-  font-size:22px!important;
-}
+.navbar .nav-links .nsp-menu-close{position:absolute!important;top:24px!important;right:24px!important;width:42px!important;height:42px!important;display:flex!important;align-items:center!important;justify-content:center!important;border:1px solid rgba(10,10,10,.18)!important;background:transparent!important;color:#0A0A0A!important;font-size:22px!important;}
 body.nsp-menu-open{transform:translateX(var(--nsp-drawer-width));overflow-x:hidden!important;}
 body.nsp-menu-open .navbar{transform:translateX(calc(-1 * var(--nsp-drawer-width)));}
-body.nsp-menu-open .navbar .menu-btn{visibility:hidden;pointer-events:none;}
+body.nsp-menu-open .navbar .menu-btn{visibility:hidden!important;pointer-events:none!important;}
 .menu-btn{width:44px!important;height:44px!important;padding:6px 0!important;gap:6px!important;}
 .menu-btn span{width:34px!important;height:2px!important;}
 .bag-button{width:44px!important;height:44px!important;}
 .bag-button::before{font-size:24px!important;}
 body.nsp-cart-open .bag-button{opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
-@media(max-width:800px){
-  :root{--nsp-drawer-width:82vw;}
-  body.nsp-menu-open .navbar{transform:translateX(calc(-1 * var(--nsp-drawer-width)));}
-  .navbar .nav-links{padding-left:28px!important;padding-right:28px!important;}
-}
-</style>
-'''
-              s = s.replace('</head>', css + '</head>', 1)
-              js = r'''
-<script id="nsp-sidebar-cart-behavior">
+@media(max-width:800px){:root{--nsp-drawer-width:82vw}.navbar .nav-links{padding-left:28px!important;padding-right:28px!important}.navbar .nav-links.active{transform:translateX(0)!important}body.nsp-menu-open .navbar{transform:translateX(calc(-1 * var(--nsp-drawer-width)));}}
+</style>'''
+              js = '''<script id="nsp-sidebar-cart-behavior">
 (function(){
   function setup(){
     const menu=document.querySelector('.menu-btn');
     const nav=document.querySelector('.nav-links');
     const cart=document.querySelector('.bag-button');
-    if(menu && nav){
-      menu.addEventListener('click',()=>document.body.classList.add('nsp-menu-open'),true);
-      nav.addEventListener('click',(e)=>{
-        const close=e.target.closest('.nsp-menu-close');
-        if(close){document.body.classList.remove('nsp-menu-open');}
-      });
-      nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>document.body.classList.remove('nsp-menu-open')));
+    if(menu) menu.addEventListener('click',function(){document.body.classList.add('nsp-menu-open');},true);
+    if(nav){
+      nav.addEventListener('click',function(e){if(e.target.closest('.nsp-menu-close'))document.body.classList.remove('nsp-menu-open');},true);
+      nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){document.body.classList.remove('nsp-menu-open');});});
     }
-    if(cart){
-      cart.addEventListener('click',()=>document.body.classList.add('nsp-cart-open'),true);
-    }
-    document.addEventListener('click',(e)=>{
+    if(cart) cart.addEventListener('click',function(){document.body.classList.add('nsp-cart-open');},true);
+    document.addEventListener('click',function(e){
       const el=e.target.closest('button,a,[role="button"]');
       if(!el)return;
       const txt=((el.getAttribute('aria-label')||'')+' '+(el.className||'')+' '+(el.textContent||'')).toLowerCase();
-      if(/close|\b×\b|\bx\b/.test(txt) && /(cart|bag|drawer|basket)/.test(txt)){
-        document.body.classList.remove('nsp-cart-open');
-      }
+      if(/close|×/.test(txt) && /cart|bag|drawer|basket/.test(txt))document.body.classList.remove('nsp-cart-open');
     },true);
-    const observer=new MutationObserver(()=>{
-      if(!document.body.contains(cart)) document.body.classList.remove('nsp-cart-open');
-    });
-    observer.observe(document.body,{childList:true,subtree:true});
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',setup); else setup();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
 })();
-</script>
-'''
-              s = s.replace('</body>', js + '</body>', 1)
-              p.write_text(s, encoding='utf-8')
+</script>'''
+              s=s.replace('</head>',css+'\n</head>',1)
+              s=s.replace('</body>',js+'\n</body>',1)
+              p.write_text(s,encoding='utf-8')
           PY
       - name: Commit patched site
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "Apply NSP sidebar and cart interaction layout"
-          git push
+          if ! git diff --cached --quiet; then
+            git commit -m "Apply NSP sidebar and cart interaction layout"
+            git push
+          fi
