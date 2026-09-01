@@ -46,14 +46,14 @@ patch = r'''
   opacity:1 !important;
 }
 .nav-links.nsp-reference-menu a:hover { opacity:.55 !important; }
-body.nsp-menu-open > :not(.nav-links):not(.modal-backdrop):not(script):not(style),
-body.nsp-cart-open > :not(.nav-links):not(.modal-backdrop):not(script):not(style) {
+body.nsp-menu-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style),
+body.nsp-cart-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style) {
   transition:transform .45s cubic-bezier(.22,1,.36,1) !important;
 }
-body.nsp-menu-open > :not(.nav-links):not(.modal-backdrop):not(script):not(style) {
+body.nsp-menu-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style) {
   transform:translateX(25vw) !important;
 }
-body.nsp-cart-open > :not(.nav-links):not(.modal-backdrop):not(script):not(style) {
+body.nsp-cart-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style) {
   transform:translateX(-25vw) !important;
 }
 body.nsp-menu-open .navbar { transform:translateX(25vw) !important; }
@@ -69,9 +69,9 @@ body.nsp-menu-open { overflow:hidden !important; }
     padding:48px 32px !important;
   }
   .nav-links.nsp-reference-menu a { font-size:20px !important; margin-bottom:31px !important; }
-  body.nsp-menu-open > :not(.nav-links):not(.modal-backdrop):not(script):not(style),
+  body.nsp-menu-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style),
   body.nsp-menu-open .navbar { transform:translateX(78vw) !important; }
-  body.nsp-cart-open > :not(.nav-links):not(.modal-backdrop):not(script):not(style),
+  body.nsp-cart-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style),
   body.nsp-cart-open .navbar { transform:translateX(-78vw) !important; }
 }
 </style>
