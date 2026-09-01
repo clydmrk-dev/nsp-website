@@ -1,0 +1,93 @@
+name: NSP cart landing page v2
+on:
+  push:
+    paths:
+      - '.github/nsp-cart-page-v2-trigger.txt'
+permissions:
+  contents: write
+jobs:
+  cart-page:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build cart landing page shell
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='NSP CART PAGE V2 2026-09-02'
+          if marker not in s:
+            css='''<style id="nsp-cart-page-v2">
+/* NSP CART PAGE V2 2026-09-02 */
+body.nsp-cart-page-v2{background:#fff!important;color:var(--black)!important;overflow:auto!important}
+body.nsp-cart-page-v2 #nsp-site-canvas{display:none!important}
+body.nsp-cart-page-v2 .navbar{display:flex!important;position:fixed!important;inset:0 0 auto!important;height:86px!important;padding:0 4.8%!important;color:var(--black)!important;background:#fff!important;mix-blend-mode:normal!important;z-index:9000!important}
+body.nsp-cart-page-v2 .navbar .logo{display:block!important;position:absolute!important;left:50%!important;top:13px!important;transform:translateX(-50%)!important}
+body.nsp-cart-page-v2 .navbar .logo img{display:block!important;width:154px!important;height:48px!important;object-fit:contain!important}
+body.nsp-cart-page-v2 .navbar .menu-btn{position:fixed!important;left:4.8%!important;top:24px!important;color:var(--black)!important;display:flex!important}
+body.nsp-cart-page-v2 .navbar .bag-button{position:fixed!important;right:4.8%!important;top:24px!important;color:var(--black)!important;display:inline-flex!important}
+body.nsp-cart-page-v2 .navbar .bag-button::before{font-size:17px!important}
+body.nsp-cart-page-v2 .nav-links{display:none!important}
+body.nsp-cart-page-v2 .bag-panel{position:relative!important;display:block!important;inset:auto!important;width:100%!important;max-width:none!important;height:auto!important;min-height:100vh!important;margin:0!important;padding:150px 12% 80px!important;background:#fff!important;color:var(--black)!important;transform:none!important;overflow:visible!important;z-index:8000!important;box-shadow:none!important}
+body.nsp-cart-page-v2 .bag-panel .bag-header{display:block!important;text-align:center!important;padding:0 0 64px!important;margin:0!important;border:0!important;background:#fff!important}
+body.nsp-cart-page-v2 .bag-panel .bag-header h2,body.nsp-cart-page-v2 .bag-panel .bag-header .bag-title{font-family:Arial,Helvetica,sans-serif!important;font-size:31px!important;font-weight:400!important;letter-spacing:0!important;text-transform:uppercase!important;margin:0!important}
+body.nsp-cart-page-v2 .bag-panel .bag-close{display:none!important}
+body.nsp-cart-page-v2 .bag-panel .bag-body{padding:0!important;margin:0!important;min-height:0!important}
+body.nsp-cart-page-v2 .bag-panel .cart-header-row{display:grid!important;grid-template-columns:minmax(0,1fr) 120px 160px!important;align-items:end!important;border-bottom:1px solid rgba(10,10,10,.65)!important;padding:0 0 20px!important;margin:0!important;font-size:14px!important;letter-spacing:1px!important;text-transform:uppercase!important}
+body.nsp-cart-page-v2 .bag-panel .cart-items{display:block!important;margin:0!important}
+body.nsp-cart-page-v2 .bag-panel .cart-item{display:grid!important;grid-template-columns:minmax(0,1fr) 120px 160px!important;align-items:center!important;min-height:300px!important;padding:35px 0!important;border-bottom:1px solid rgba(10,10,10,.65)!important}
+body.nsp-cart-page-v2 .bag-panel .cart-item img{width:220px!important;height:220px!important;object-fit:contain!important;background:#f3f3f1!important}
+body.nsp-cart-page-v2 .bag-panel .cart-item-info{display:flex!important;align-items:center!important;gap:30px!important}
+body.nsp-cart-page-v2 .bag-panel .cart-item-name{font-size:16px!important;font-weight:400!important;text-transform:uppercase!important;line-height:1.2!important}
+body.nsp-cart-page-v2 .bag-panel .cart-item-meta{font-size:13px!important;margin-top:8px!important;opacity:.7!important}
+body.nsp-cart-page-v2 .bag-panel .cart-item-quantity{justify-self:start!important;display:flex!important;align-items:center!important;justify-content:center!important;min-width:88px!important;height:48px!important;background:#f5f5f3!important;font-size:14px!important}
+body.nsp-cart-page-v2 .bag-panel .cart-item-total{justify-self:end!important;font-size:15px!important}
+body.nsp-cart-page-v2 .bag-panel .remove{display:block!important;margin-top:8px!important;font-size:12px!important;text-decoration:underline!important;background:none!important;border:0!important;padding:0!important}
+body.nsp-cart-page-v2 .bag-panel .bag-footer{display:flex!important;flex-direction:column!important;align-items:flex-end!important;padding-top:22px!important}
+body.nsp-cart-page-v2 .bag-panel .bag-total{font-size:15px!important;margin-bottom:12px!important}
+body.nsp-cart-page-v2 .bag-panel .bag-actions{display:flex!important;gap:18px!important;align-items:center!important}
+body.nsp-cart-page-v2 .bag-panel .checkout-btn{background:var(--forest)!important;color:var(--cream)!important;border:0!important;min-width:165px!important;height:50px!important}
+body.nsp-cart-page-v2 .bag-panel .update-cart{border:1px solid var(--forest)!important;background:#fff!important;color:var(--forest)!important;height:50px!important}
+body.nsp-cart-page-v2 .bag-panel .close{display:none!important}
+@media(max-width:800px){body.nsp-cart-page-v2 .bag-panel{padding:125px 6% 50px!important}body.nsp-cart-page-v2 .bag-panel .cart-header-row,body.nsp-cart-page-v2 .bag-panel .cart-item{grid-template-columns:minmax(0,1fr) 70px 105px!important}body.nsp-cart-page-v2 .bag-panel .cart-item img{width:130px!important;height:130px!important}body.nsp-cart-page-v2 .navbar .logo img{width:120px!important}}
+</style>'''
+            js='''<script id="nsp-cart-page-v2-script">
+(function(){
+  function install(){
+    const bag=document.getElementById('bagButton');
+    const panel=document.getElementById('bagPanel');
+    if(!bag||!panel||document.body.dataset.cartV2)return;
+    document.body.dataset.cartV2='1';
+    function openCart(e){
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+      document.body.classList.remove('nsp-menu-open','nsp-cart-open','nsp-cart-landing');
+      document.body.classList.add('nsp-cart-page-v2');
+      panel.classList.add('open');
+      history.pushState({nspCart:true},'', '/cart');
+      window.scrollTo(0,0);
+    }
+    bag.addEventListener('click',openCart,true);
+    window.addEventListener('popstate',function(){
+      if(location.pathname==='/cart') document.body.classList.add('nsp-cart-page-v2');
+      else {document.body.classList.remove('nsp-cart-page-v2');panel.classList.remove('open');}
+    });
+    if(location.pathname==='/cart'){
+      document.body.classList.add('nsp-cart-page-v2');
+      panel.classList.add('open');
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
+</script>'''
+            s=s.replace('</head>',css+'\n</head>',1)
+            s=s.replace('</body>',js+'\n</body>',1)
+            p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit cart page
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Redesign cart as dedicated landing page"
+          git push
