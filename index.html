@@ -1683,5 +1683,23 @@ renderBag();
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initCartLanding);else initCartLanding();
 })();
 </script>
+
+<style id="nsp-cart-landing-link-style">/* NSP CART LANDING LINK 2026-09-02 */</style>
+<script id="nsp-cart-landing-link">
+(function(){
+  function bind(){
+    const bag=document.getElementById('bagButton');
+    if(!bag || bag.dataset.nspCartLanding==='1') return;
+    bag.dataset.nspCartLanding='1';
+    bag.onclick=function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      window.location.href='/cart';
+    };
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind);
+  else bind();
+})();
+</script>
 </body>
 </html>
