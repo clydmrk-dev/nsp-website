@@ -1,0 +1,31 @@
+name: NSP UI polish
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ui-polish.yml
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply requested UI polish
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          additions='''\n<style id="nsp-ui-polish">\n/* NSP UI polish */\n.header{transition:transform .45s cubic-bezier(.22,1,.36,1);}\n.header.menu-open{transform:translateX(220px);}\n.header.cart-open{transform:translateX(-220px);}\n.nav-links{position:fixed!important;left:0!important;top:0!important;height:100vh!important;width:220px!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;justify-content:center!important;gap:22px!important;padding:32px!important;background:var(--black)!important;color:var(--cream)!important;transform:translateX(-100%);transition:transform .45s cubic-bezier(.22,1,.36,1);z-index:1000;}\n.nav-links.active{transform:translateX(0);}\nbody.nsp-menu-open{overflow:hidden;}\n.product-card img{transition:opacity .35s ease;}\n.nsp-product-front{opacity:1;}\n.nsp-product-back{opacity:0;position:absolute!important;inset:0;width:100%;height:100%;object-fit:cover;}\n.product-card:hover .nsp-product-front{opacity:0;}\n.product-card:hover .nsp-product-back{opacity:1;}\n.nsp-316-image{transition:opacity .8s ease;}\n.nsp-burgundy{color:var(--burgundy)!important;}\n</style>\n<script id="nsp-ui-polish-script">\n(function(){\n  const header=document.querySelector('.header');\n  const menuBtn=document.querySelector('.menu-toggle, .hamburger, [aria-label*="menu" i]');\n  const cartBtn=document.querySelector('.cart, .cart-icon, [aria-label*="cart" i]');\n  if(menuBtn&&header){menuBtn.addEventListener('click',()=>{header.classList.toggle('menu-open');document.body.classList.toggle('nsp-menu-open');});}\n  if(cartBtn&&header){cartBtn.addEventListener('click',()=>header.classList.toggle('cart-open'));}\n})();\n</script>\n'''
+          if 'id="nsp-ui-polish"' not in s:
+              s=s.replace('</head>', additions+'</head>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Polish NSP menu cart and product transitions" || exit 0
+          git push
