@@ -1159,6 +1159,26 @@ body.nsp-menu-open { overflow:hidden !important; }
 </script>
 <!-- NSP WHOLE PAGE SIDE PANEL SHIFT -->
 
+<style id="nsp-clean-nav-15vw">
+/* NSP CLEAN NAV SHELL 15VW 2026-09-02 */
+:root{--nsp-drawer:25vw;--nsp-cart-drawer:25vw;--nsp-shift:15vw;--nsp-ease:cubic-bezier(.22,.61,.36,1)}
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body{padding:0!important;margin:0!important}
+#nsp-site-canvas{width:100%;min-height:100vh;transform:none;transition:transform .45s var(--nsp-ease);will-change:transform}
+body.nsp-menu-open #nsp-site-canvas{transform:translate3d(var(--nsp-shift),0,0)!important}
+body.nsp-cart-open #nsp-site-canvas{transform:translate3d(calc(-1 * var(--nsp-shift)),0,0)!important}
+.navbar{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:5000!important;transform:none!important;mix-blend-mode:difference!important}
+.navbar .menu-btn,.navbar .bag-button{position:fixed!important;top:22px!important;z-index:5002!important}
+.navbar .menu-btn{left:5%!important}
+.navbar .bag-button{right:5%!important}
+body.nsp-menu-open .navbar .menu-btn,body.nsp-cart-open .navbar .bag-button{display:none!important}
+.navbar .nav-links.active{display:flex!important;position:fixed!important;top:0!important;left:0!important;width:var(--nsp-drawer)!important;min-width:var(--nsp-drawer)!important;max-width:var(--nsp-drawer)!important;height:100vh!important;padding:80px 48px!important;margin:0!important;background:var(--cream)!important;color:var(--black)!important;mix-blend-mode:normal!important;z-index:5001!important;transform:none!important;box-shadow:none!important;overflow:hidden!important}
+.navbar .nav-links.active a{color:var(--black)!important}
+body.nsp-menu-open{overflow:hidden!important}
+body.nsp-cart-open .bag-panel{position:fixed!important;top:0!important;right:0!important;left:auto!important;width:var(--nsp-cart-drawer)!important;max-width:var(--nsp-cart-drawer)!important;height:100vh!important;z-index:5001!important;transform:none!important;overflow-y:auto!important;background:var(--cream)!important;box-shadow:none!important}
+body.nsp-cart-open{overflow:auto!important}
+body.nsp-menu-open>main,body.nsp-menu-open>footer,body.nsp-cart-open>main,body.nsp-cart-open>footer{transform:none!important;width:auto!important;margin:0!important;padding:0!important}
+</style>
 </head>
 <body>
 
