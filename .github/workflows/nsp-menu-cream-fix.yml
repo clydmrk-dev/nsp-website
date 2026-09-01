@@ -10,33 +10,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Fix cream panels and fixed controls
+      - name: Put menu and cart in existing cream spaces
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          marker='NSP CREAM PANEL FINAL GEOMETRY 2026-09-02'
+          marker='NSP CREAM SPACE GEOMETRY V4 2026-09-02'
           if marker not in s:
-            css='''<style id="nsp-cream-panel-final-geometry">
-/* NSP CREAM PANEL FINAL GEOMETRY 2026-09-02 */
-:root{--nsp-menu-left:25vw;--nsp-menu-width:43vw;--nsp-cart-width:39vw;}
-.navbar{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:5000!important;}
+            css='''<style id="nsp-cream-space-geometry-v4">
+/* NSP CREAM SPACE GEOMETRY V4 2026-09-02 */
+:root{--nsp-menu-left:25vw;--nsp-menu-width:24vw;--nsp-cart-width:25vw;}
+html,body{width:100%!important;max-width:100%!important;overflow-x:hidden!important;}
+.navbar{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:5000!important;transform:none!important;}
 body.nsp-menu-open>.navbar,body.nsp-cart-open>.navbar{position:fixed!important;top:0!important;left:0!important;right:0!important;transform:none!important;background:transparent!important;mix-blend-mode:normal!important;}
-body.nsp-menu-open::before,body.nsp-menu-open::after{content:none!important;display:none!important;background:transparent!important;}
-body.nsp-menu-open .navbar::before{content:""!important;position:fixed!important;top:0!important;left:0!important;width:68vw!important;height:100vh!important;background:var(--cream)!important;z-index:-1!important;pointer-events:none!important;}
-body.nsp-menu-open .nav-links,body.nsp-menu-open .nav-links.active,body.nsp-menu-open .nav-links.nsp-reference-menu{display:flex!important;position:fixed!important;top:0!important;left:var(--nsp-menu-left)!important;right:auto!important;width:var(--nsp-menu-width)!important;min-width:var(--nsp-menu-width)!important;max-width:var(--nsp-menu-width)!important;height:100vh!important;padding:52px 44px!important;margin:0!important;background:var(--cream)!important;color:var(--black)!important;transform:none!important;box-shadow:none!important;mix-blend-mode:normal!important;z-index:5100!important;overflow:hidden!important;}
+body.nsp-menu-open{background:var(--cream)!important;}
+body.nsp-menu-open::before{content:""!important;position:fixed!important;top:0!important;left:0!important;width:25vw!important;height:100vh!important;background:var(--cream)!important;z-index:2998!important;pointer-events:none!important;}
+body.nsp-menu-open .nav-links,body.nsp-menu-open .nav-links.active,body.nsp-menu-open .nav-links.nsp-reference-menu{display:flex!important;position:fixed!important;top:0!important;left:var(--nsp-menu-left)!important;right:auto!important;width:var(--nsp-menu-width)!important;min-width:var(--nsp-menu-width)!important;max-width:var(--nsp-menu-width)!important;height:100vh!important;padding:52px 34px!important;margin:0!important;background:var(--cream)!important;color:var(--black)!important;transform:none!important;box-shadow:none!important;mix-blend-mode:normal!important;z-index:5100!important;overflow:hidden!important;}
 body.nsp-menu-open .nav-links a,body.nsp-menu-open .nav-links.nsp-reference-menu a{color:var(--black)!important;}
-.menu-btn{position:fixed!important;top:22px!important;left:calc(100% - 60px)!important;z-index:5200!important;}
 body.nsp-menu-open .menu-btn{opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
-body.nsp-menu-open .nsp-menu-close{position:fixed!important;top:28px!important;left:calc(68vw - 62px)!important;right:auto!important;z-index:5300!important;}
-body.nsp-cart-open::before,body.nsp-cart-open::after{content:none!important;display:none!important;background:transparent!important;}
-body.nsp-cart-open .navbar::after{content:""!important;position:fixed!important;top:0!important;right:0!important;width:var(--nsp-cart-width)!important;height:100vh!important;background:var(--cream)!important;z-index:-1!important;pointer-events:none!important;}
+body.nsp-menu-open .nsp-menu-close{position:fixed!important;top:28px!important;left:calc(49vw - 62px)!important;right:auto!important;z-index:5300!important;}
+body.nsp-cart-open{background:var(--cream)!important;}
+body.nsp-cart-open::after{content:""!important;position:fixed!important;top:0!important;right:0!important;width:25vw!important;height:100vh!important;background:var(--cream)!important;z-index:2998!important;pointer-events:none!important;}
 body.nsp-cart-open .bag-panel{position:fixed!important;top:0!important;right:0!important;left:auto!important;width:var(--nsp-cart-width)!important;min-width:var(--nsp-cart-width)!important;max-width:var(--nsp-cart-width)!important;height:100vh!important;margin:0!important;background:var(--cream)!important;color:var(--black)!important;transform:none!important;box-shadow:none!important;z-index:5100!important;overflow-y:auto!important;overflow-x:hidden!important;}
 .bag-button{position:fixed!important;top:22px!important;right:5%!important;z-index:5200!important;}
 body.nsp-cart-open .bag-button{opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
-body.nsp-cart-open .bag-panel .close{position:absolute!important;top:22px!important;right:28px!important;z-index:5300!important;}
-@media(max-width:800px){:root{--nsp-menu-left:0vw;--nsp-menu-width:78vw;--nsp-cart-width:88vw;}body.nsp-menu-open .navbar::before{width:78vw!important;}body.nsp-menu-open .nav-links,body.nsp-menu-open .nav-links.active,body.nsp-menu-open .nav-links.nsp-reference-menu{left:0!important;width:78vw!important;min-width:78vw!important;max-width:78vw!important;padding:48px 32px!important;}body.nsp-menu-open .nsp-menu-close{left:calc(78vw - 62px)!important;}}
+body.nsp-cart-open .bag-close{position:absolute!important;top:22px!important;right:28px!important;z-index:5300!important;}
+.menu-btn,.bag-button{will-change:auto!important;}
+@media(max-width:800px){:root{--nsp-menu-left:0vw;--nsp-menu-width:78vw;--nsp-cart-width:88vw;}body.nsp-menu-open::before{width:0!important;}body.nsp-menu-open .nav-links,body.nsp-menu-open .nav-links.active,body.nsp-menu-open .nav-links.nsp-reference-menu{left:0!important;width:78vw!important;min-width:78vw!important;max-width:78vw!important;padding:48px 32px!important;}body.nsp-menu-open .nsp-menu-close{left:calc(78vw - 62px)!important;}body.nsp-cart-open::after{width:88vw!important;}}
 </style>'''
             s=s.replace('</head>',css+'\n</head>',1)
             p.write_text(s,encoding='utf-8')
@@ -46,5 +47,5 @@ body.nsp-cart-open .bag-panel .close{position:absolute!important;top:22px!import
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "Fix NSP cream panel geometry and fixed controls"
+          git diff --cached --quiet || git commit -m "Move NSP drawers into cream spaces"
           git push
