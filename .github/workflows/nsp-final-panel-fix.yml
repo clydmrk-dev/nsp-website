@@ -36,12 +36,87 @@ body.nsp-menu-open .modal-backdrop,body.nsp-cart-open .modal-backdrop,body.nsp-m
 @media(max-width:800px){:root{--nsp-menu-width:78vw;--nsp-cart-width:88vw;}.navbar .nav-links.active{width:var(--nsp-menu-width)!important;min-width:var(--nsp-menu-width)!important;max-width:var(--nsp-menu-width)!important;padding:48px 32px!important;}}
 </style>'''
             s=s.replace('</head>',css+'\n</head>',1)
-            p.write_text(s,encoding='utf-8')
+          marker2='NSP PANEL CLEAN OVERRIDE 2026-09-02'
+          if marker2 not in s:
+            css2='''<style id="nsp-panel-clean-override">
+/* NSP PANEL CLEAN OVERRIDE 2026-09-02 */
+/* Remove every older padding-based/whole-body shift. The document remains
+   100% wide; only the actual page shell moves. */
+html,body{width:100%!important;max-width:100%!important;overflow-x:hidden!important;}
+body.nsp-menu-open,body.nsp-cart-open{padding:0!important;margin:0!important;}
+body.nsp-menu-open>main,body.nsp-menu-open>footer{
+  width:100%!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  padding-left:0!important;
+  transform:translate3d(25vw,0,0)!important;
+  transition:transform .45s cubic-bezier(.22,.61,.36,1)!important;
+}
+body.nsp-cart-open>main,body.nsp-cart-open>footer{
+  width:100%!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  padding-left:0!important;
+  transform:translate3d(-39vw,0,0)!important;
+  transition:transform .45s cubic-bezier(.22,.61,.36,1)!important;
+}
+body.nsp-menu-open>.navbar{transform:translate3d(25vw,0,0)!important;transition:transform .45s cubic-bezier(.22,.61,.36,1)!important;}
+body.nsp-cart-open>.navbar{transform:translate3d(-39vw,0,0)!important;transition:transform .45s cubic-bezier(.22,.61,.36,1)!important;}
+/* Menu is a true viewport-anchored 25% panel. */
+body>.nav-links.nsp-reference-menu,
+body>.nav-links.active{
+  position:fixed!important;
+  top:0!important;
+  left:0!important;
+  right:auto!important;
+  bottom:0!important;
+  width:25vw!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:100vh!important;
+  margin:0!important;
+  padding:52px 44px!important;
+  background:#fff!important;
+  color:#0A0A0A!important;
+  transform:none!important;
+  z-index:3000!important;
+  overflow:hidden!important;
+  box-shadow:none!important;
+  mix-blend-mode:normal!important;
+}
+body>.nav-links.nsp-reference-menu:not(.active){display:none!important;}
+body>.nav-links.active a,body>.nav-links.nsp-reference-menu a{color:#0A0A0A!important;}
+/* Cart is fixed to the viewport and is never translated with the page. */
+body.nsp-cart-open>.bag-panel{
+  position:fixed!important;
+  top:0!important;
+  right:0!important;
+  left:auto!important;
+  bottom:0!important;
+  width:39vw!important;
+  max-width:none!important;
+  height:100vh!important;
+  margin:0!important;
+  transform:none!important;
+  z-index:3100!important;
+  overflow-y:auto!important;
+}
+@media(max-width:800px){
+  body.nsp-menu-open>main,body.nsp-menu-open>footer{transform:translate3d(78vw,0,0)!important;}
+  body.nsp-cart-open>main,body.nsp-cart-open>footer{transform:translate3d(-88vw,0,0)!important;}
+  body.nsp-menu-open>.navbar{transform:translate3d(78vw,0,0)!important;}
+  body.nsp-cart-open>.navbar{transform:translate3d(-88vw,0,0)!important;}
+  body>.nav-links.nsp-reference-menu,body>.nav-links.active{width:78vw!important;padding:48px 32px!important;}
+  body.nsp-cart-open>.bag-panel{width:88vw!important;}
+}
+</style>'''
+            s=s.replace('</head>',css2+'\n</head>',1)
+          p.write_text(s,encoding='utf-8')
           PY
       - name: Commit site patch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "Fix NSP true split drawer layout"
+          git diff --cached --quiet || git commit -m "Clean NSP drawer layout overrides"
           git push
