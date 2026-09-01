@@ -61,8 +61,17 @@ button{
 }
 .logo{display:none;}
 .nav-links{
-  display:flex;
-  gap:30px;
+  position:absolute;
+  top:78px;
+  left:5%;
+  display:none;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:18px;
+  padding:22px 26px;
+  background:var(--black);
+  color:var(--cream);
+  mix-blend-mode:normal;
   list-style:none;
   font-size:11px;
   font-weight:800;
@@ -72,6 +81,8 @@ button{
 .nav-links a:hover{
   opacity:.55;
 }
+.nav-links.active{display:flex;}
+
 .menu-btn,.bag-button{border:0;background:none;color:var(--cream);}
 .menu-btn{display:flex;flex-direction:column;justify-content:center;gap:5px;width:34px;height:34px;padding:5px 0;}
 .menu-btn span{display:block;width:28px;height:2px;background:currentColor;}
