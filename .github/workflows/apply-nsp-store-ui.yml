@@ -20,23 +20,20 @@ jobs:
           path=Path('index.html')
           text=path.read_text(encoding='utf-8')
 
-          def replace_once(pattern, replacement, flags=0):
+          def sub(pattern,replacement,flags=0):
               global text
-              new, count = re.subn(pattern, replacement, text, count=1, flags=flags)
-              if count != 1:
-                  raise SystemExit('Expected pattern not found: '+pattern[:100])
-              text=new
+              text,count=re.subn(pattern,replacement,text,count=1,flags=flags)
+              if count!=1:
+                  raise SystemExit('Pattern not found: '+pattern[:120])
 
-          replace_once(r'\.logo\{\n  font-size:25px;\n  font-weight:900;\n  letter-spacing:-\.08em;\n\}', '.logo{display:none;}')
-
-          replace_once(r'\.menu-btn,\n\.bag-button\{\n  border:0;\n  background:none;\n  color:var\(--cream\);\n\}\n\.menu-btn\{\n  display:none;\n  font-size:25px;\n\}\n\.bag-button\{\n  font-size:11px;\n  font-weight:800;\n  letter-spacing:1\.5px;\n  text-transform:uppercase;\n\}\n\.bag-count\{\n  display:inline-flex;\n  min-width:18px;\n  height:18px;\n  margin-left:5px;\n  border-radius:50%;\n  align-items:center;\n  justify-content:center;\n  background:var\(--cream\);\n  color:var\(--black\);\n  font-size:9px;\n\}', '''.menu-btn,.bag-button{border:0;background:none;color:var(--cream);}
+          sub(r'\.logo\{\n  font-size:25px;\n  font-weight:900;\n  letter-spacing:-\.08em;\n\}', '.logo{display:none;}')
+          sub(r'\.menu-btn,\n\.bag-button\{.*?\.bag-count\{.*?\n\}', '''.menu-btn,.bag-button{border:0;background:none;color:var(--cream);}
 .menu-btn{display:flex;flex-direction:column;justify-content:center;gap:5px;width:34px;height:34px;padding:5px 0;}
 .menu-btn span{display:block;width:28px;height:2px;background:currentColor;}
 .bag-button{font-size:0;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;position:relative;}
 .bag-button::before{content:'\\1F6D2';font-size:18px;line-height:1;}
-.bag-count{position:absolute;top:0;right:-2px;display:inline-flex;min-width:15px;height:15px;margin:0;border-radius:50%;align-items:center;justify-content:center;background:var(--cream);color:var(--black);font-size:8px;}''')
-
-          replace_once(r'<nav class="navbar">.*?</nav>', '''<nav class="navbar">
+.bag-count{position:absolute;top:0;right:-2px;display:inline-flex;min-width:15px;height:15px;margin:0;border-radius:50%;align-items:center;justify-content:center;background:var(--cream);color:var(--black);font-size:8px;}''',re.S)
+          sub(r'<nav class="navbar">.*?</nav>', '''<nav class="navbar">
   <button class="menu-btn" id="menuBtn" aria-label="Open navigation"><span></span><span></span><span></span></button>
   <ul class="nav-links" id="navLinks">
     <li><a href="#shop">Shop</a></li>
@@ -45,20 +42,18 @@ jobs:
     <li><a href="#contact">Contact</a></li>
   </ul>
   <button class="bag-button" id="bagButton" aria-label="Open shopping cart"><span class="bag-count" id="bagCount">0</span></button>
-</nav>''', re.S)
-
-          replace_once(r'\.add-button\{\n  width:100%;\n  padding:17px;\n  border:0;\n  background:var\(--burgundy\);', '.add-button{\n  width:100%;\n  padding:17px;\n  border:0;\n  background:var(--forest);')
-          replace_once(r'\.checkout\{\n  width:100%;\n  margin-top:20px;\n  padding:17px;\n  border:0;\n  background:var\(--burgundy\);', '.checkout{\n  width:100%;\n  margin-top:20px;\n  padding:17px;\n  border:0;\n  background:var(--forest);')
-          replace_once(r'\.place-order\{\n  width:100%;\n  margin-top:22px;\n  padding:17px;\n  border:0;\n  background:var\(--burgundy\);', '.place-order{\n  width:100%;\n  margin-top:22px;\n  padding:17px;\n  border:0;\n  background:var(--forest);')
-
-          replace_once(r'<div class="collection-image"><img src="/2\.png" alt="NSP 316 Collection"></div>', '<div class="collection-image"><img id="collection316Image" src="/2.png" alt="NSP 316 Collection"></div>')
-
-          replace_once(r'<section class="statement"><div class="label">Our Foundation</div><p class="statement-text">.*?</p><div class="reference">John 3:16</div></section>', '<section class="statement"><div class="label">Our Foundation</div><p class="statement-text">“For God so <span class="foundation-accent">loved</span> the world that He gave His one and only Son, that whoever believes in Him shall not perish but have <span class="foundation-accent">eternal life</span>.”</p><div class="reference foundation-accent">John 3:16</div></section>', re.S)
-          replace_once(r'\.reference\{\n  margin-top:30px;', '.foundation-accent{color:var(--burgundy);}\n.reference{\n  margin-top:30px;')
-
-          replace_once(r'<div class="product-image"><img src="\$\{p\.image\}" alt="\$\{p\.name\}" loading="lazy"></div>', '<div class="product-image"><img src="${p.image}" data-front="${p.gallery[0] || p.image}" data-back="${p.gallery[1] || p.image}" alt="${p.name}" loading="lazy"></div>')
+</nav>''',re.S)
+          sub(r'\.add-button\{\n  width:100%;\n  padding:17px;\n  border:0;\n  background:var\(--burgundy\);', '.add-button{\n  width:100%;\n  padding:17px;\n  border:0;\n  background:var(--forest);')
+          sub(r'\.checkout\{\n  width:100%;\n  margin-top:20px;\n  padding:17px;\n  border:0;\n  background:var\(--burgundy\);', '.checkout{\n  width:100%;\n  margin-top:20px;\n  padding:17px;\n  border:0;\n  background:var(--forest);')
+          sub(r'\.place-order\{\n  width:100%;\n  margin-top:22px;\n  padding:17px;\n  border:0;\n  background:var\(--burgundy\);', '.place-order{\n  width:100%;\n  margin-top:22px;\n  padding:17px;\n  border:0;\n  background:var(--forest);')
+          sub(r'<div class="collection-image"><img src="/2\.png" alt="NSP 316 Collection"></div>', '<div class="collection-image"><img id="collection316Image" src="/2.png" alt="NSP 316 Collection"></div>')
+          sub(r'<section class="statement"><div class="label">Our Foundation</div><p class="statement-text">.*?</p><div class="reference">John 3:16</div></section>', '<section class="statement"><div class="label">Our Foundation</div><p class="statement-text">“For God so <span class="foundation-accent">loved</span> the world that He gave His one and only Son, that whoever believes in Him shall not perish but have <span class="foundation-accent">eternal life</span>.”</p><div class="reference foundation-accent">John 3:16</div></section>',re.S)
+          sub(r'\.reference\{\n  margin-top:30px;', '.foundation-accent{color:var(--burgundy);}\n.reference{\n  margin-top:30px;')
+          sub(r'<div class="product-image"><img src="\$\{p\.image\}" alt="\$\{p\.name\}" loading="lazy"></div>', '<div class="product-image"><img src="${p.image}" data-front="${p.gallery[0] || p.image}" data-back="${p.gallery[1] || p.image}" alt="${p.name}" loading="lazy"></div>')
 
           marker='function getProductGallery(product){'
+          if marker not in text:
+              raise SystemExit('Product gallery marker not found')
           gallery_js="""productsEl.querySelectorAll('.product').forEach(card=>{
   const image=card.querySelector('.product-image img');
   if(!image) return;
@@ -80,8 +75,6 @@ if(collection316Image){
 }
 
 """
-          if marker not in text:
-              raise SystemExit('Product gallery marker not found')
           text=text.replace(marker,gallery_js+marker,1)
           path.write_text(text,encoding='utf-8')
 
