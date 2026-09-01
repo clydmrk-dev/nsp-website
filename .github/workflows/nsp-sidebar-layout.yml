@@ -1,10 +1,11 @@
 name: NSP sidebar layout
 on:
   push:
-    paths:
-      - '.github/nsp-sidebar-trigger.txt'
+    branches: [main]
+
 permissions:
   contents: write
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -21,7 +22,6 @@ jobs:
               css = r'''
 <style id="nsp-sidebar-layout-v2">
 /* NSP SIDEBAR LAYOUT V2 */
-/* Keep the menu panel anchored to the viewport while the page/header is pushed. */
 .navbar .nav-links{
   position:fixed!important;
   top:0!important;
@@ -44,56 +44,24 @@ jobs:
   transform:none!important;
   z-index:3000!important;
 }
-.navbar .nav-links.active{
-  left:calc(-1 * var(--nsp-side-shift, 320px))!important;
-  transform:none!important;
-}
+.navbar .nav-links.active{left:calc(-1 * var(--nsp-side-shift, 320px))!important;transform:none!important;}
 .navbar .nav-links a{color:var(--black)!important;}
-.navbar .nav-links .nsp-menu-close{
-  position:absolute!important;
-  top:24px!important;
-  right:24px!important;
-  width:36px!important;
-  height:36px!important;
-  margin:0!important;
-}
-/* Hide only the cart trigger while its cart panel is open. */
-body.nsp-cart-open #bagButton,
-body.nsp-cart-open .bag-button{
-  opacity:0!important;
-  visibility:hidden!important;
-  pointer-events:none!important;
-}
-/* Match the menu trigger size to the cart trigger. */
-.menu-btn{
-  width:44px!important;
-  height:44px!important;
-  padding:6px 0!important;
-  gap:6px!important;
-}
+.navbar .nav-links .nsp-menu-close{position:absolute!important;top:24px!important;right:24px!important;width:36px!important;height:36px!important;margin:0!important;}
+body.nsp-cart-open #bagButton,body.nsp-cart-open .bag-button{opacity:0!important;visibility:hidden!important;pointer-events:none!important;}
+.menu-btn{width:44px!important;height:44px!important;padding:6px 0!important;gap:6px!important;}
 .menu-btn span{width:34px!important;height:2px!important;}
-.bag-button{
-  width:44px!important;
-  height:44px!important;
-}
+.bag-button{width:44px!important;height:44px!important;}
 .bag-button::before{font-size:24px!important;}
-@media(max-width:800px){
-  .navbar .nav-links{
-    width:min(320px,78vw)!important;
-    left:calc(-1 * min(320px,78vw))!important;
-  }
-  .navbar .nav-links.active{left:calc(-1 * min(320px,78vw))!important;}
-}
+@media(max-width:800px){.navbar .nav-links{width:min(320px,78vw)!important;left:calc(-1 * min(320px,78vw))!important}.navbar .nav-links.active{left:calc(-1 * min(320px,78vw))!important}}
 </style>
 '''
               s = s.replace('</head>', css + '</head>', 1)
               p.write_text(s)
           PY
-      - name: Commit and remove temporary workflow
+      - name: Commit index update
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          rm -f .github/nsp-sidebar-trigger.txt
-          git add index.html .github/nsp-sidebar-trigger.txt .github/workflows/nsp-sidebar-layout.yml
-          git commit -m "Apply NSP sidebar layout and cart icon fix"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Apply NSP sidebar layout and cart icon fix"
           git push
