@@ -16,75 +16,24 @@ jobs:
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          marker='NSP PANEL BLANK SPACE FIX 2026-09-02'
+          marker='NSP PANEL TRUE SPLIT 2026-09-02'
           if marker not in s:
-            css='''<style id="nsp-panel-blank-space-fix">
-/* NSP PANEL BLANK SPACE FIX 2026-09-02 */
-/* Do not shrink the page when a drawer opens. The drawer occupies the space
-   created by translating the full-width page, matching the reference layout. */
-:root{
-  --nsp-menu-width:25vw;
-  --nsp-cart-width:min(430px,40vw);
-  --nsp-panel-ease:cubic-bezier(.22,.61,.36,1);
-}
-/* Undo the earlier padding-based push; padding was shrinking the document and
-   was the source of the large blank regions shown beside the page. */
-body.nsp-menu-open,
-body.nsp-cart-open{
-  padding-left:0!important;
-  padding-right:0!important;
-}
-/* Only the actual page shell moves. Fixed drawers/modals stay in place. */
-body.nsp-menu-open>main,
-body.nsp-menu-open>footer,
-body.nsp-menu-open>.navbar{
-  transform:translateX(var(--nsp-menu-width))!important;
-  transition:transform .45s var(--nsp-panel-ease)!important;
-}
-body.nsp-cart-open>main,
-body.nsp-cart-open>footer,
-body.nsp-cart-open>.navbar{
-  transform:translateX(calc(-1 * var(--nsp-cart-width)))!important;
-  transition:transform .45s var(--nsp-panel-ease)!important;
-}
-/* Never transform the fixed cart, menu, checkout, or product modal. */
-body.nsp-menu-open>.nav-links,
-body.nsp-cart-open>.nav-links,
-body.nsp-menu-open>.bag-panel,
-body.nsp-cart-open>.bag-panel,
-body.nsp-menu-open>.modal-backdrop,
-body.nsp-cart-open>.modal-backdrop,
-body.nsp-menu-open>.checkout-backdrop,
-body.nsp-cart-open>.checkout-backdrop{
-  transform:none!important;
-}
-/* Menu is exactly the left quarter on desktop, like the reference. */
-.nav-links.nsp-reference-menu,
-.nav-links.active{
-  width:25vw!important;
-  min-width:0!important;
-  max-width:none!important;
-  left:0!important;
-  right:auto!important;
-  padding:52px 44px!important;
-  background:#fff!important;
-  color:#0A0A0A!important;
-}
-/* Cart fills the right-side space it creates, with no empty area after it. */
-.bag-panel{
-  width:var(--nsp-cart-width)!important;
-  right:calc(-1 * var(--nsp-cart-width))!important;
-  transition:right .45s var(--nsp-panel-ease)!important;
-}
-.bag-panel.open{right:0!important;}
-/* Cart remains independently scrollable; only the menu locks the document. */
+            css='''<style id="nsp-panel-true-split">
+/* NSP PANEL TRUE SPLIT 2026-09-02 */
+:root{--nsp-menu-width:25vw;--nsp-cart-width:39vw;--nsp-panel-ease:cubic-bezier(.22,.61,.36,1);}
+html,body{width:100%;max-width:100%;overflow-x:hidden;}
+body.nsp-menu-open,body.nsp-cart-open{padding:0!important;margin:0!important;}
+body.nsp-menu-open>main,body.nsp-menu-open>footer{transform:translate3d(var(--nsp-menu-width),0,0)!important;width:100%!important;transition:transform .45s var(--nsp-panel-ease)!important;}
+body.nsp-cart-open>main,body.nsp-cart-open>footer{transform:translate3d(calc(-1 * var(--nsp-cart-width)),0,0)!important;width:100%!important;transition:transform .45s var(--nsp-panel-ease)!important;}
+body.nsp-menu-open>.navbar{transform:translate3d(var(--nsp-menu-width),0,0)!important;transition:transform .45s var(--nsp-panel-ease)!important;}
+body.nsp-cart-open>.navbar{transform:translate3d(calc(-1 * var(--nsp-cart-width)),0,0)!important;transition:transform .45s var(--nsp-panel-ease)!important;}
+.navbar .nav-links.active{display:flex!important;position:absolute!important;top:0!important;left:calc(-1 * var(--nsp-menu-width))!important;width:var(--nsp-menu-width)!important;min-width:var(--nsp-menu-width)!important;max-width:var(--nsp-menu-width)!important;height:100vh!important;padding:52px 44px!important;margin:0!important;background:#fff!important;color:#0A0A0A!important;overflow:hidden!important;z-index:2001!important;transform:none!important;box-shadow:none!important;mix-blend-mode:normal!important;}
+body.nsp-menu-open>.navbar .nav-links.active{left:calc(-1 * var(--nsp-menu-width))!important;transform:none!important;}
 body.nsp-menu-open{overflow:hidden!important;}
+body.nsp-cart-open .bag-panel{position:fixed!important;top:0!important;right:0!important;left:auto!important;width:var(--nsp-cart-width)!important;max-width:var(--nsp-cart-width)!important;height:100vh!important;transform:none!important;z-index:2001!important;overflow-y:auto!important;transition:transform .45s var(--nsp-panel-ease),right .45s var(--nsp-panel-ease)!important;}
 body.nsp-cart-open{overflow:auto!important;}
-@media(max-width:800px){
-  :root{--nsp-menu-width:78vw;--nsp-cart-width:88vw;}
-  .nav-links.nsp-reference-menu,
-  .nav-links.active{width:var(--nsp-menu-width)!important;padding:48px 32px!important;}
-}
+body.nsp-menu-open .modal-backdrop,body.nsp-cart-open .modal-backdrop,body.nsp-menu-open .checkout-backdrop,body.nsp-cart-open .checkout-backdrop{transform:none!important;}
+@media(max-width:800px){:root{--nsp-menu-width:78vw;--nsp-cart-width:88vw;}.navbar .nav-links.active{width:var(--nsp-menu-width)!important;min-width:var(--nsp-menu-width)!important;max-width:var(--nsp-menu-width)!important;padding:48px 32px!important;}}
 </style>'''
             s=s.replace('</head>',css+'\n</head>',1)
             p.write_text(s,encoding='utf-8')
@@ -94,5 +43,5 @@ body.nsp-cart-open{overflow:auto!important;}
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "Fix NSP panel blank space layout"
+          git diff --cached --quiet || git commit -m "Fix NSP true split drawer layout"
           git push
