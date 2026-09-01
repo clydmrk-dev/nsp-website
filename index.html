@@ -1179,6 +1179,16 @@ body.nsp-cart-open .bag-panel{position:fixed!important;top:0!important;right:0!i
 body.nsp-cart-open{overflow:auto!important}
 body.nsp-menu-open>main,body.nsp-menu-open>footer,body.nsp-cart-open>main,body.nsp-cart-open>footer{transform:none!important;width:auto!important;margin:0!important;padding:0!important}
 </style>
+<style id="nsp-cart-landing-page">
+/* NSP CART LANDING PAGE 2026-09-02 */
+body.nsp-cart-landing{overflow:auto!important}
+body.nsp-cart-landing .bag-button{display:none!important}
+body.nsp-cart-landing .bag-panel{position:fixed!important;inset:0!important;width:100%!important;max-width:none!important;height:100vh!important;margin:0!important;padding:0!important;background:var(--cream)!important;color:var(--black)!important;transform:none!important;right:auto!important;left:0!important;top:0!important;z-index:6000!important;overflow-y:auto!important;box-shadow:none!important}
+body.nsp-cart-landing .bag-panel.open{display:block!important}
+body.nsp-cart-landing .bag-panel .bag-header{position:sticky!important;top:0!important;z-index:2!important;background:var(--cream)!important;border-bottom:1px solid rgba(10,10,10,.12)!important;padding:28px 5%!important}
+body.nsp-cart-landing .bag-panel .bag-body{min-height:calc(100vh - 90px)!important;padding:70px 8%!important}
+body.nsp-cart-landing .bag-panel .bag-close,body.nsp-cart-landing .bag-panel .close{position:fixed!important;right:5%!important;top:24px!important;z-index:10!important}
+</style>
 </head>
 <body>
 
@@ -1645,6 +1655,32 @@ renderBag();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
   else init();
+})();
+</script>
+<script id="nsp-cart-landing-script">
+(function(){
+  function initCartLanding(){
+    const bag=document.getElementById('bagButton');
+    const panel=document.getElementById('bagPanel');
+    if(!bag||!panel||bag.dataset.cartLandingBound)return;
+    bag.dataset.cartLandingBound='1';
+    function openCartPage(e){
+      if(e)e.preventDefault();
+      document.body.classList.remove('nsp-menu-open','nsp-cart-open','nsp-panel-open');
+      document.body.classList.add('nsp-cart-landing');
+      panel.classList.add('open');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    function closeCartPage(){
+      panel.classList.remove('open');
+      document.body.classList.remove('nsp-cart-landing','nsp-cart-open','nsp-panel-open');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    bag.onclick=openCartPage;
+    const close=panel.querySelector('#bagClose,.bag-close,.close');
+    if(close)close.addEventListener('click',closeCartPage);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initCartLanding);else initCartLanding();
 })();
 </script>
 </body>
