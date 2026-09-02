@@ -1,0 +1,41 @@
+name: NSP Footer Link Fix
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix-footer-link:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make footer NSP link to hero
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          old = '<div class="footer-logo">NSP</div>'
+          new = '<a class="footer-logo" href="#top" aria-label="Back to top">NSP</a>'
+          if old not in s:
+              print('Footer logo already fixed or markup not found; nothing to do.')
+              raise SystemExit(0)
+          p.write_text(s.replace(old, new, 1))
+          PY
+      - name: Commit change
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Make footer NSP link to hero'
+          git push
