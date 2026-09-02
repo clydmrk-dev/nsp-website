@@ -17,15 +17,43 @@ jobs:
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
           marker='NSP COLLECTION LANDING LINK 2026-09-02'
-          if marker not in s:
-            patch='''\n<style id="nsp-collection-landing-link">\n/* NSP COLLECTION LANDING LINK 2026-09-02 */\n</style>\n<script id="nsp-collection-landing-script">\n(function(){\n  function bindCollectionLink(){\n    if(window.__nspCollectionLinkBound)return;\n    window.__nspCollectionLinkBound=true;\n    document.addEventListener('click',function(e){\n      const el=e.target.closest('a,button');\n      if(!el)return;\n      const label=(el.textContent||'').replace(/\\s+/g,' ').trim().toUpperCase();\n      if(label==='VIEW COLLECTION'||label==='EXPLORE COLLECTION'){\n        e.preventDefault();\n        e.stopPropagation();\n        window.location.href='/collection.html';\n      }\n    },true);\n  }\n  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindCollectionLink);else bindCollectionLink();\n})();\n</script>\n'''
+          start=s.find('<script id="nsp-collection-landing-script">')
+          end=s.find('</script>', start)
+          patch='''<style id="nsp-collection-landing-link">
+          /* NSP COLLECTION LANDING LINK 2026-09-02 */
+          </style>
+          <script id="nsp-collection-landing-script">
+          (function(){
+            function bindCollectionLink(){
+              if(window.__nspCollectionLinkBound)return;
+              window.__nspCollectionLinkBound=true;
+              document.addEventListener('click',function(e){
+                const el=e.target.closest('a,button');
+                if(!el)return;
+                const label=(el.textContent||'').replace(/\\s+/g,' ').trim().toUpperCase();
+                const href=(el.getAttribute('href')||'').toLowerCase();
+                const isCollectionAction=label.includes('COLLECTION') || href.includes('collection');
+                if(isCollectionAction){
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.location.assign('/collection.html');
+                }
+              },true);
+            }
+            if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindCollectionLink);else bindCollectionLink();
+          })();
+          </script>
+          '''
+          if start >= 0 and end >= 0:
+            s=s[:s.find('<style id="nsp-collection-landing-link">', max(0,start-2000))]+patch+s[end+9:]
+          else:
             s=s.replace('</head>',patch+'</head>',1)
-            p.write_text(s,encoding='utf-8')
+          p.write_text(s,encoding='utf-8')
           PY
       - name: Commit collection link
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "Link featured collection to shirt landing page"
+          git diff --cached --quiet || git commit -m "Fix featured collection button targeting"
           git push
