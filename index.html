@@ -1349,6 +1349,29 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
 .hero .eyebrow{top:calc(50% + 150px)!important;}
 .hero .hero-bottom{display:none!important;}
 </style>
+
+<style id="nsp-collection-landing-link">
+/* NSP COLLECTION LANDING LINK 2026-09-02 */
+</style>
+<script id="nsp-collection-landing-script">
+(function(){
+  function bindCollectionLink(){
+    if(window.__nspCollectionLinkBound)return;
+    window.__nspCollectionLinkBound=true;
+    document.addEventListener('click',function(e){
+      const el=e.target.closest('a,button');
+      if(!el)return;
+      const label=(el.textContent||'').replace(/\s+/g,' ').trim().toUpperCase();
+      if(label==='VIEW COLLECTION'||label==='EXPLORE COLLECTION'){
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href='/collection.html';
+      }
+    },true);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindCollectionLink);else bindCollectionLink();
+})();
+</script>
 </head>
 <body>
 
