@@ -1,0 +1,31 @@
+name: NSP collection landing link
+on:
+  push:
+    paths:
+      - '.github/nsp-collection-trigger.txt'
+permissions:
+  contents: write
+jobs:
+  patch-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Connect collection button
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          marker='NSP COLLECTION LANDING LINK 2026-09-02'
+          if marker not in s:
+            patch='''\n<style id="nsp-collection-landing-link">\n/* NSP COLLECTION LANDING LINK 2026-09-02 */\n</style>\n<script id="nsp-collection-landing-script">\n(function(){\n  function bindCollectionLink(){\n    if(window.__nspCollectionLinkBound)return;\n    window.__nspCollectionLinkBound=true;\n    document.addEventListener('click',function(e){\n      const el=e.target.closest('a,button');\n      if(!el)return;\n      const label=(el.textContent||'').replace(/\\s+/g,' ').trim().toUpperCase();\n      if(label==='VIEW COLLECTION'||label==='EXPLORE COLLECTION'){\n        e.preventDefault();\n        e.stopPropagation();\n        window.location.href='/collection.html';\n      }\n    },true);\n  }\n  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindCollectionLink);else bindCollectionLink();\n})();\n</script>\n'''
+            s=s.replace('</head>',patch+'</head>',1)
+            p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit collection link
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Link featured collection to shirt landing page"
+          git push
