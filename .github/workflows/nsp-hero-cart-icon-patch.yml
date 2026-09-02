@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Match hero cart icon to menu icon
+      - name: Match hero cart icon and preserve badge
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -23,7 +23,7 @@ jobs:
           text = path.read_text()
 
           old = '.bag-button::before{content:"\\1F6D2";font-size:18px;line-height:1;}'
-          new = '''/* HERO CART — same line-art cart as the menu */
+          new = '''/* HERO CART — same line-art cart as the menu, Ivory */
           .bag-button::before{
             content:"";
             display:block;
@@ -32,27 +32,30 @@ jobs:
             background-repeat:no-repeat;
             background-position:center;
             background-size:22px 22px;
-            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 1.9-1.4L21 7H6' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='10' cy='20' r='1.2' fill='currentColor'/%3E%3Ccircle cx='18' cy='20' r='1.2' fill='currentColor'/%3E%3C/svg%3E");
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 1.9-1.4L21 7H6' fill='none' stroke='%23F4F1E8' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='10' cy='20' r='1.2' fill='%23F4F1E8'/%3E%3Ccircle cx='18' cy='20' r='1.2' fill='%23F4F1E8'/%3E%3C/svg%3E");
           }'''
-          if old not in text:
-              raise SystemExit('Hero cart icon CSS not found')
-          text = text.replace(old, new, 1)
+          if old in text:
+              text = text.replace(old, new, 1)
 
-          # The hero should show only the cart icon, with no numeric badge.
-          badge_css = '''
-          .bag-count{display:none!important;}
-          '''
           marker = '<style id="nsp-hero-cart-icon-2026-09-02">'
-          if marker not in text:
+          badge_css = '''
+          .bag-button::before{color:#F4F1E8!important;}
+          .bag-count{display:flex!important;}
+          '''
+          if marker in text:
+              start = text.index(marker)
+              end = text.index('</style>', start)
+              text = text[:start] + marker + badge_css + text[end:]
+          else:
               text = text.replace('</head>', marker + badge_css + '</style>\n</head>', 1)
 
           path.write_text(text)
           PY
 
-      - name: Commit hero cart icon update
+      - name: Commit hero cart update
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "Use matching line-art cart icon on hero"
+          git diff --cached --quiet || git commit -m "Keep hero cart ivory and show cart count"
           git push
