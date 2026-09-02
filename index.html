@@ -1189,6 +1189,81 @@ body.nsp-cart-landing .bag-panel .bag-header{position:sticky!important;top:0!imp
 body.nsp-cart-landing .bag-panel .bag-body{min-height:calc(100vh - 90px)!important;padding:70px 8%!important}
 body.nsp-cart-landing .bag-panel .bag-close,body.nsp-cart-landing .bag-panel .close{position:fixed!important;right:5%!important;top:24px!important;z-index:10!important}
 </style>
+<style id="nsp-navigation-final-2026-09-02">
+/* FINAL NSP MENU INTERACTION */
+.navbar .menu-btn{
+  transition:transform .25s ease,color .2s ease;
+}
+.navbar .menu-btn::after{
+  content:"";
+  display:none;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:30px;
+  line-height:1;
+  font-weight:400;
+}
+body.nsp-menu-open .navbar .menu-btn{
+  display:flex!important;
+  left:calc(25vw - 72px)!important;
+  top:22px!important;
+  width:42px!important;
+  height:42px!important;
+  padding:0!important;
+  gap:0!important;
+  color:var(--black)!important;
+  z-index:6002!important;
+  transform:none!important;
+}
+body.nsp-menu-open .navbar .menu-btn span{display:none!important;}
+body.nsp-menu-open .navbar .menu-btn::after{
+  content:"←";
+  display:block;
+}
+body.nsp-menu-open .navbar .menu-btn:hover::after{
+  transform:translateX(-3px);
+}
+
+/* MENU LINKS — forest hover with ivory text */
+.navbar .nav-links.nsp-reference-menu li.nsp-cart-menu-item,
+.navbar .nav-links.active li.nsp-cart-menu-item{margin-top:2px!important;}
+.navbar .nav-links.nsp-reference-menu a,
+.navbar .nav-links.active a{
+  position:relative!important;
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  min-height:52px!important;
+  padding:13px 14px!important;
+  margin:0 0 8px!important;
+  color:var(--black)!important;
+  background:transparent!important;
+  transition:background .2s ease,color .2s ease!important;
+}
+.navbar .nav-links.nsp-reference-menu a:hover,
+.navbar .nav-links.nsp-reference-menu a:focus-visible,
+.navbar .nav-links.active a:hover,
+.navbar .nav-links.active a:focus-visible{
+  background:var(--forest)!important;
+  color:var(--cream)!important;
+  opacity:1!important;
+}
+
+/* CART ITEM BELOW CONTACT */
+.nsp-cart-menu-link{gap:12px!important;}
+.nsp-menu-cart-icon{
+  width:22px!important;
+  height:22px!important;
+  flex:0 0 22px!important;
+}
+.nsp-cart-menu-link span{
+  display:inline-block!important;
+}
+@media(max-width:800px){
+  body.nsp-menu-open .navbar .menu-btn{
+    left:calc(78vw - 62px)!important;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -1199,6 +1274,7 @@ body.nsp-cart-landing .bag-panel .bag-close,body.nsp-cart-landing .bag-panel .cl
     <li><a href="#collection-316">316</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#contact">Contact</a></li>
+    <li class="nsp-cart-menu-item"><a href="/cart" class="nsp-cart-menu-link" aria-label="Cart"><svg class="nsp-menu-cart-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 1.9-1.4L21 7H6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.2" fill="currentColor"/><circle cx="18" cy="20" r="1.2" fill="currentColor"/></svg><span>Cart</span></a></li>
   </ul>
   <button class="bag-button" id="bagButton" aria-label="Open shopping cart"><span class="bag-count" id="bagCount">0</span></button>
 </nav>
@@ -1699,6 +1775,31 @@ renderBag();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind);
   else bind();
+})();
+</script>
+<script id="nsp-navigation-final-script-2026-09-02">
+(function(){
+  function init(){
+    const menu=document.getElementById('menuBtn');
+    const nav=document.getElementById('navLinks');
+    if(!menu||!nav)return;
+    menu.addEventListener('click',function(){
+      requestAnimationFrame(function(){
+        const open=nav.classList.contains('active');
+        document.body.classList.toggle('nsp-menu-open',open);
+        document.body.classList.remove('nsp-cart-open');
+      });
+    });
+    nav.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click',function(){
+        if(a.getAttribute('href')==='/cart') return;
+        nav.classList.remove('active');
+        document.body.classList.remove('nsp-menu-open');
+      });
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+  else init();
 })();
 </script>
 </body>
