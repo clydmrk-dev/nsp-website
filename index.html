@@ -1362,16 +1362,19 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
       const el=e.target.closest('a,button');
       if(!el)return;
       const label=(el.textContent||'').replace(/\s+/g,' ').trim().toUpperCase();
-      if(label==='VIEW COLLECTION'||label==='EXPLORE COLLECTION'){
+      const href=(el.getAttribute('href')||'').toLowerCase();
+      const isCollectionAction=label.includes('COLLECTION') || href.includes('collection');
+      if(isCollectionAction){
         e.preventDefault();
         e.stopPropagation();
-        window.location.href='/collection.html';
+        window.location.assign('/collection.html');
       }
     },true);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindCollectionLink);else bindCollectionLink();
 })();
 </script>
+
 </head>
 <body>
 
