@@ -1586,7 +1586,7 @@ productsEl.querySelectorAll('.product').forEach(card=>{
   card.addEventListener('mouseenter',()=>{image.src=image.dataset.back||image.dataset.front;});
   card.addEventListener('mouseleave',()=>{image.src=image.dataset.front||image.src;});
 });
-const collection316Images=['/8.png','/9.png'];
+const collection316Images=['/8.png','/9.png','/10.png','/11.png'];
 let collection316Index=0;
 const collection316Image=document.getElementById('collection316Image');
 if(collection316Image){setInterval(()=>{collection316Index=(collection316Index+1)%collection316Images.length;collection316Image.style.opacity='0';setTimeout(()=>{collection316Image.src=collection316Images[collection316Index];requestAnimationFrame(()=>{collection316Image.style.opacity='1';});},650);},4500);}
