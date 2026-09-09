@@ -50,53 +50,33 @@ body.nsp-menu-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(s
 body.nsp-cart-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style) {
   transition:transform .45s cubic-bezier(.22,1,.36,1) !important;
 }
-body.nsp-menu-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style) {
-  transform:translateX(25vw) !important;
-}
-body.nsp-cart-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style) {
-  transform:translateX(-25vw) !important;
-}
+body.nsp-menu-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style) { transform:translateX(25vw) !important; }
+body.nsp-cart-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style) { transform:translateX(-25vw) !important; }
 body.nsp-menu-open .navbar { transform:translateX(25vw) !important; }
 body.nsp-cart-open .navbar { transform:translateX(-25vw) !important; }
 body.nsp-menu-open { overflow:hidden !important; }
-
 @media (max-width:800px){
-  .nav-links.nsp-reference-menu,
-  .nav-links.active {
-    width:78vw !important;
-    min-width:0 !important;
-    max-width:none !important;
-    padding:48px 32px !important;
-  }
+  .nav-links.nsp-reference-menu,.nav-links.active { width:78vw !important; min-width:0 !important; max-width:none !important; padding:48px 32px !important; }
   .nav-links.nsp-reference-menu a { font-size:20px !important; margin-bottom:31px !important; }
-  body.nsp-menu-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style),
-  body.nsp-menu-open .navbar { transform:translateX(78vw) !important; }
-  body.nsp-cart-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style),
-  body.nsp-cart-open .navbar { transform:translateX(-78vw) !important; }
+  body.nsp-menu-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style),body.nsp-menu-open .navbar { transform:translateX(78vw) !important; }
+  body.nsp-cart-open > :not(.nav-links):not(.bag-panel):not(.modal-backdrop):not(script):not(style),body.nsp-cart-open .navbar { transform:translateX(-78vw) !important; }
 }
 </style>
 <script id="nsp-reference-menu-behavior">
 (function(){
   function setup(){
-    const menu = document.querySelector('.nav-links');
-    const button = document.querySelector('.menu-btn');
-    if(!menu || !button) return;
-    if(menu.parentElement !== document.body) document.body.appendChild(menu);
+    const menu=document.querySelector('.nav-links');
+    const button=document.querySelector('.menu-btn');
+    if(!menu||!button)return;
+    if(menu.parentElement!==document.body)document.body.appendChild(menu);
     menu.classList.add('nsp-reference-menu');
-    const sync = function(){
-      const open = menu.classList.contains('active');
-      document.body.classList.toggle('nsp-menu-open', open);
-      if(open) document.body.classList.remove('nsp-cart-open');
-    };
-    button.addEventListener('click', function(){ setTimeout(sync, 0); });
-    menu.addEventListener('click', function(e){
-      if(e.target.closest('a')) setTimeout(sync, 0);
-    });
-    new MutationObserver(sync).observe(menu, {attributes:true, attributeFilter:['class']});
+    const sync=function(){const open=menu.classList.contains('active');document.body.classList.toggle('nsp-menu-open',open);if(open)document.body.classList.remove('nsp-cart-open');};
+    button.addEventListener('click',function(){setTimeout(sync,0);});
+    menu.addEventListener('click',function(e){if(e.target.closest('a'))setTimeout(sync,0);});
+    new MutationObserver(sync).observe(menu,{attributes:true,attributeFilter:['class']});
     sync();
   }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
-  else setup();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
 })();
 </script>
 <!-- NSP WHOLE PAGE SIDE PANEL SHIFT -->
@@ -106,6 +86,6 @@ if marker in s:
 else:
     s = s.replace('</head>', patch + '\n</head>', 1)
 
-# 316 collection: red hoodie front/back plus green hoodie front/back.
-s = s.replace("const collection316Images=['/2.png','/3.png','/4.png','/5.png','/6.png','/7.png'];", "const collection316Images=['/8.png','/9.png','/10.png','/11.png'];")
+# 316 collection: always replace the current image list, whatever it is.
+s = re.sub(r"const collection316Images\s*=\s*\[[^\]]*\];", "const collection316Images=['/8.png','/9.png','/10.png','/11.png'];", s, count=1)
 p.write_text(s, encoding='utf-8')
