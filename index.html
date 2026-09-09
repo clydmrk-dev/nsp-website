@@ -379,6 +379,9 @@ button{
   max-height:560px;
   object-fit:contain;
   object-position:center;
+  opacity:1;
+  transition:opacity 0.65s ease-in-out;
+  will-change:opacity;
 }
 
 /* STATEMENT */
@@ -1589,7 +1592,17 @@ productsEl.querySelectorAll('.product').forEach(card=>{
 const collection316Images=['/8.png','/9.png','/10.png','/NSP DG back.png'];
 let collection316Index=0;
 const collection316Image=document.getElementById('collection316Image');
-if(collection316Image){setInterval(()=>{collection316Index=(collection316Index+1)%collection316Images.length;collection316Image.style.opacity='0';setTimeout(()=>{collection316Image.src=collection316Images[collection316Index];requestAnimationFrame(()=>{collection316Image.style.opacity='1';});},650);},4500);}
+if(collection316Image){
+  collection316Images.forEach(src=>{const preload=new Image();preload.src=src;});
+  setInterval(()=>{
+    collection316Index=(collection316Index+1)%collection316Images.length;
+    collection316Image.style.opacity='0';
+    setTimeout(()=>{
+      collection316Image.src=collection316Images[collection316Index];
+      requestAnimationFrame(()=>{collection316Image.style.opacity='1';});
+    },650);
+  },4500);
+}
 
 function getProductGallery(product){
   return Array.isArray(product?.gallery) && product.gallery.length ? product.gallery : [product?.image].filter(Boolean);
