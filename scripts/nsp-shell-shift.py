@@ -106,6 +106,6 @@ if marker in s:
 else:
     s = s.replace('</head>', patch + '\n</head>', 1)
 
-# 316 collection: use the new red hoodie front/back pair only.
-s = s.replace("const collection316Images=['/2.png','/3.png','/4.png','/5.png','/6.png','/7.png'];", "const collection316Images=['/8.png','/9.png'];")
+# 316 collection: red hoodie front/back plus green hoodie front/back.
+s = s.replace("const collection316Images=['/2.png','/3.png','/4.png','/5.png','/6.png','/7.png'];", "const collection316Images=['/8.png','/9.png','/10.png','/11.png'];")
 p.write_text(s, encoding='utf-8')
