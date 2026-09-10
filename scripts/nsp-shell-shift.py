@@ -21,6 +21,11 @@ marker = ".marquee span{\n  margin-right:50px;\n  font-size:10px;\n  font-weight
 replacement = marker + "\n.marquee span:nth-child(8n){margin-right:0;}"
 s = s.replace(marker, replacement)
 
+# Homepage typography: keep the existing design, but make the requested headings/text normal weight.
+typography_fix = """.hero h1,.section-title,.collection h2,.statement-text,.reference,.social h2,.footer-logo{font-weight:400!important;}"""
+if typography_fix not in s:
+    s = s.replace('</style>', typography_fix + '</style>', 1)
+
 p.write_text(s, encoding='utf-8')
 
 # Product detail: Collection 01 uses one product with Forest Green and Black color variants.
