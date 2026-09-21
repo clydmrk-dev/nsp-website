@@ -1444,6 +1444,56 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
   #products{grid-template-columns:1fr;gap:10px;}
 }
 </style>
+
+<style id="nsp-mobile-316-aesthetic">
+@media(max-width:800px){
+  #collection-316{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:0;
+    margin:0;
+    background:var(--black);
+  }
+  #collection-316 .collection-copy{
+    min-height:0;
+    height:auto;
+    aspect-ratio:4/5;
+    overflow:hidden;
+  }
+  #collection-316 .collection-lifestyle-image{
+    width:100%;
+    height:100%;
+    min-height:0;
+    object-fit:cover;
+    object-position:center 42%;
+    display:block;
+  }
+  #collection-316 .collection-image{
+    min-height:0;
+    height:auto;
+    aspect-ratio:4/5;
+    padding:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  #collection-316 .collection-image > img:first-child,
+  #collection-316 .collection-image .nsp-316-layer{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    object-position:center;
+  }
+}
+@media(max-width:500px){
+  #collection-316 .collection-copy,
+  #collection-316 .collection-image{
+    aspect-ratio:5/6;
+  }
+}
+</style>
+
 </head>
 <body>
 
