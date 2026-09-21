@@ -373,6 +373,9 @@ button{
   justify-content:center;
   overflow:hidden;
 }
+.collection-image{
+  position:relative;
+}
 .collection-image img{
   width:100%;
   height:100%;
@@ -380,8 +383,28 @@ button{
   object-fit:contain;
   object-position:center;
   opacity:1;
-  transition:opacity 0.65s ease-in-out;
+  transition:opacity 0.9s cubic-bezier(.22,1,.36,1);
   will-change:opacity;
+}
+.collection-image .nsp-316-layer{
+  position:absolute;
+  inset:45px;
+  width:calc(100% - 90px);
+  height:calc(100% - 90px);
+  max-height:560px;
+  object-fit:contain;
+  object-position:center;
+  opacity:0;
+  transition:opacity 0.9s cubic-bezier(.22,1,.36,1);
+  will-change:opacity;
+  pointer-events:none;
+}
+@media(max-width:800px){
+  .collection-image .nsp-316-layer{
+    inset:25px;
+    width:calc(100% - 50px);
+    height:calc(100% - 50px);
+  }
 }
 
 /* STATEMENT */
@@ -1598,14 +1621,30 @@ const collection316Images=['/8.png','/9.png','/10.png','/NSP DG back.png'];
 let collection316Index=0;
 const collection316Image=document.getElementById('collection316Image');
 if(collection316Image){
+  const collection316Layer=document.createElement('img');
+  collection316Layer.className='nsp-316-layer';
+  collection316Layer.alt='NSP 316 Collection';
+  collection316Layer.src=collection316Images[1];
+  collection316Image.parentElement.appendChild(collection316Layer);
+
   collection316Images.forEach(src=>{const preload=new Image();preload.src=src;});
+
   setInterval(()=>{
-    collection316Index=(collection316Index+1)%collection316Images.length;
-    collection316Image.style.opacity='0';
-    setTimeout(()=>{
-      collection316Image.src=collection316Images[collection316Index];
-      requestAnimationFrame(()=>{collection316Image.style.opacity='1';});
-    },650);
+    const nextIndex=(collection316Index+1)%collection316Images.length;
+    const nextSrc=collection316Images[nextIndex];
+    const showingLayer=(collection316Index % 2 === 0) ? collection316Image : collection316Layer;
+    const hiddenLayer=(showingLayer === collection316Image) ? collection316Layer : collection316Image;
+
+    hiddenLayer.src=nextSrc;
+    hiddenLayer.style.opacity='0';
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        hiddenLayer.style.opacity='1';
+        showingLayer.style.opacity='0';
+      });
+    });
+
+    collection316Index=nextIndex;
   },4500);
 }
 
