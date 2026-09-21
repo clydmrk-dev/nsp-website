@@ -1407,14 +1407,35 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
 </script>
 
 <style id="nsp-home-showroom">
-/* HOME FEATURED = NSP SHOWROOM — no shopping controls */
-.showroom-product{cursor:default!important;}
-.showroom-product .product-image{background:var(--soft);padding:22px;}
-.showroom-product .product-info{justify-content:flex-start;padding-top:16px;}
-.showroom-product .product-name{font-size:18px!important;font-weight:500!important;letter-spacing:.2px!important;text-transform:none!important;}
+/* HOME FEATURED = NSP EDITORIAL SHOWROOM */
+#shop{padding:0 5% 110px;}
+#products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;}
+.showroom-product{cursor:default!important;min-width:0;}
+.showroom-product .product-image{
+  aspect-ratio:4/5;
+  padding:0;
+  background:var(--soft);
+  overflow:hidden;
+}
+.showroom-product .product-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  transition:transform .7s cubic-bezier(.22,1,.36,1);
+}
+.showroom-product:hover .product-image img{transform:scale(1.02);}
+.showroom-product .product-info,
+.showroom-product .product-name,
 .showroom-product .product-price,
 .showroom-product .product-cta{display:none!important;}
-.showroom-product:hover img{transform:scale(1.018);}
+@media(max-width:1000px){
+  #products{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:560px){
+  #shop{padding:0 4% 80px;}
+  #products{grid-template-columns:1fr;gap:10px;}
+}
 </style>
 </head>
 <body>
@@ -1441,7 +1462,7 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
 <div class="marquee"><div class="marquee-track"><span>Faith Over Fear</span><span>None Shall Perish</span><span>John 3:16</span><span>Made For The Called</span><span>Faith Over Fear</span><span>None Shall Perish</span><span>John 3:16</span><span>Made For The Called</span><span>Faith Over Fear</span><span>None Shall Perish</span><span>John 3:16</span><span>Made For The Called</span><span>Faith Over Fear</span><span>None Shall Perish</span><span>John 3:16</span><span>Made For The Called</span></div></div>
 
 <section class="section" id="shop">
-  <div class="section-head"><div><div class="label">01 — Featured</div><h2 class="section-title">Shop NSP</h2></div><a href="#shop" class="text-link">View Collection →</a></div>
+  
   <div class="products" id="products"></div>
 </section>
 
@@ -1613,19 +1634,17 @@ function showSelectedSizeStock(size){
 }
 
 /* PRODUCTS */
-productsEl.innerHTML = products.map((p,i)=>`
-  <article class="product showroom-product" data-index="${i}" aria-label="${p.name}">
-    <div class="product-image"><img src="${p.image}" data-front="${p.gallery[0] || p.image}" data-back="${p.gallery[1] || p.image}" alt="${p.name}" loading="lazy"></div>
-    <div class="product-info showroom-info"><span class="product-name">${p.name}</span></div>
+const featuredPhotos=[
+  {src:'/featured/NSP_Featured_1.jpg',alt:'NSP black shirt editorial detail'},
+  {src:'/featured/NSP_Featured_2.jpg',alt:'NSP black shirt lifestyle'},
+  {src:'/featured/NSP_Featured_3.jpg',alt:'NSP olive shirt front'},
+  {src:'/featured/NSP_Featured_4.jpg',alt:'NSP olive shirt back'}
+];
+productsEl.innerHTML = featuredPhotos.map((photo)=>`
+  <article class="product showroom-product" aria-label="NSP Featured">
+    <div class="product-image"><img src="${photo.src}" alt="${photo.alt}" loading="lazy"></div>
   </article>
 `).join('');
-
-productsEl.querySelectorAll('.product').forEach(card=>{
-  const image=card.querySelector('.product-image img');
-  if(!image) return;
-  card.addEventListener('mouseenter',()=>{image.src=image.dataset.back||image.dataset.front;});
-  card.addEventListener('mouseleave',()=>{image.src=image.dataset.front||image.src;});
-});
 const collection316Images=['/8.png','/9.png','/10.png','/NSP DG back.png'];
 let collection316Index=0;
 const collection316Image=document.getElementById('collection316Image');
@@ -1699,10 +1718,7 @@ function openProduct(i){
   loadInventory();
 }
 
-productsEl.addEventListener('click',e=>{
-  const card=e.target.closest('.product');
-  if(card) openProduct(Number(card.dataset.index));
-});
+/* Homepage Featured is a pure showroom — no product modal or shopping action. */
 
 document.getElementById('galleryPrev').onclick=()=>{
   const gallery=getProductGallery(selectedProduct);
