@@ -409,19 +409,25 @@ button{
 .statement{
   padding:135px 5%;
   text-align:center;
-  background:#E9E4D8;
+  background:var(--forest);
+  color:var(--cream);
+}
+.statement .label{
+  color:var(--cream);
 }
 .statement-text{
   max-width:1200px;
   margin:auto;
+  color:var(--cream);
   font-size:clamp(35px,5.8vw,76px);
   line-height:.98;
   letter-spacing:-.06em;
   font-weight:900;
 }
-.foundation-accent{color:var(--burgundy);}
+.foundation-accent{color:#D7B98A;}
 .reference{
   margin-top:30px;
+  color:var(--cream);
   font-size:10px;
   font-weight:800;
   letter-spacing:2px;
@@ -434,8 +440,18 @@ button{
   grid-template-columns:1fr 1fr;
   gap:90px;
 }
+#about{
+  background:var(--forest);
+  color:var(--cream);
+}
+#about .label,
+#about h2,
+#about-copy,
+#about .about-copy{
+  color:var(--cream);
+}
 .about h2{
-  color:var(--forest);
+  color:var(--cream);
   font-size:clamp(55px,8vw,112px);
   line-height:.83;
   letter-spacing:-.075em;
