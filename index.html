@@ -393,8 +393,9 @@ button{
   object-fit:contain;
   object-position:center;
   opacity:1;
-  transition:opacity 0.9s cubic-bezier(.22,1,.36,1);
-  will-change:opacity;
+  transform:translateX(0);
+  transition:opacity 0.9s cubic-bezier(.22,1,.36,1), transform 0.9s cubic-bezier(.22,1,.36,1);
+  will-change:opacity,transform;
 }
 .collection-image .nsp-316-layer{
   position:absolute;
@@ -405,8 +406,9 @@ button{
   object-fit:contain;
   object-position:center;
   opacity:0;
-  transition:opacity 0.9s cubic-bezier(.22,1,.36,1);
-  will-change:opacity;
+  transform:translateX(8%);
+  transition:opacity 0.9s cubic-bezier(.22,1,.36,1), transform 0.9s cubic-bezier(.22,1,.36,1);
+  will-change:opacity,transform;
   pointer-events:none;
 }
 @media(max-width:800px){
@@ -1742,12 +1744,15 @@ if(collection316Image){
     hiddenLayer.style.transition='none';
     hiddenLayer.src=nextSrc;
     hiddenLayer.style.opacity='0';
+    hiddenLayer.style.transform='translateX(8%)';
     hiddenLayer.offsetWidth;
-    hiddenLayer.style.transition='opacity 0.9s cubic-bezier(.22,1,.36,1)';
+    hiddenLayer.style.transition='opacity 0.9s cubic-bezier(.22,1,.36,1), transform 0.9s cubic-bezier(.22,1,.36,1)';
 
     requestAnimationFrame(()=>{
       hiddenLayer.style.opacity='1';
+      hiddenLayer.style.transform='translateX(0)';
       showingLayer.style.opacity='0';
+      showingLayer.style.transform='translateX(-8%)';
     });
 
     collection316Index=nextIndex;
