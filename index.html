@@ -1733,7 +1733,7 @@ if(collection316Image){
     }
   };
 
-  setInterval(async()=>{
+  const advanceCollection316=async()=>{
     const nextIndex=(collection316Index+1)%collection316Images.length;
     const nextSrc=collection316Images[nextIndex];
     const showingLayer=(collection316Index % 2 === 0) ? collection316Image : collection316Layer;
@@ -1756,7 +1756,9 @@ if(collection316Image){
     });
 
     collection316Index=nextIndex;
-  },4500);
+  };
+
+  setInterval(advanceCollection316,3300);
 }
 
 function getProductGallery(product){
