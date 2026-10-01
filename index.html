@@ -1716,21 +1716,38 @@ if(collection316Image){
   collection316Layer.src=collection316Images[1];
   collection316Image.parentElement.appendChild(collection316Layer);
 
-  collection316Images.forEach(src=>{const preload=new Image();preload.src=src;});
+  const collection316Preloads=collection316Images.map(src=>{
+    const preload=new Image();
+    preload.src=src;
+    return preload;
+  });
 
-  setInterval(()=>{
+  const decodeCollection316Image=async(src)=>{
+    const preload=collection316Preloads.find(img=>img.src.endsWith(src));
+    if(preload){
+      try{
+        if(preload.decode) await preload.decode();
+      }catch{}
+    }
+  };
+
+  setInterval(async()=>{
     const nextIndex=(collection316Index+1)%collection316Images.length;
     const nextSrc=collection316Images[nextIndex];
     const showingLayer=(collection316Index % 2 === 0) ? collection316Image : collection316Layer;
     const hiddenLayer=(showingLayer === collection316Image) ? collection316Layer : collection316Image;
 
+    await decodeCollection316Image(nextSrc);
+
+    hiddenLayer.style.transition='none';
     hiddenLayer.src=nextSrc;
     hiddenLayer.style.opacity='0';
+    hiddenLayer.offsetWidth;
+    hiddenLayer.style.transition='opacity 0.9s cubic-bezier(.22,1,.36,1)';
+
     requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        hiddenLayer.style.opacity='1';
-        showingLayer.style.opacity='0';
-      });
+      hiddenLayer.style.opacity='1';
+      showingLayer.style.opacity='0';
     });
 
     collection316Index=nextIndex;
