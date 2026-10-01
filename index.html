@@ -251,6 +251,20 @@ button{
   text-transform:uppercase;
 }
 
+/* FULL-BLEED FEATURED PHOTO SHOWROOM */
+#shop{
+  padding:0;
+}
+#shop .products{
+  grid-template-columns:repeat(4,1fr);
+  gap:0;
+}
+#shop .product-image{
+  width:100%;
+  aspect-ratio:4/5;
+  padding:0;
+  border-radius:0;
+}
 /* PRODUCTS */
 .products{
   display:grid;
@@ -923,8 +937,9 @@ footer{
   .hero h1{font-size:clamp(30px,10vw,80px);white-space:nowrap}
   .hero-bottom{flex-direction:column;align-items:flex-start;margin-top:40px}
   .section{padding:80px 6%}
+  #shop{padding:0}
   .section-head{flex-direction:column;align-items:flex-start}
-  .products{grid-template-columns:repeat(2,1fr);gap:26px 12px}
+  #shop .products{grid-template-columns:repeat(2,1fr);gap:0}
   .product-image{padding:0}
   .collection{grid-template-columns:1fr}
   .collection-copy{padding:80px 6%}
