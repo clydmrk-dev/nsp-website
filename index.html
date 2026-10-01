@@ -377,65 +377,18 @@ button{
   min-height:0;
   aspect-ratio:4/5;
   background:#D9D8D3;
-  padding:45px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-}
-.collection-image{
-  position:relative;
-}
-.collection-image{
-  min-height:0;
-  aspect-ratio:4/5;
-  background:#D9D8D3;
   padding:0;
   display:block;
   overflow:hidden;
   position:relative;
 }
-.collection-image .nsp-316-track{
-  width:max-content;
-  height:100%;
-  display:flex;
-  align-items:center;
-  gap:0;
-  animation:nsp316Marquee 18s linear infinite;
-  will-change:transform;
-}
-.collection-image .nsp-316-item{
-  flex:0 0 28vw;
-  width:28vw;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.collection-image .nsp-316-item img{
+.collection-photo{
   width:100%;
   height:100%;
-  object-fit:contain;
+  object-fit:cover;
   object-position:center;
+  display:block;
 }
-@keyframes nsp316Marquee{
-  from{transform:translate3d(0,0,0);}
-  to{transform:translate3d(-112vw,0,0);}
-}
-@media(max-width:800px){
-  .collection-image .nsp-316-track{
-    animation-duration:14s;
-  }
-  .collection-image .nsp-316-item{
-    flex-basis:58vw;
-    width:58vw;
-  }
-  @keyframes nsp316Marquee{
-    from{transform:translate3d(0,0,0);}
-    to{transform:translate3d(-232vw,0,0);}
-  }
-}
-
 /* STATEMENT */
 .statement{
   padding:135px 5%;
@@ -1553,7 +1506,9 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
   <div class="collection-copy">
     <img class="collection-lifestyle-image" src="/featured/NSP_316_Lifestyle_resized.jpg" alt="NSP 316 Collection lifestyle">
   </div>
-  <div class="collection-image"><img id="collection316Image" src="/8.png" alt="NSP 316 Collection"></div>
+  <div class="collection-image">
+    <img class="collection-photo" src="/featured/NSP_316_Lifestyle_resized.jpg" alt="NSP 316 Collection lifestyle">
+  </div>
 </section>
 
 <section class="statement"><div class="label">Our Foundation</div><p class="statement-text">“For God so <span class="foundation-accent">loved</span> the world that He gave His one and only Son, that whoever believes in Him shall not perish but have <span class="foundation-accent">eternal life</span>.”</p><div class="reference foundation-accent">John 3:16</div></section>
@@ -1725,26 +1680,7 @@ productsEl.innerHTML = featuredPhotos.map((photo)=>`
     <div class="product-image"><img src="${photo.src}" alt="${photo.alt}" loading="lazy"></div>
   </article>
 `).join('');
-const collection316Images=['/8.png','/9.png','/10.png','/NSP DG back.png'];
-const collection316Image=document.getElementById('collection316Image');
-if(collection316Image){
-  const track=document.createElement('div');
-  track.className='nsp-316-track';
 
-  const loopImages=[...collection316Images,...collection316Images];
-  loopImages.forEach((src,index)=>{
-    const item=document.createElement('div');
-    item.className='nsp-316-item';
-    const img=document.createElement('img');
-    img.src=src;
-    img.alt='NSP 316 Collection';
-    if(index>0) img.loading='lazy';
-    item.appendChild(img);
-    track.appendChild(item);
-  });
-
-  collection316Image.replaceWith(track);
-}
 
 function getProductGallery(product){
   return Array.isArray(product?.gallery) && product.gallery.length ? product.gallery : [product?.image].filter(Boolean);
