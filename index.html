@@ -1528,7 +1528,7 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
   <div class="hero-bottom"></div>
 </header>
 
-<div class="marquee"><div class="marquee-track"><span>Faith Over Fear</span><span>None Shall Perish</span><span>John 3:16</span><span>Made For The Called</span><span>Faith Over Fear</span><span>None Shall Perish</span><span>John 3:16</span><span>Made For The Called</span><span>Faith Over Fear</span><span>None Shall Perish</span><span>John 3:16</span><span>Made For The Called</span><span>Faith Over Fear</span><span>None Shall Perish</span><span>John 3:16</span><span>Made For The Called</span></div></div>
+<div class="marquee"><div class="marquee-track"><span>None Shall Perish</span><span>John 3:16</span><span>None Shall Perish</span><span>John 3:16</span><span>None Shall Perish</span><span>John 3:16</span><span>None Shall Perish</span><span>John 3:16</span></div></div>
 
 <section class="section" id="shop">
   
@@ -1998,38 +1998,3 @@ renderBag();
     bag.dataset.nspCartLanding='1';
     bag.onclick=function(e){
       e.preventDefault();
-      e.stopImmediatePropagation();
-      window.location.href='/cart';
-    };
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind);
-  else bind();
-})();
-</script>
-<script id="nsp-navigation-final-script-2026-09-02">
-(function(){
-  function init(){
-    const menu=document.getElementById('menuBtn');
-    const nav=document.getElementById('navLinks');
-    if(!menu||!nav)return;
-    menu.addEventListener('click',function(){
-      requestAnimationFrame(function(){
-        const open=nav.classList.contains('active');
-        document.body.classList.toggle('nsp-menu-open',open);
-        document.body.classList.remove('nsp-cart-open');
-      });
-    });
-    nav.querySelectorAll('a').forEach(function(a){
-      a.addEventListener('click',function(){
-        if(a.getAttribute('href')==='/cart') return;
-        nav.classList.remove('active');
-        document.body.classList.remove('nsp-menu-open');
-      });
-    });
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
-  else init();
-})();
-</script>
-</body>
-</html>
