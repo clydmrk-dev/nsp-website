@@ -201,8 +201,14 @@ button{
   width:max-content;
   display:flex;
   animation:move 25s linear infinite;
+  will-change:transform;
+}
+.marquee-group{
+  display:flex;
+  flex:0 0 auto;
 }
 .marquee span{
+  flex:0 0 auto;
   margin-right:50px;
   font-size:10px;
   font-weight:800;
@@ -1528,7 +1534,7 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
   <div class="hero-bottom"></div>
 </header>
 
-<div class="marquee"><div class="marquee-track"><span>None Shall Perish</span><span>John 3:16</span><span>None Shall Perish</span><span>John 3:16</span><span>None Shall Perish</span><span>John 3:16</span><span>None Shall Perish</span><span>John 3:16</span></div></div>
+<div class="marquee"><div class="marquee-track"><div class="marquee-group"><span>None Shall Perish</span><span>John 3:16</span></div><div class="marquee-group" aria-hidden="true"><span>None Shall Perish</span><span>John 3:16</span></div></div></div>
 
 <section class="section" id="shop">
   
