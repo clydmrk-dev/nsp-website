@@ -1954,6 +1954,10 @@ function closeVipPopup(){
   localStorage.setItem('nspVipPopupSeen','1');
   showVipTab();
 }
+
+function declineVipOffer(){
+  closeVipPopup();
+}
 function openVipPopup(){
   resetVipSteps();
   hideVipTab();
@@ -1962,7 +1966,7 @@ function openVipPopup(){
   document.body.style.overflow='hidden';
 }
 vipClose.onclick=closeVipPopup;
-vipDismiss.onclick=closeVipPopup;
+vipDismiss.onclick=declineVipOffer;
 vipTab.onclick=openVipPopup;
 vipTab.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')openVipPopup()});
 vipTabClose.onclick=()=>{hideVipTab();localStorage.setItem('nspVipPopupSeen','1')};
