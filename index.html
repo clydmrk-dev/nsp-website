@@ -1789,7 +1789,7 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
 
 <main id="top">
 <header class="hero">
-  <div class="eyebrow">Est. 2026</div>
+  <a class="hero-shop-button" href="/collection.html">SHOP</a>
   
   <div class="hero-bottom"></div>
 </header>
@@ -2703,5 +2703,37 @@ footer{
   box-shadow:none!important;
   backdrop-filter:blur(3px);
   -webkit-backdrop-filter:blur(3px);
+}
+</style>
+<style id="nsp-hero-shop-button-final">
+.hero{
+  justify-content:center!important;
+  align-items:center!important;
+}
+.hero .hero-shop-button{
+  position:absolute;
+  z-index:5;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:94px;
+  height:50px;
+  padding:0 24px;
+  border:1px solid rgba(244,241,232,.95);
+  background:rgba(10,10,10,.08);
+  color:var(--cream);
+  font:800 12px/1 Arial,Helvetica,sans-serif;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  text-decoration:none;
+  transition:background .25s ease,color .25s ease,transform .25s ease;
+}
+.hero .hero-shop-button:hover{
+  background:var(--cream);
+  color:var(--forest);
+  transform:translate(-50%,-50%) scale(1.03);
 }
 </style>
