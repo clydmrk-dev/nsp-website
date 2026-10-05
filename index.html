@@ -699,60 +699,6 @@ footer{
   .vip-subtitle{font-size:14px;margin:22px auto}
 }
 
-/* VIP WELCOME POPUP */
-const vipPopup = document.getElementById('vipPopup');
-const vipForm = document.getElementById('vipForm');
-const vipClose = document.getElementById('vipClose');
-const vipDismiss = document.getElementById('vipDismiss');
-const vipTab = document.getElementById('vipTab');
-const vipTabClose = document.getElementById('vipTabClose');
-
-function showVipTab(){
-  vipTab.classList.add('visible');
-}
-function hideVipTab(){
-  vipTab.classList.remove('visible');
-}
-function closeVipPopup(){
-  vipPopup.classList.remove('open');
-  vipPopup.setAttribute('aria-hidden','true');
-  document.body.style.overflow='';
-  localStorage.setItem('nspVipPopupSeen','1');
-  showVipTab();
-}
-function openVipPopup(){
-  hideVipTab();
-  vipPopup.classList.add('open');
-  vipPopup.setAttribute('aria-hidden','false');
-  document.body.style.overflow='hidden';
-}
-vipClose.onclick=closeVipPopup;
-vipDismiss.onclick=closeVipPopup;
-vipTab.onclick=openVipPopup;
-vipTab.addEventListener('keydown',e=>{
-  if(e.key==='Enter' || e.key===' ') openVipPopup();
-});
-vipTabClose.onclick=()=>{
-  hideVipTab();
-  localStorage.setItem('nspVipPopupSeen','1');
-};
-vipPopup.addEventListener('click',e=>{
-  if(e.target===vipPopup) closeVipPopup();
-});
-vipForm.addEventListener('submit',e=>{
-  e.preventDefault();
-  const email=document.getElementById('vipEmail').value.trim();
-  if(!email) return;
-  localStorage.setItem('nspVipEmail',email);
-  closeVipPopup();
-  alert('Welcome to the NSP family!');
-});
-if(localStorage.getItem('nspVipPopupSeen')==='1'){
-  showVipTab();
-}else{
-  setTimeout(openVipPopup,700);
-}
-
 /* PRODUCT MODAL */
 .modal-backdrop{
   position:fixed;
@@ -1851,6 +1797,62 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
   </div>
 </div>
 
+<script>
+/* VIP WELCOME POPUP */
+const vipPopup = document.getElementById('vipPopup');
+const vipForm = document.getElementById('vipForm');
+const vipClose = document.getElementById('vipClose');
+const vipDismiss = document.getElementById('vipDismiss');
+const vipTab = document.getElementById('vipTab');
+const vipTabClose = document.getElementById('vipTabClose');
+
+function showVipTab(){
+  vipTab.classList.add('visible');
+}
+function hideVipTab(){
+  vipTab.classList.remove('visible');
+}
+function closeVipPopup(){
+  vipPopup.classList.remove('open');
+  vipPopup.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+  localStorage.setItem('nspVipPopupSeen','1');
+  showVipTab();
+}
+function openVipPopup(){
+  hideVipTab();
+  vipPopup.classList.add('open');
+  vipPopup.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+}
+vipClose.onclick=closeVipPopup;
+vipDismiss.onclick=closeVipPopup;
+vipTab.onclick=openVipPopup;
+vipTab.addEventListener('keydown',e=>{
+  if(e.key==='Enter' || e.key===' ') openVipPopup();
+});
+vipTabClose.onclick=()=>{
+  hideVipTab();
+  localStorage.setItem('nspVipPopupSeen','1');
+};
+vipPopup.addEventListener('click',e=>{
+  if(e.target===vipPopup) closeVipPopup();
+});
+vipForm.addEventListener('submit',e=>{
+  e.preventDefault();
+  const email=document.getElementById('vipEmail').value.trim();
+  if(!email) return;
+  localStorage.setItem('nspVipEmail',email);
+  closeVipPopup();
+  alert('Welcome to the NSP family!');
+});
+if(localStorage.getItem('nspVipPopupSeen')==='1'){
+  showVipTab();
+}else{
+  setTimeout(openVipPopup,700);
+}
+
+</script>
 <script>
 
 const products = [
