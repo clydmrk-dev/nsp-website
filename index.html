@@ -2386,3 +2386,30 @@ renderBag();
     bag.dataset.nspCartLanding='1';
     bag.onclick=function(e){
       e.preventDefault();
+<style id="nsp-cart-final-fix">
+body.nsp-cart-open{overflow:auto!important;padding-right:0!important}
+body.nsp-cart-open .navbar{transform:none!important}
+body.nsp-cart-open > :not(.navbar):not(.bag-panel):not(.modal-backdrop):not(script):not(style){transform:none!important;width:auto!important;margin-left:0!important;margin-right:0!important}
+body.nsp-cart-open .bag-button{display:inline-flex!important}
+body.nsp-cart-open .bag-panel{position:fixed!important;top:0!important;right:0!important;left:auto!important;bottom:0!important;width:min(430px,100vw)!important;max-width:430px!important;height:100vh!important;margin:0!important;padding:30px!important;transform:none!important;z-index:6000!important;overflow-y:auto!important;background:var(--cream)!important;box-shadow:-15px 0 40px rgba(0,0,0,.15)!important}
+@media(max-width:560px){body.nsp-cart-open .bag-panel{width:100vw!important;max-width:100vw!important;padding:24px!important}}
+</style>
+<script id="nsp-cart-final-fix-script">
+(function(){
+  const bag=document.getElementById('bagButton'), panel=document.getElementById('bagPanel'), close=document.getElementById('bagClose');
+  if(!bag||!panel)return;
+  function openCart(e){
+    if(e)e.preventDefault();
+    document.body.classList.remove('nsp-menu-open','nsp-cart-landing','nsp-panel-open');
+    document.body.classList.add('nsp-cart-open');
+    panel.classList.add('open');
+  }
+  function closeCart(e){
+    if(e)e.preventDefault();
+    panel.classList.remove('open');
+    document.body.classList.remove('nsp-cart-open','nsp-cart-landing','nsp-panel-open');
+  }
+  bag.onclick=openCart;
+  if(close)close.onclick=closeCart;
+})();
+</script>
