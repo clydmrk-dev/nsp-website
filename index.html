@@ -2528,3 +2528,48 @@ footer{
 .nsp-nav-icon{color:#F4F1E8!important}
 .nsp-nav-dropdown{z-index:100001!important}
 </style>
+<style id="nsp-navbar-menu-smooth-final">
+.navbar.nsp-brand-header{
+  background:rgba(18,59,42,.94)!important;
+}
+.nsp-nav-dropdown{
+  display:flex!important;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-10px);
+  transition:opacity .28s ease,transform .28s ease,visibility .28s ease;
+}
+.nsp-nav-dropdown.open{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+  transform:translateY(0);
+}
+.nsp-menu-toggle{
+  flex-direction:column!important;
+  gap:5px!important;
+}
+.nsp-menu-toggle span{
+  width:25px!important;
+  height:2px!important;
+  margin:0!important;
+  transition:transform .25s ease,opacity .2s ease;
+}
+.nsp-menu-toggle.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nsp-menu-toggle.active span:nth-child(2){opacity:0}
+.nsp-menu-toggle.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+</style>
+<script id="nsp-navbar-menu-smooth-final-script">
+(function(){
+  const menu=document.getElementById('nspMenuToggle');
+  const dropdown=document.getElementById('nspNavDropdown');
+  if(!menu||!dropdown)return;
+  menu.addEventListener('click',function(){
+    const open=dropdown.classList.contains('open');
+    dropdown.classList.toggle('open',!open);
+    menu.classList.toggle('active',!open);
+    menu.setAttribute('aria-expanded',String(!open));
+  });
+})();
+</script>
