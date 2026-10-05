@@ -512,6 +512,76 @@ footer{
   text-transform:uppercase;
 }
 
+/* VIP COLLAPSED TAB */
+.vip-tab{
+  position:fixed;
+  left:0;
+  bottom:0;
+  z-index:9998;
+  width:150px;
+  height:150px;
+  background:#8B1006;
+  clip-path:polygon(0 0,100% 100%,0 100%);
+  cursor:pointer;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+.vip-tab.visible{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+.vip-tab-text{
+  position:absolute;
+  left:8px;
+  bottom:18px;
+  color:#fff;
+  font:900 15px/1 Inter,Arial,sans-serif;
+  text-transform:uppercase;
+  transform:rotate(45deg);
+  transform-origin:left bottom;
+  white-space:nowrap;
+}
+.vip-tab-close{
+  position:fixed;
+  left:140px;
+  bottom:18px;
+  z-index:9999;
+  width:24px;
+  height:24px;
+  padding:0;
+  border:0;
+  border-radius:50%;
+  background:#050505;
+  color:#fff;
+  font:700 18px/22px Arial,sans-serif;
+  cursor:pointer;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+.vip-tab.visible + .vip-tab-close{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+.vip-step2 .vip-kicker{font-size:28px;margin-bottom:22px}
+.vip-step2 .vip-subtitle{color:#111;font-size:15px;line-height:1.25;max-width:390px}
+.vip-consent{margin:18px auto 0;max-width:390px;color:#111;font-size:11px;line-height:1.25}
+.vip-step2 .vip-dismiss{margin-top:20px}
+.vip-step2[hidden],.vip-step3[hidden]{display:none}
+.vip-step3 .vip-kicker{font-size:30px;margin-bottom:24px}
+.vip-code-intro{max-width:380px;margin:0 auto 22px;color:#111;font-size:15px;line-height:1.25;font-weight:700;text-align:center}
+.vip-code-box{width:100%;max-width:370px;margin:0 auto 28px;padding:22px 18px;border:4px dashed #111;display:flex;align-items:center;justify-content:center;gap:28px;color:#8B1006}
+.vip-code-box strong{font-family:Georgia,serif;font-size:25px;letter-spacing:.03em}
+.vip-code-box button{border:0;background:none;color:#8B1006;font-size:34px;line-height:1;cursor:pointer}
+@media(max-width:700px){
+  .vip-tab{width:125px;height:125px}
+  .vip-tab-text{font-size:13px;bottom:15px;left:6px}
+  .vip-tab-close{left:115px;bottom:14px;width:22px;height:22px;font-size:16px;line-height:20px}
+}
+
 /* WELCOME VIP POPUP */
 .vip-step3[hidden]{display:none}
 .vip-step3 .vip-kicker{font-size:30px;margin-bottom:24px}
