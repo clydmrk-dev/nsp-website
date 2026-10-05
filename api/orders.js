@@ -85,7 +85,9 @@ export default async function handler(req, res) {
           createdAt: new Date().toISOString(),
           customer: body.customer,
           items: body.items,
-          total: body.total
+          total: body.total,
+          vipCode: body.vipCode || '',
+          key: internalApiKey
         })
       });
 
@@ -93,7 +95,7 @@ export default async function handler(req, res) {
       if (!response.ok || data.ok === false) {
         return res.status(400).json({ ok: false, error: data.error || 'The order could not be accepted.' });
       }
-      return res.status(200).json({ ok: true, orderNumber: body.orderNumber });
+      return res.status(200).json({ ok: true, orderNumber: body.orderNumber, subtotal: data.subtotal ?? body.total, discount: data.discount ?? 0, total: data.total ?? body.total });
     }
 
     return res.status(405).json({ ok: false, error: 'Method not allowed' });
