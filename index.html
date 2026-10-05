@@ -1816,6 +1816,27 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
 
 <section class="section" id="about"><div class="about"><h2>Built<br>On<br>Faith.</h2><div class="about-copy"><p>None Shall Perish is a Christian streetwear brand built around one simple message: your faith should be lived, not hidden.</p><p>NSP exists to create clothing that carries meaning — pieces that remind us of the Gospel, our identity in Christ, and the purpose we are called to live.</p><p>Wear the message. Live the message. Share the message.</p></div></div></section>
 
+
+<section class="join-family" id="join-family">
+  <div class="join-family-media">
+    <img src="/featured/NSP_Featured_2.jpg" alt="None Shall Perish community">
+  </div>
+  <div class="join-family-copy">
+    <div class="join-family-kicker">Be First To Every Drop</div>
+    <h2>Join The Family</h2>
+    <ul class="join-family-list">
+      <li>Shop every drop before it sells out</li>
+      <li>Discounts kept for the family</li>
+      <li>Sneak peeks before anyone else</li>
+    </ul>
+    <form class="join-family-form" id="joinFamilyForm">
+      <input id="joinFamilyName" type="text" autocomplete="given-name" placeholder="First name" required>
+      <input id="joinFamilyEmail" type="email" autocomplete="email" placeholder="Your email address" required>
+      <button type="submit">Join The Family</button>
+    </form>
+    <div class="join-family-note">No spam. Just the drops, before everyone else.</div>
+  </div>
+</section>
 <section class="social" id="contact"><h2>Follow<br>The Journey.</h2><p>Join the NSP community and follow our latest drops, stories, and collections.</p><a href="https://www.instagram.com/noneshallperish.co/" class="outline-button" target="_blank" rel="noopener noreferrer">Instagram →</a></section>
 </main>
 
@@ -2889,3 +2910,135 @@ footer{
   letter-spacing:.01em!important;
 }
 </style>
+/* JOIN THE FAMILY SECTION */
+<style id="nsp-join-family">
+.join-family{
+  display:grid;
+  grid-template-columns:1.08fr .92fr;
+  min-height:620px;
+  background:#050505;
+  color:var(--cream);
+}
+.join-family-media{
+  min-height:620px;
+  overflow:hidden;
+  background:#171717;
+}
+.join-family-media img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  object-position:center;
+}
+.join-family-copy{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:80px clamp(40px,6vw,90px);
+  background:#050505;
+}
+.join-family-kicker{
+  margin-bottom:22px;
+  color:#8f8a80;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+.join-family h2{
+  margin:0 0 28px;
+  color:var(--cream);
+  font-size:clamp(48px,5.4vw,78px);
+  line-height:.9;
+  letter-spacing:-.06em;
+  font-weight:900;
+}
+.join-family-list{
+  display:grid;
+  gap:17px;
+  margin:0 0 34px;
+  padding:0;
+  list-style:none;
+}
+.join-family-list li{
+  position:relative;
+  padding-left:20px;
+  color:#aaa69f;
+  font-size:14px;
+  line-height:1.4;
+}
+.join-family-list li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:.48em;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#8B1006;
+}
+.join-family-form{
+  display:grid;
+  gap:10px;
+  max-width:520px;
+}
+.join-family-form input{
+  width:100%;
+  height:56px;
+  padding:0 20px;
+  border:1px solid #292929;
+  border-radius:999px;
+  outline:none;
+  background:#050505;
+  color:var(--cream);
+  font:500 14px/1 Inter,Arial,sans-serif;
+}
+.join-family-form input::placeholder{color:#777}
+.join-family-form input:focus{border-color:#555}
+.join-family-form button{
+  width:100%;
+  height:56px;
+  border:0;
+  border-radius:999px;
+  background:#8B1006;
+  color:#fff;
+  cursor:pointer;
+  font:800 13px/1 Inter,Arial,sans-serif;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+  transition:transform .2s ease,background .2s ease;
+}
+.join-family-form button:hover{background:#a31308;transform:translateY(-1px)}
+.join-family-note{
+  margin-top:18px;
+  color:#777;
+  font-size:10px;
+  line-height:1.5;
+}
+@media(max-width:800px){
+  .join-family{grid-template-columns:1fr;min-height:0}
+  .join-family-media{min-height:420px}
+  .join-family-copy{padding:60px 7vw 70px}
+  .join-family h2{font-size:clamp(48px,13vw,72px)}
+}
+</style>
+
+<script id="nsp-join-family-script">
+(function(){
+  const form=document.getElementById('joinFamilyForm');
+  if(!form)return;
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    const email=document.getElementById('joinFamilyEmail').value.trim();
+    if(!email)return;
+    localStorage.setItem('nspVipEmail',email);
+    if(typeof openVipPopup==='function'){
+      document.getElementById('vipEmail').value=email;
+      openVipPopup();
+    }else{
+      alert('Welcome to the NSP family.');
+    }
+  });
+})();
+</script>
