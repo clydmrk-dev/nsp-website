@@ -2915,12 +2915,14 @@ footer{
 .join-family{
   display:grid;
   grid-template-columns:1.08fr .92fr;
-  min-height:620px;
+  aspect-ratio:16/7;
+  width:100%;
   background:#050505;
   color:var(--cream);
 }
 .join-family-media{
-  min-height:620px;
+  min-height:0;
+  height:100%;
   overflow:hidden;
   background:#171717;
 }
@@ -3017,8 +3019,11 @@ footer{
   line-height:1.5;
 }
 @media(max-width:800px){
-  .join-family{grid-template-columns:1fr;min-height:0}
-  .join-family-media{min-height:420px}
+  .join-family{
+    grid-template-columns:1fr;
+    aspect-ratio:auto;
+  }
+  .join-family-media{height:auto;aspect-ratio:4/5}
   .join-family-copy{padding:60px 7vw 70px}
   .join-family h2{font-size:clamp(48px,13vw,72px)}
 }
