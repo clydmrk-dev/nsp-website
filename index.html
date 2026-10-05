@@ -2525,5 +2525,35 @@ body.nsp-menu-open .navbar .menu-btn{
 body.nsp-cart-open .bag-panel{
   transform:none!important;
 }
-</style></body>
+</style><style id="nsp-cart-position-final">
+/* CART MUST BE A DIRECT BODY OVERLAY — NOT INSIDE THE MOVING SITE CANVAS */
+#nsp-site-canvas{transform:none!important}
+body.nsp-cart-open #nsp-site-canvas{transform:none!important}
+body.nsp-menu-open #nsp-site-canvas{transform:none!important}
+body.nsp-cart-open .bag-panel{
+  position:fixed!important;
+  top:0!important;
+  right:0!important;
+  bottom:0!important;
+  left:auto!important;
+  width:min(430px,100vw)!important;
+  max-width:430px!important;
+  height:100vh!important;
+  margin:0!important;
+  transform:none!important;
+  z-index:99999!important;
+}
+</style>
+<script id="nsp-cart-body-overlay">
+(function(){
+  function moveCartToBody(){
+    const cart=document.getElementById('bagPanel');
+    if(cart && cart.parentElement!==document.body) document.body.appendChild(cart);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',moveCartToBody);
+  else moveCartToBody();
+  document.addEventListener('click',moveCartToBody,true);
+})();
+</script>
+</body>
 </html>
