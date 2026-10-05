@@ -2649,3 +2649,51 @@ footer{
   else initNSPMenu();
 })();
 </script>
+<style id="nsp-aesthetic-cart-final">
+.nsp-cart-link{
+  width:42px!important;
+  height:42px!important;
+  border-radius:50%!important;
+  transition:background .25s ease,transform .25s ease!important;
+}
+.nsp-cart-link:hover{
+  background:rgba(244,241,232,.12)!important;
+  transform:translateY(-50%) scale(1.04)!important;
+}
+.nsp-cart-icon{
+  width:25px!important;
+  height:25px!important;
+  border:0!important;
+  background:none!important;
+  transform:none!important;
+}
+.nsp-cart-icon:before{
+  content:""!important;
+  position:absolute!important;
+  left:3px!important;
+  top:4px!important;
+  width:18px!important;
+  height:15px!important;
+  border:1.6px solid currentColor!important;
+  border-radius:2px 2px 4px 4px!important;
+  background:transparent!important;
+}
+.nsp-cart-icon:after{
+  content:""!important;
+  position:absolute!important;
+  left:7px!important;
+  top:0!important;
+  width:10px!important;
+  height:8px!important;
+  border:1.6px solid currentColor!important;
+  border-bottom:0!important;
+  border-radius:7px 7px 0 0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.nsp-cart-link .nsp-cart-icon{
+  background:
+    radial-gradient(circle,currentColor 0 1.5px,transparent 1.7px) 7px 21px/4px 4px no-repeat,
+    radial-gradient(circle,currentColor 0 1.5px,transparent 1.7px) 15px 21px/4px 4px no-repeat!important;
+}
+</style>
