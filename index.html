@@ -513,6 +513,34 @@ footer{
 }
 
 /* WELCOME VIP POPUP */
+.vip-step3[hidden]{display:none}
+.vip-step3 .vip-kicker{font-size:30px;margin-bottom:24px}
+.vip-code-intro{max-width:380px;margin:0 auto 22px;color:#111;font-size:15px;line-height:1.25;font-weight:700;text-align:center}
+.vip-code-box{
+  width:100%;
+  max-width:370px;
+  margin:0 auto 28px;
+  padding:22px 18px;
+  border:4px dashed #111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:28px;
+  color:#8B1006;
+}
+.vip-code-box strong{
+  font-family:Georgia,serif;
+  font-size:25px;
+  letter-spacing:.03em;
+}
+.vip-code-box button{
+  border:0;
+  background:none;
+  color:#8B1006;
+  font-size:34px;
+  line-height:1;
+  cursor:pointer;
+}
 .vip-step2 .vip-kicker{font-size:28px;margin-bottom:22px}
 .vip-step2 .vip-subtitle{color:#111;font-size:15px;line-height:1.25;max-width:390px}
 .vip-consent{margin:18px auto 0;max-width:390px;color:#111;font-size:11px;line-height:1.25}
@@ -1747,6 +1775,15 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
         </form>
         <button class="vip-dismiss" id="vipSmsSkip" type="button">I'll take the risk of missing out on drops...</button>
       </div>
+      <div id="vipStep3" class="vip-step3" hidden>
+        <div class="vip-kicker">Welcome To<br>Generation!</div>
+        <p class="vip-code-intro">Confirm your subscription, then use the code for 10% OFF!</p>
+        <div class="vip-code-box">
+          <strong id="vipCode">NSP10OFF</strong>
+          <button type="button" id="vipCopyCode" aria-label="Copy discount code">⧉</button>
+        </div>
+        <button class="vip-dismiss" id="vipCodeDone" type="button">Continue Shopping</button>
+      </div>
     </div>
     <div class="vip-visual">
       <button class="vip-close" id="vipClose" type="button" aria-label="Close">×</button>
@@ -1828,10 +1865,13 @@ const vipStep1 = document.getElementById('vipStep1');
 const vipStep2 = document.getElementById('vipStep2');
 const vipSmsForm = document.getElementById('vipSmsForm');
 const vipSmsSkip = document.getElementById('vipSmsSkip');
+const vipStep3 = document.getElementById('vipStep3');
+const vipCopyCode = document.getElementById('vipCopyCode');
+const vipCodeDone = document.getElementById('vipCodeDone');
 
 function showVipTab(){ vipTab.classList.add('visible'); }
 function hideVipTab(){ vipTab.classList.remove('visible'); }
-function resetVipSteps(){ vipStep1.hidden=false; vipStep2.hidden=true; }
+function resetVipSteps(){ vipStep1.hidden=false; vipStep2.hidden=true; vipStep3.hidden=true; }
 function closeVipPopup(){
   vipPopup.classList.remove('open');
   vipPopup.setAttribute('aria-hidden','true');
@@ -1865,9 +1905,12 @@ vipSmsForm.addEventListener('submit',e=>{
   const phone=document.getElementById('vipPhone').value.trim();
   if(!phone)return;
   localStorage.setItem('nspVipPhone',phone);
-  closeVipPopup();
+  vipStep2.hidden=true;
+  vipStep3.hidden=false;
 });
 vipSmsSkip.onclick=closeVipPopup;
+vipCopyCode.onclick=()=>navigator.clipboard?.writeText(document.getElementById('vipCode').textContent.trim());
+vipCodeDone.onclick=closeVipPopup;
 if(localStorage.getItem('nspVipPopupSeen')==='1')showVipTab();
 else setTimeout(openVipPopup,700);
 
