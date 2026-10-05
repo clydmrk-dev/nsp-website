@@ -121,23 +121,25 @@ function doPost(e) {
       return jsonResponse(applyVipCode(data.email, data.vipCode, data.orderNumber));
     }
 
+    var orderHeaders = [
+      'Order Number',
+      'Date/Time',
+      'Customer Name',
+      'Phone',
+      'Email',
+      'Address',
+      'Items',
+      'Subtotal',
+      'Discount',
+      'VIP Code',
+      'Total',
+      'Status'
+    ];
+
     if (!sheet) {
       sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet('Orders');
-      sheet.appendRow([
-        'Order Number',
-        'Date/Time',
-        'Customer Name',
-        'Phone',
-        'Email',
-        'Address',
-        'Items',
-        'Subtotal',
-        'Discount',
-        'VIP Code',
-        'Total',
-        'Status'
-      ]);
     }
+    sheet.getRange(1, 1, 1, orderHeaders.length).setValues([orderHeaders]);
 
     var customer = data.customer || {};
     var items = Array.isArray(data.items) ? data.items : [];
