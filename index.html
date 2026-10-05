@@ -1772,7 +1772,24 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
 }
 </style>
 
-</head>
+<style id="nsp-no-page-shift">
+html,body{overflow-x:hidden!important}
+body{width:100%!important;position:relative!important}
+.navbar,.hero,.section,.collection,.statement,.about,.social,.footer{transform:none!important}
+body.nsp-menu-open,
+body.nsp-cart-open,
+body.nsp-panel-open{overflow-x:hidden!important}
+body.nsp-menu-open > *,
+body.nsp-cart-open > *,
+body.nsp-panel-open > *{margin-left:0!important;margin-right:0!important}
+body.nsp-menu-open .navbar,
+body.nsp-cart-open .navbar,
+body.nsp-panel-open .navbar{transform:none!important;left:0!important}
+.bag-panel,
+.mobile-menu,
+.menu-panel,
+.nav-panel{will-change:transform}
+</style></head>
 <body>
 
 <nav class="navbar">
@@ -2427,5 +2444,27 @@ body.nsp-cart-open .bag-panel{
   if(close)close.onclick=closeCart;
 })();
 </script>
-</body>
+<script id="nsp-no-page-shift-script">
+(function(){
+  function lockPagePosition(){
+    document.documentElement.style.overflowX='hidden';
+    document.body.style.overflowX='hidden';
+    document.body.style.left='0';
+    document.body.style.marginLeft='0';
+    document.body.style.marginRight='0';
+    document.body.style.transform='none';
+  }
+  const observer=new MutationObserver(function(){
+    if(document.body.classList.contains('nsp-menu-open')||
+       document.body.classList.contains('nsp-cart-open')||
+       document.body.classList.contains('nsp-panel-open')){
+      lockPagePosition();
+    }
+  });
+  observer.observe(document.body,{attributes:true,attributeFilter:['class','style']});
+  document.addEventListener('click',function(){
+    requestAnimationFrame(lockPagePosition);
+  },true);
+})();
+</script></body>
 </html>
