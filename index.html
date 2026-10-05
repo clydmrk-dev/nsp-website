@@ -2439,3 +2439,32 @@ renderBag();
   }
 }
 </style>
+
+
+<style id="nsp-announcement-bar">
+.nsp-announcement-bar{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--burgundy);
+  color:var(--cream);
+  z-index:99998;
+  font-family:Inter,Arial,sans-serif;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+.nsp-brand-header{
+  top:34px!important;
+}
+@media(max-width:800px){
+  .nsp-announcement-bar{height:30px;font-size:9px;letter-spacing:1.1px;}
+  .nsp-brand-header{top:30px!important;}
+}
+</style>
