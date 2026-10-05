@@ -704,21 +704,38 @@ const vipPopup = document.getElementById('vipPopup');
 const vipForm = document.getElementById('vipForm');
 const vipClose = document.getElementById('vipClose');
 const vipDismiss = document.getElementById('vipDismiss');
+const vipTab = document.getElementById('vipTab');
+const vipTabClose = document.getElementById('vipTabClose');
 
+function showVipTab(){
+  vipTab.classList.add('visible');
+}
+function hideVipTab(){
+  vipTab.classList.remove('visible');
+}
 function closeVipPopup(){
   vipPopup.classList.remove('open');
   vipPopup.setAttribute('aria-hidden','true');
   document.body.style.overflow='';
   localStorage.setItem('nspVipPopupSeen','1');
+  showVipTab();
 }
 function openVipPopup(){
-  if(localStorage.getItem('nspVipPopupSeen')==='1') return;
+  hideVipTab();
   vipPopup.classList.add('open');
   vipPopup.setAttribute('aria-hidden','false');
   document.body.style.overflow='hidden';
 }
 vipClose.onclick=closeVipPopup;
 vipDismiss.onclick=closeVipPopup;
+vipTab.onclick=openVipPopup;
+vipTab.addEventListener('keydown',e=>{
+  if(e.key==='Enter' || e.key===' ') openVipPopup();
+});
+vipTabClose.onclick=()=>{
+  hideVipTab();
+  localStorage.setItem('nspVipPopupSeen','1');
+};
 vipPopup.addEventListener('click',e=>{
   if(e.target===vipPopup) closeVipPopup();
 });
@@ -730,7 +747,11 @@ vipForm.addEventListener('submit',e=>{
   closeVipPopup();
   alert('Welcome to the NSP family!');
 });
-setTimeout(openVipPopup,700);
+if(localStorage.getItem('nspVipPopupSeen')==='1'){
+  showVipTab();
+}else{
+  setTimeout(openVipPopup,700);
+}
 
 /* PRODUCT MODAL */
 .modal-backdrop{
@@ -1745,6 +1766,11 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
 
 <footer><div class="footer-top"><a class="footer-logo" href="#top" aria-label="Back to top">NSP</a><div class="footer-links"><div class="footer-column"><h4>Navigate</h4><a href="#shop">Shop</a><a href="#collection-316">316</a><a href="#about">About</a><a href="#contact">Contact</a></div><div class="footer-column"><h4>Social</h4><a href="https://www.instagram.com/noneshallperish.co/" target="_blank" rel="noopener noreferrer">Instagram</a><a href="https://www.facebook.com/noneshallperish316" target="_blank" rel="noopener noreferrer">Facebook</a></div></div></div><div class="footer-bottom"><span>© 2026 None Shall Perish</span><span>Faith. Purpose. Eternity.</span></div></footer>
 
+
+<div class="vip-tab" id="vipTab" role="button" tabindex="0" aria-label="Unlock 10% off">
+  <span class="vip-tab-text">Unlock 10% Off</span>
+</div>
+<button class="vip-tab-close" id="vipTabClose" type="button" aria-label="Close VIP offer">×</button>
 <div class="vip-backdrop" id="vipPopup" aria-hidden="true">
   <div class="vip-popup" role="dialog" aria-modal="true" aria-labelledby="vipTitle">
     <div class="vip-copy">
