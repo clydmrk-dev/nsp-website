@@ -1975,7 +1975,7 @@ vipForm.addEventListener('submit',e=>{
     if(!response.ok||!result.ok||!result.code) throw new Error(result.error||'Unable to generate your VIP code.');
     localStorage.setItem('nspVipEmail',email);
     localStorage.setItem('nspVipCode',result.code);
-    document.getElementById('vipCode').textContent=result.code);
+    document.getElementById('vipCode').textContent=result.code;
     vipStep1.hidden=true;
     vipStep2.hidden=false;
   }catch(error){
