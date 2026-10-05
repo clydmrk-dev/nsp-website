@@ -1969,9 +1969,19 @@ vipForm.addEventListener('submit',e=>{
   e.preventDefault();
   const email=document.getElementById('vipEmail').value.trim();
   if(!email)return;
-  localStorage.setItem('nspVipEmail',email);
-  vipStep1.hidden=true;
-  vipStep2.hidden=false;
+  try{
+    const response=await fetch('/api/vip',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'generateVipCode',email})});
+    const result=await response.json();
+    if(!response.ok||!result.ok||!result.code) throw new Error(result.error||'Unable to generate your VIP code.');
+    localStorage.setItem('nspVipEmail',email);
+    localStorage.setItem('nspVipCode',result.code);
+    document.getElementById('vipCode').textContent=result.code);
+    vipStep1.hidden=true;
+    vipStep2.hidden=false;
+  }catch(error){
+    console.error('NSP VIP generation error:',error);
+    alert('We could not generate your VIP code right now. Please try again.');
+  }
 });
 vipSmsForm.addEventListener('submit',e=>{
   e.preventDefault();
@@ -1992,7 +2002,11 @@ vipCodeDone.onclick=()=>{
   localStorage.setItem('nspVipCompleted','1');
   hideVipTab();
 };
-setTimeout(openVipPopup,700);
+if(localStorage.getItem('nspVipCompleted')==='1'){
+  hideVipTab();
+}else{
+  setTimeout(openVipPopup,700);
+}
 
 </script>
 <script>
@@ -2221,29 +2235,35 @@ document.getElementById('checkoutForm').addEventListener('submit',async e=>{
     email:document.getElementById('customerEmail').value.trim(),
     address:document.getElementById('customerAddress').value.trim()
   };
-  const total=bag.reduce((sum,p)=>sum+Number(p.price||0),0);
+  const subtotal=bag.reduce((sum,p)=>sum+Number(p.price||0),0);
+  const storedVipEmail=String(localStorage.getItem('nspVipEmail')||'').trim().toLowerCase();
+  const storedVipCode=String(localStorage.getItem('nspVipCode')||'').trim();
+  const vipCode=storedVipEmail===customer.email.toLowerCase()?storedVipCode:'';
   const orderNumber='NSP-2026-'+Math.floor(1000+Math.random()*9000);
-  const orderText=[`NSP ORDER ${orderNumber}`,`Customer: ${customer.name}`,`Phone: ${customer.phone}`,`Email: ${customer.email}`,`Address: ${customer.address}`,'',...bag.map(p=>`${p.name} | Size ${p.size} | ₱${p.price}`),'',`Total: ₱${total}`].join('\n');
   const submitButton=document.querySelector('.place-order');
   submitButton.disabled=true;
   submitButton.textContent='Saving Order...';
   try{
-    const response=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderNumber,customer,items:[...bag],total})});
+    const response=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderNumber,customer,items:[...bag],total:subtotal,vipCode})});
     const result=await response.json();
     if(!response.ok||!result.ok) throw new Error(result.error||'Unable to save the order.');
-    localStorage.setItem('nspLastOrder',JSON.stringify({orderNumber,customer,items:[...bag],total,orderText}));
-    showSuccess(orderNumber,customer,total,orderText);
+    const finalTotal=Number(result.total??subtotal);
+    const discount=Number(result.discount||0);
+    const orderTextBase=[`NSP ORDER ${orderNumber}`,`Customer: ${customer.name}`,`Phone: ${customer.phone}`,`Email: ${customer.email}`,`Address: ${customer.address}`,'',...bag.map(p=>`${p.name} | Size ${p.size} | ₱${p.price}`)];
+    const orderText=[...orderTextBase,...(discount>0?[`VIP 10% OFF (${vipCode})`,`Discount: -₱${discount}`]:[]),`Total: ₱${finalTotal}`].join('\\n');
+    localStorage.setItem('nspLastOrder',JSON.stringify({orderNumber,customer,items:[...bag],subtotal:subtotal,discount,total:finalTotal,vipCode,orderText}));
+    showSuccess(orderNumber,customer,finalTotal,orderText);
+    if(discount>0) localStorage.removeItem('nspVipCode');
     bag=[];
     localStorage.setItem('nspBag',JSON.stringify(bag));
     renderBag();
   }catch(error){
     console.error('NSP order submission error:',error);
-    alert('We could not save your order right now. Please try again.');
+    alert(error.message||'We could not save your order right now. Please try again.');
     submitButton.disabled=false;
     submitButton.textContent='Place Order';
   }
 });
-
 function showSuccess(orderNumber,customer,total,orderText){
   const body=document.getElementById('checkoutBody');
   body.innerHTML=`<div class="success-screen"><div class="success-icon">✓</div><h2>Order<br>Received.</h2><p>Thank you, ${escapeHtml(customer.name)}. Your NSP order has been prepared successfully.</p><div class="success-order"><strong>Order ${orderNumber}</strong><br><br><strong>Customer:</strong> ${escapeHtml(customer.name)}<br><strong>Phone:</strong> ${escapeHtml(customer.phone)}<br><strong>Total:</strong> ₱${total}<br><br>NSP will confirm your order, availability, shipping, and payment details with you.</div><div class="success-actions"><button id="copyOrder">Copy Order Details</button><button class="secondary" id="finishOrder">Continue Shopping</button></div></div>`;
