@@ -1981,10 +1981,23 @@ vipSmsForm.addEventListener('submit',e=>{
   vipStep3.hidden=false;
 });
 vipSmsSkip.onclick=closeVipPopup;
-vipCopyCode.onclick=()=>navigator.clipboard?.writeText(document.getElementById('vipCode').textContent.trim());
-vipCodeDone.onclick=closeVipPopup;
-if(localStorage.getItem('nspVipPopupSeen')==='1')showVipTab();
-else setTimeout(openVipPopup,700);
+vipCopyCode.onclick=()=>{
+  navigator.clipboard?.writeText(document.getElementById('vipCode').textContent.trim());
+};
+vipCodeDone.onclick=()=>{
+  vipPopup.classList.remove('open');
+  vipPopup.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+  localStorage.setItem('nspVipCompleted','1');
+  hideVipTab();
+};
+if(localStorage.getItem('nspVipCompleted')==='1'){
+  hideVipTab();
+}else if(localStorage.getItem('nspVipPopupSeen')==='1'){
+  showVipTab();
+}else{
+  setTimeout(openVipPopup,700);
+}
 
 </script>
 <script>
