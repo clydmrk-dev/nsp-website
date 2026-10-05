@@ -1967,7 +1967,7 @@ vipTab.onclick=openVipPopup;
 vipTab.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')openVipPopup()});
 vipTabClose.onclick=()=>{hideVipTab();localStorage.setItem('nspVipPopupSeen','1')};
 vipPopup.addEventListener('click',e=>{if(e.target===vipPopup)closeVipPopup()});
-vipForm.addEventListener('submit',e=>{
+vipForm.addEventListener('submit',async e=>{
   e.preventDefault();
   const email=document.getElementById('vipEmail').value.trim();
   if(!email)return;
