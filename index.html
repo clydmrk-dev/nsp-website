@@ -2508,3 +2508,11 @@ footer{
 <script id="nsp-navbar-controls-final">
 (function(){const menu=document.getElementById('nspMenuToggle'),dropdown=document.getElementById('nspNavDropdown'),cart=document.getElementById('nspCartLink');if(menu&&dropdown){menu.addEventListener('click',function(){const open=dropdown.classList.toggle('open');menu.setAttribute('aria-expanded',open?'true':'false')});dropdown.querySelectorAll('a').forEach(a=>a.addEventListener('click',function(){dropdown.classList.remove('open');menu.setAttribute('aria-expanded','false')}))}if(cart)cart.addEventListener('click',function(){window.location.href='/collection.html'})})();
 </script>
+<style id="nsp-navbar-static-final">
+.navbar.nsp-brand-header{
+  position:absolute!important;
+  top:0!important;
+  left:0!important;
+  right:0!important;
+}
+</style>
