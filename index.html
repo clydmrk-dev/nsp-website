@@ -2091,14 +2091,15 @@ function showSelectedSizeStock(size){
 
 /* PRODUCTS */
 const featuredPhotos=[
-  {src:'/featured/NSP_Featured_1.jpg',alt:'NSP black shirt editorial detail'},
-  {src:'/featured/NSP_Featured_2.jpg',alt:'NSP black shirt lifestyle'},
-  {src:'/featured/NSP_Featured_3.jpg',alt:'NSP olive shirt front'},
-  {src:'/featured/NSP_Featured_4.jpg',alt:'NSP olive shirt back'}
+  {src:'/featured/NSP_Featured_1.jpg',alt:'NSP black shirt editorial detail',name:'NSP Black'},
+  {src:'/featured/NSP_Featured_2.jpg',alt:'NSP black shirt lifestyle',name:'NSP Olive Green'},
+  {src:'/featured/NSP_Featured_3.jpg',alt:'NSP olive shirt front',name:'NSP Olive Green'},
+  {src:'/featured/NSP_Featured_4.jpg',alt:'NSP olive shirt back',name:'NSP Black'}
 ];
 productsEl.innerHTML = featuredPhotos.map((photo)=>`
-  <article class="product showroom-product" aria-label="NSP Featured">
+  <article class="product showroom-product" aria-label="${photo.name}">
     <div class="product-image"><img src="${photo.src}" alt="${photo.alt}" loading="lazy"></div>
+    <div class="product-info"><span class="product-name">${photo.name}</span></div>
   </article>
 `).join('');
 
@@ -2756,5 +2757,51 @@ footer{
 }
 .nsp-cart-icon{
   color:var(--forest)!important;
+}
+</style>
+<style id="nsp-featured-spaced-named-final">
+#shop{
+  padding:82px 5% 86px!important;
+  background:var(--forest)!important;
+}
+#shop .products{
+  grid-template-columns:repeat(4,1fr)!important;
+  gap:28px 8px!important;
+  background:transparent!important;
+}
+#shop .product{
+  background:var(--forest)!important;
+}
+#shop .product-image{
+  width:100%!important;
+  aspect-ratio:4/5!important;
+  padding:0!important;
+  border-radius:0!important;
+}
+#shop .product-info{
+  padding:14px 2px 0!important;
+  color:var(--cream)!important;
+}
+#shop .product-name{
+  color:var(--cream)!important;
+  font-size:11px!important;
+  font-weight:800!important;
+  letter-spacing:1px!important;
+  text-transform:uppercase!important;
+}
+@media(max-width:800px){
+  #shop{
+    padding:50px 4% 60px!important;
+  }
+  #shop .products{
+    grid-template-columns:repeat(2,1fr)!important;
+    gap:24px 7px!important;
+  }
+  #shop .product-info{
+    padding-top:10px!important;
+  }
+  #shop .product-name{
+    font-size:10px!important;
+  }
 }
 </style>
