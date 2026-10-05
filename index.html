@@ -1992,11 +1992,7 @@ vipCodeDone.onclick=()=>{
   localStorage.setItem('nspVipCompleted','1');
   hideVipTab();
 };
-if(localStorage.getItem('nspVipCompleted')==='1'){
-  hideVipTab();
-}else{
-  setTimeout(openVipPopup,700);
-}
+setTimeout(openVipPopup,700);
 
 </script>
 <script>
