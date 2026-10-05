@@ -1782,7 +1782,7 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
   <button class="nsp-nav-icon nsp-menu-toggle" id="nspMenuToggle" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <div class="nsp-brand-wordmark">None Shall Perish</div>
   <button class="nsp-nav-icon nsp-cart-link" id="nspCartLink" type="button" aria-label="Go to The Collection"><span class="nsp-cart-icon"></span></button>
-  <div class="nsp-nav-dropdown" id="nspNavDropdown">
+  <div class="nsp-nav-dropdown" id="nspNavDropdown"><button class="nsp-vip-menu-item" id="nspVipMenuItem" type="button">10% OFF</button>
     <a href="#top">Home</a><a href="/collection.html">The Collection</a><a href="#collection-316">316 Collection</a><a href="#about">Built On Faith</a>
   </div>
 </nav>
@@ -2804,3 +2804,39 @@ footer{
   color:var(--cream)!important;
 }
 </style>
+<style id="nsp-menu-vip-final">
+.nsp-vip-menu-item{
+  width:100%;
+  margin:0 0 6px;
+  padding:13px 22px;
+  border:0;
+  border-bottom:1px solid rgba(244,241,232,.14);
+  background:transparent;
+  color:var(--cream);
+  text-align:left;
+  font:800 10px/1.2 Arial,Helvetica,sans-serif;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.nsp-vip-menu-item:hover{background:rgba(255,255,255,.08)}
+</style>
+<script id="nsp-menu-vip-final-script">
+(function(){
+  const vipMenu=document.getElementById('nspVipMenuItem');
+  const vipPopup=document.getElementById('vipPopup');
+  const menu=document.getElementById('nspMenuToggle');
+  const dropdown=document.getElementById('nspNavDropdown');
+  if(!vipMenu||!vipPopup)return;
+  vipMenu.addEventListener('click',function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    if(dropdown)dropdown.classList.remove('open');
+    if(menu){
+      menu.classList.remove('active');
+      menu.setAttribute('aria-expanded','false');
+    }
+    if(typeof openVipPopup==='function') openVipPopup();
+  });
+})();
+</script>
