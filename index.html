@@ -2565,76 +2565,7 @@ body.nsp-menu-open .navbar .menu-btn::after{content:none!important;display:none!
   .bag-panel.open{width:100vw!important;max-width:100vw!important}
 }
 </style>
-<script id="nsp-overlay-only-final-script">
-(function(){
-  function setup(){
-    const menu=document.getElementById('menuBtn');
-    const nav=document.getElementById('navLinks');
-    const bag=document.getElementById('bagButton');
-    const panel=document.getElementById('bagPanel');
-    if(!menu||!nav||!bag||!panel)return;
 
-    function stationary(){
-      const canvas=document.getElementById('nsp-site-canvas');
-      if(canvas) canvas.style.transform='none';
-      document.body.style.transform='none';
-      document.body.style.marginLeft='0';
-      document.body.style.marginRight='0';
-      document.documentElement.style.overflowX='hidden';
-      document.body.style.overflowX='hidden';
-    }
-
-    function openMenu(){
-      panel.classList.remove('open');
-      nav.classList.add('active');
-      stationary();
-    }
-    function closeMenu(){
-      nav.classList.remove('active');
-      stationary();
-    }
-    function openCart(){
-      nav.classList.remove('active');
-      if(panel.parentElement!==document.body) document.body.appendChild(panel);
-      panel.classList.add('open');
-      stationary();
-    }
-    function closeCart(){
-      panel.classList.remove('open');
-      stationary();
-    }
-
-    document.addEventListener('click',function(e){
-      if(e.target.closest('#menuBtn')){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        if(nav.classList.contains('active')) closeMenu(); else openMenu();
-        return;
-      }
-      if(e.target.closest('#bagButton')){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        openCart();
-        return;
-      }
-      if(e.target.closest('#bagClose,.bag-close,.nsp-menu-close')){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        closeMenu();
-        closeCart();
-        return;
-      }
-    },true);
-
-    // Keep the cart attached to the viewport, never a transformed site container.
-    if(panel.parentElement!==document.body) document.body.appendChild(panel);
-    stationary();
-  }
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',setup);
-  else setup();
-})();
-</script>
 <style id="nsp-final-overlay-layout">
 html,body{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
 #nsp-site-canvas{transform:none!important}
@@ -2729,7 +2660,64 @@ body > #bagPanel,
   body > #bagPanel,#bagPanel.open{width:100vw!important;max-width:100vw!important}
 }
 </style>
-<script id="nsp-final-menu-cart-repair-script">
+
+<style id="nsp-stable-controls-final">
+/* STABLE MENU + CART CONTROLS */
+.navbar .menu-btn{
+  position:fixed!important;
+  top:22px!important;
+  left:5%!important;
+  z-index:1000000!important;
+  display:flex!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+}
+#bagButton{
+  position:fixed!important;
+  top:22px!important;
+  right:5%!important;
+  z-index:1000001!important;
+  width:34px!important;
+  height:34px!important;
+  margin:0!important;
+  display:inline-flex!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+  color:var(--cream)!important;
+}
+#bagButton::before{color:var(--cream)!important;}
+.navbar .nav-links.active{
+  position:fixed!important;
+  top:0!important;
+  left:0!important;
+  right:auto!important;
+  width:min(360px,82vw)!important;
+  height:100vh!important;
+  transform:none!important;
+  z-index:999998!important;
+}
+#bagPanel.open{
+  position:fixed!important;
+  top:0!important;
+  right:0!important;
+  bottom:0!important;
+  left:auto!important;
+  width:min(430px,100vw)!important;
+  max-width:430px!important;
+  height:100vh!important;
+  margin:0!important;
+  transform:none!important;
+  z-index:999999!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:700px){
+  .navbar .menu-btn{left:4%!important}
+  #bagButton{right:4%!important}
+  .navbar .nav-links.active{width:82vw!important}
+  #bagPanel.open{width:100vw!important;max-width:100vw!important}
+}
+</style>
+<script id="nsp-stable-controls-final-script">
 (function(){
   function init(){
     const menu=document.getElementById('menuBtn');
@@ -2739,9 +2727,10 @@ body > #bagPanel,
     const close=document.getElementById('bagClose');
     if(!menu||!nav||!bag||!panel)return;
 
-    // Remove legacy state that physically shifts the site.
-    function resetPageShift(){
-      document.body.classList.remove('nsp-menu-open','nsp-cart-open','nsp-panel-open','nsp-cart-landing');
+    // Put the cart trigger outside the navbar stacking context so it remains visible above the drawer.
+    if(bag.parentElement!==document.body) document.body.appendChild(bag);
+
+    function resetPage(){
       document.body.style.paddingLeft='0';
       document.body.style.paddingRight='0';
       document.body.style.marginLeft='0';
@@ -2756,10 +2745,9 @@ body > #bagPanel,
     menu.onclick=function(e){
       e.preventDefault();
       e.stopPropagation();
-      const opening=!nav.classList.contains('active');
       panel.classList.remove('open');
-      nav.classList.toggle('active',opening);
-      resetPageShift();
+      nav.classList.toggle('active');
+      resetPage();
     };
 
     bag.onclick=function(e){
@@ -2767,7 +2755,7 @@ body > #bagPanel,
       e.stopPropagation();
       nav.classList.remove('active');
       panel.classList.add('open');
-      resetPageShift();
+      resetPage();
     };
 
     if(close){
@@ -2775,19 +2763,13 @@ body > #bagPanel,
         e.preventDefault();
         e.stopPropagation();
         panel.classList.remove('open');
-        resetPageShift();
+        resetPage();
       };
     }
 
-    // Prevent legacy click handlers from changing page position.
-    document.addEventListener('click',function(e){
-      if(e.target.closest('#menuBtn,#bagButton,#bagClose')){
-        e.stopImmediatePropagation();
-      }
-    },true);
-
-    resetPageShift();
+    resetPage();
   }
+
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
   else init();
 })();
