@@ -2574,10 +2574,7 @@ body.nsp-menu-open .navbar .menu-btn::after{content:none!important;display:none!
     const panel=document.getElementById('bagPanel');
     if(!menu||!nav||!bag||!panel)return;
 
-    function clearShift(){
-      document.body.classList.remove('nsp-menu-open','nsp-cart-open','nsp-panel-open','nsp-cart-landing');
-      const header=document.querySelector('.navbar');
-      if(header) header.classList.remove('nsp-menu-open','nsp-cart-open');
+    function keepPageStationary(){
       document.documentElement.style.overflowX='hidden';
       document.body.style.overflowX='hidden';
       document.body.style.transform='none';
@@ -2587,34 +2584,31 @@ body.nsp-menu-open .navbar .menu-btn::after{content:none!important;display:none!
       if(canvas) canvas.style.transform='none';
     }
 
+    menu.addEventListener('click',function(){
+      panel.classList.remove('open');
+      nav.classList.toggle('active');
+      keepPageStationary();
+    },true);
+
+    bag.addEventListener('click',function(){
+      nav.classList.remove('active');
+      panel.classList.add('open');
+      keepPageStationary();
+    },true);
+
     document.addEventListener('click',function(e){
-      if(e.target.closest('#menuBtn')){
-        e.preventDefault(); e.stopImmediatePropagation();
-        const open=!nav.classList.contains('active');
-        panel.classList.remove('open');
-        nav.classList.toggle('active',open);
-        clearShift();
-        return;
-      }
-      if(e.target.closest('#bagButton')){
-        e.preventDefault(); e.stopImmediatePropagation();
-        nav.classList.remove('active');
-        panel.classList.add('open');
-        clearShift();
-        return;
-      }
       if(e.target.closest('#bagClose,.bag-close,.nsp-menu-close')){
-        e.preventDefault(); e.stopImmediatePropagation();
         nav.classList.remove('active');
         panel.classList.remove('open');
-        clearShift();
+        keepPageStationary();
       }
     },true);
 
     const observer=new MutationObserver(function(){
-      clearShift();
+      keepPageStationary();
     });
     observer.observe(document.body,{attributes:true,attributeFilter:['class','style']});
+    keepPageStationary();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',setup);
   else setup();
