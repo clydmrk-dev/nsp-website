@@ -2613,3 +2613,39 @@ footer{
   }
 }
 </style>
+<style id="nsp-menu-working-final">
+.nsp-menu-toggle{
+  z-index:100003!important;
+  pointer-events:auto!important;
+}
+.nsp-nav-dropdown{
+  z-index:100002!important;
+}
+</style>
+<script id="nsp-menu-working-final-script">
+(function(){
+  function initNSPMenu(){
+    const menu=document.getElementById('nspMenuToggle');
+    const dropdown=document.getElementById('nspNavDropdown');
+    if(!menu||!dropdown||menu.dataset.nspFixed)return;
+    menu.dataset.nspFixed='1';
+    menu.onclick=function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      const isOpen=dropdown.classList.contains('open');
+      dropdown.classList.toggle('open',!isOpen);
+      menu.classList.toggle('active',!isOpen);
+      menu.setAttribute('aria-expanded',!isOpen?'true':'false');
+    };
+    dropdown.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click',function(){
+        dropdown.classList.remove('open');
+        menu.classList.remove('active');
+        menu.setAttribute('aria-expanded','false');
+      });
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initNSPMenu);
+  else initNSPMenu();
+})();
+</script>
