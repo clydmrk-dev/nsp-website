@@ -2491,5 +2491,39 @@ body.nsp-cart-open .bag-panel{
   else init();
 })();
 </script>
-</body>
+<style id="nsp-no-push-final">
+/* FINAL: MENU AND CART OVERLAYS — NEVER MOVE THE PAGE */
+html,body{overflow-x:hidden!important;width:100%!important;max-width:100%!important}
+body{padding-left:0!important;padding-right:0!important;margin-left:0!important;margin-right:0!important}
+body.nsp-menu-open,
+body.nsp-cart-open,
+body.nsp-panel-open{padding-left:0!important;padding-right:0!important}
+body.nsp-menu-open > *,
+body.nsp-cart-open > *,
+body.nsp-panel-open > *{
+  transform:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+body.nsp-menu-open #nsp-site-canvas,
+body.nsp-cart-open #nsp-site-canvas{transform:none!important}
+body.nsp-menu-open .navbar,
+body.nsp-cart-open .navbar,
+body.nsp-panel-open .navbar{transform:none!important}
+body.nsp-menu-open .header,
+body.nsp-cart-open .header{transform:none!important}
+body.nsp-menu-open .navbar .menu-btn::after{content:none!important;display:none!important}
+body.nsp-menu-open .navbar .menu-btn span{display:block!important}
+body.nsp-menu-open .navbar .menu-btn{
+  left:5%!important;
+  top:22px!important;
+  width:28px!important;
+  height:auto!important;
+  padding:0!important;
+  color:var(--cream)!important;
+}
+body.nsp-cart-open .bag-panel{
+  transform:none!important;
+}
+</style></body>
 </html>
