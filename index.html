@@ -513,6 +513,12 @@ footer{
 }
 
 /* WELCOME VIP POPUP */
+.vip-step2 .vip-kicker{font-size:28px;margin-bottom:22px}
+.vip-step2 .vip-subtitle{color:#111;font-size:15px;line-height:1.25;max-width:390px}
+.vip-consent{margin:18px auto 0;max-width:390px;color:#111;font-size:11px;line-height:1.25}
+.vip-step2 .vip-dismiss{margin-top:20px}
+.vip-step2[hidden]{display:none}
+
 .vip-backdrop{
   position:fixed;
   inset:0;
@@ -1720,14 +1726,27 @@ body.nsp-menu-open .navbar .menu-btn:hover::after{
 <div class="vip-backdrop" id="vipPopup" aria-hidden="true">
   <div class="vip-popup" role="dialog" aria-modal="true" aria-labelledby="vipTitle">
     <div class="vip-copy">
-      <div class="vip-kicker">Don't Miss Out On...</div>
-      <h2 class="vip-title" id="vipTitle">10% Off Your<br>First Order!</h2>
-      <p class="vip-subtitle">Get early access to new drops & unlock exclusive discounts by joining the VIP list!</p>
-      <form class="vip-form" id="vipForm">
-        <input class="vip-email" id="vipEmail" type="email" autocomplete="email" placeholder="Your Email" required>
-        <button class="vip-submit" type="submit">Join The Family!</button>
-      </form>
-      <button class="vip-dismiss" id="vipDismiss" type="button">I'd rather pay full price...</button>
+      <div id="vipStep1">
+        <div class="vip-kicker">Don't Miss Out On...</div>
+        <h2 class="vip-title" id="vipTitle">10% Off Your<br>First Order!</h2>
+        <p class="vip-subtitle">Get early access to new drops & unlock exclusive discounts by joining the VIP list!</p>
+        <form class="vip-form" id="vipForm">
+          <input class="vip-email" id="vipEmail" type="email" autocomplete="email" placeholder="Your Email" required>
+          <button class="vip-submit" type="submit">Join The Family!</button>
+        </form>
+        <button class="vip-dismiss" id="vipDismiss" type="button">I'd rather pay full price...</button>
+      </div>
+      <div id="vipStep2" class="vip-step2" hidden>
+        <div class="vip-kicker">Thank You &lt;3</div>
+        <h2 class="vip-title">Welcome To<br>The Family! &lt;3</h2>
+        <p class="vip-subtitle">Want an SMS instead? Get your code texted to you & receive drop notifications instantly!</p>
+        <form class="vip-form" id="vipSmsForm">
+          <input class="vip-email" id="vipPhone" type="tel" autocomplete="tel" placeholder="Phone Number">
+          <p class="vip-consent">By submitting this form, you consent to receive informational updates and marketing texts from None Shall Perish. Msg & data rates may apply. Msg frequency varies. Unsubscribe at any time.</p>
+          <button class="vip-submit" type="submit">Join The VIP SMS List!</button>
+        </form>
+        <button class="vip-dismiss" id="vipSmsSkip" type="button">I'll take the risk of missing out on drops...</button>
+      </div>
     </div>
     <div class="vip-visual">
       <button class="vip-close" id="vipClose" type="button" aria-label="Close">×</button>
@@ -1805,13 +1824,14 @@ const vipClose = document.getElementById('vipClose');
 const vipDismiss = document.getElementById('vipDismiss');
 const vipTab = document.getElementById('vipTab');
 const vipTabClose = document.getElementById('vipTabClose');
+const vipStep1 = document.getElementById('vipStep1');
+const vipStep2 = document.getElementById('vipStep2');
+const vipSmsForm = document.getElementById('vipSmsForm');
+const vipSmsSkip = document.getElementById('vipSmsSkip');
 
-function showVipTab(){
-  vipTab.classList.add('visible');
-}
-function hideVipTab(){
-  vipTab.classList.remove('visible');
-}
+function showVipTab(){ vipTab.classList.add('visible'); }
+function hideVipTab(){ vipTab.classList.remove('visible'); }
+function resetVipSteps(){ vipStep1.hidden=false; vipStep2.hidden=true; }
 function closeVipPopup(){
   vipPopup.classList.remove('open');
   vipPopup.setAttribute('aria-hidden','true');
@@ -1820,6 +1840,7 @@ function closeVipPopup(){
   showVipTab();
 }
 function openVipPopup(){
+  resetVipSteps();
   hideVipTab();
   vipPopup.classList.add('open');
   vipPopup.setAttribute('aria-hidden','false');
@@ -1828,29 +1849,27 @@ function openVipPopup(){
 vipClose.onclick=closeVipPopup;
 vipDismiss.onclick=closeVipPopup;
 vipTab.onclick=openVipPopup;
-vipTab.addEventListener('keydown',e=>{
-  if(e.key==='Enter' || e.key===' ') openVipPopup();
-});
-vipTabClose.onclick=()=>{
-  hideVipTab();
-  localStorage.setItem('nspVipPopupSeen','1');
-};
-vipPopup.addEventListener('click',e=>{
-  if(e.target===vipPopup) closeVipPopup();
-});
+vipTab.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')openVipPopup()});
+vipTabClose.onclick=()=>{hideVipTab();localStorage.setItem('nspVipPopupSeen','1')};
+vipPopup.addEventListener('click',e=>{if(e.target===vipPopup)closeVipPopup()});
 vipForm.addEventListener('submit',e=>{
   e.preventDefault();
   const email=document.getElementById('vipEmail').value.trim();
-  if(!email) return;
+  if(!email)return;
   localStorage.setItem('nspVipEmail',email);
-  closeVipPopup();
-  alert('Welcome to the NSP family!');
+  vipStep1.hidden=true;
+  vipStep2.hidden=false;
 });
-if(localStorage.getItem('nspVipPopupSeen')==='1'){
-  showVipTab();
-}else{
-  setTimeout(openVipPopup,700);
-}
+vipSmsForm.addEventListener('submit',e=>{
+  e.preventDefault();
+  const phone=document.getElementById('vipPhone').value.trim();
+  if(!phone)return;
+  localStorage.setItem('nspVipPhone',phone);
+  closeVipPopup();
+});
+vipSmsSkip.onclick=closeVipPopup;
+if(localStorage.getItem('nspVipPopupSeen')==='1')showVipTab();
+else setTimeout(openVipPopup,700);
 
 </script>
 <script>
