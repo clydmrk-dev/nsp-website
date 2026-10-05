@@ -1994,8 +1994,6 @@ vipCodeDone.onclick=()=>{
 };
 if(localStorage.getItem('nspVipCompleted')==='1'){
   hideVipTab();
-}else if(localStorage.getItem('nspVipPopupSeen')==='1'){
-  showVipTab();
 }else{
   setTimeout(openVipPopup,700);
 }
